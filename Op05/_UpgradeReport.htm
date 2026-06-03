@@ -1,0 +1,806 @@
+﻿<html>
+	<head>
+		<META HTTP-EQUIV="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="_UpgradeReport_Files\UpgradeReport.css">
+		<title>TagAccess_VB.vbp 업그레이드 보고서</title>
+		
+		<script language="javascript">
+			function outliner () {
+				oMe = window.event.srcElement
+				//get child element
+				var child = document.all[event.srcElement.getAttribute("child",false)];
+				//if child element exists, expand or collapse it.
+				if (null != child)
+					child.className = child.className == "collapsed" ? "expanded" : "collapsed";
+			}
+		
+			function changepic() {
+				uMe = window.event.srcElement;
+				var check = uMe.src.toLowerCase();
+				if (check.lastIndexOf("upgradereport_plus.gif") != -1)
+				{
+					uMe.src = "_UpgradeReport_Files/UpgradeReport_Minus.gif"
+				}
+				else
+				{
+					uMe.src = "_UpgradeReport_Files/UpgradeReport_Plus.gif"
+				}
+			}
+		</script>
+		
+	</head>
+	<body topmargin="0" leftmargin="0" rightmargin="0" onclick="outliner();">
+		<h1>TagAccess_VB.vbp에 대한 업그레이드 보고서</h1>
+		
+		<p><span class="note">
+		<b>업그레이드 시간:  </b>2019-02-17 오후 10:42<br>
+		</span></p>
+		
+		<h2>업그레이드 요약</h2>
+		<table cellpadding="2" cellspacing="0" width="98%" border="1" bordercolor="white" class="infotable">
+		    <tr>
+		        <td nowrap class="header" width="45%">발견한 문제점의 종류</td>
+		        <td nowrap class="header" width="45%">자세히</td>
+		        <td nowrap class="header" align="right">개수</td>
+		    </tr>
+		    <tr class="row">
+		    <td class="SummaryIssueTypeContent">
+		        <IMG alt="섹션을 확장/축소합니다." class="expanded" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Minus.gif" width="9" child="SummaryIssueType0">
+		        &nbsp;컴파일 오류
+		    </td>
+		    <td class="SummaryIssueTypeHelp">
+		        프로젝트 컴파일을 방해하는 문제를 발견했습니다. 이 문제는 응용 프로그램을 실행하기 전에 해결해야 합니다.
+		    </td>
+		    <td class="SummaryIssueTypeCount">
+		        4
+		    </td>
+		    </tr>
+		    <tr class="expanded" bgcolor="white" id="SummaryIssueType0">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType0GUID0">
+		            &nbsp;일부 함수는 더 이상 지원되지 않습니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="367764E5-F3F8-4E43-AC3E-7FE0B5E074E2"'>함수는 지원되지 않습니다.</a>
+		        </td>
+		        <td class="SummaryCount">1</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType0GUID0">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType0GUID0File0">
+		                        &nbsp;Main.frm
+		                    </td>
+		                    <td class="SummaryFileCount">1</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType0GUID0File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">bntOpen_Click</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent">StrPtr</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="367764E5-F3F8-4E43-AC3E-7FE0B5E074E2"'>StrPtr 함수는 지원되지 않습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType0GUID1">
+		            &nbsp;일부 상수가 업그레이드되지 않았습니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="55B59875-9A95-4B71-9D6A-7C294BF7139D"'>상수는 업그레이드되지 않았습니다.</a>
+		        </td>
+		        <td class="SummaryCount">1</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType0GUID1">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType0GUID1File0">
+		                        &nbsp;Main.frm
+		                    </td>
+		                    <td class="SummaryFileCount">1</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType0GUID1File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">Form_Load</td>
+		                            <td class="issuecontent">VbStrConv</td>
+		                            <td class="issuecontent">VbStrConv</td>
+		                            <td class="issuecontent">vbFromUnicode</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="55B59875-9A95-4B71-9D6A-7C294BF7139D"'>vbFromUnicode 상수가 업그레이드되지 않았습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType0GUID2">
+		            &nbsp;Declare 문의 모든 매개 변수는 정규화되어야 합니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="FAE78A8D-8978-4FD4-8208-5B7324A8F795"'>선언 문이 As Any 형식의 매개 변수를 지원하지 않습니다.</a>
+		        </td>
+		        <td class="SummaryCount">2</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType0GUID2">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType0GUID2File0">
+		                        &nbsp;functions.bas
+		                    </td>
+		                    <td class="SummaryFileCount">2</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType0GUID2File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">CopyMemory</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="FAE78A8D-8978-4FD4-8208-5B7324A8F795"'>매개 변수를 'As Any'로 선언할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">2</td>
+		                            <td class="issuecontent">CopyMemory</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="FAE78A8D-8978-4FD4-8208-5B7324A8F795"'>매개 변수를 'As Any'로 선언할 수 없습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		    <td class="SummaryIssueTypeContent">
+		        <IMG alt="섹션을 확장/축소합니다." class="expanded" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Minus.gif" width="9" child="SummaryIssueType1">
+		        &nbsp;디자인 오류
+		    </td>
+		    <td class="SummaryIssueTypeHelp">
+		        디자인 타임에 설정된 일부 속성과 일치하는 속성이 없으며 이러한 속성은 업그레이드되지 않습니다. 응용 프로그램을 세부적으로 테스트하여 원하는 대로 동작하는지 확인해야 합니다.
+		    </td>
+		    <td class="SummaryIssueTypeCount">
+		        10
+		    </td>
+		    </tr>
+		    <tr class="expanded" bgcolor="white" id="SummaryIssueType1">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType1GUID0">
+		            &nbsp;오픈타입 및 트루타입 글꼴 형식만 지원됩니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="971F4DF4-254E-44F4-861D-3AA0031FE361"'>오픈타입 및 트루타입 글꼴만 지원됩니다.</a>
+		        </td>
+		        <td class="SummaryCount">1</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType1GUID0">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType1GUID0File0">
+		                        &nbsp;Main.frm
+		                    </td>
+		                    <td class="SummaryFileCount">1</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType1GUID0File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">(레이아웃)</td>
+		                            <td class="issuecontent">Label</td>
+		                            <td class="issuecontent">labTagFound</td>
+		                            <td class="issuecontent">Font</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="971F4DF4-254E-44F4-861D-3AA0031FE361"'>Windows Forms에서는 트루타입 및 오픈타입 글꼴만 지원됩니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType1GUID1">
+		            &nbsp;일부 런타임에 바인딩된 기본 속성 참조를 확인할 수 없습니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>런타임에 바인딩된 기본 속성 참조는 확인할 수 없습니다.</a>
+		        </td>
+		        <td class="SummaryCount">9</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType1GUID1">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType1GUID1File0">
+		                        &nbsp;Main.frm
+		                    </td>
+		                    <td class="SummaryFileCount">2</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType1GUID1File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">(레이아웃)</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>New (System.Windows.Forms.Padding, 0) 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">2</td>
+		                            <td class="issuecontent">(레이아웃)</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>New (System.Windows.Forms.Padding, 0) 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType1GUID1File1">
+		                        &nbsp;functions.bas
+		                    </td>
+		                    <td class="SummaryFileCount">7</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType1GUID1File1" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">2</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">3</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">4</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent">Hex</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">5</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent">Hex</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">6</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent">Hex</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">7</td>
+		                            <td class="issuecontent">BytesToHex</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent">Hex</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		    <td class="SummaryIssueTypeContent">
+		        <IMG alt="섹션을 확장/축소합니다." class="expanded" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Minus.gif" width="9" child="SummaryIssueType2">
+		        &nbsp;경고
+		    </td>
+		    <td class="SummaryIssueTypeHelp">
+		        응용 프로그램이 실행될 때 예상치 않은 결과를 발생시킬 수 있는 일부 차이점을 발견했습니다. 응용 프로그램을 세부적으로 테스트하여 원하는 대로 동작하는지 확인해야 합니다.
+		    </td>
+		    <td class="SummaryIssueTypeCount">
+		        8
+		    </td>
+		    </tr>
+		    <tr class="expanded" bgcolor="white" id="SummaryIssueType2">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID0">
+		            &nbsp;일부 이벤트는 폼이 초기화될 때 발생할 수 있습니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="88B12AE1-6DE0-48A0-86F1-60C0686C026A"'>폼이 초기화될 때 이벤트가 발생합니다.</a>
+		        </td>
+		        <td class="SummaryCount">1</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType2GUID0">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID0File0">
+		                        &nbsp;Main.frm
+		                    </td>
+		                    <td class="SummaryFileCount">1</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType2GUID0File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">cmbBlockCnt_Change</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="88B12AE1-6DE0-48A0-86F1-60C0686C026A"'>폼이 초기화될 때 cmbBlockCnt.TextChanged 이벤트가 발생합니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID1">
+		            &nbsp;일부 속성, 메서드 및 이벤트가 다른 동작을 수행하는 다른 속성, 메서드 또는 이벤트로 업그레이드되었습니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="DFCDE711-9694-47D7-9C50-45A99CD8E91E"'>속성, 메서드 또는 이벤트는 다른 이름으로 업그레이드되었으며 새 동작을 갖습니다.</a>
+		        </td>
+		        <td class="SummaryCount">1</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType2GUID1">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID1File0">
+		                        &nbsp;Main.frm
+		                    </td>
+		                    <td class="SummaryFileCount">1</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType2GUID1File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">cmbBlockCnt_Change</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="DFCDE711-9694-47D7-9C50-45A99CD8E91E"'>ComboBox 이벤트 cmbBlockCnt.Change이(가) 새로운 동작을 가진 cmbBlockCnt.TextChanged(으)로 업그레이드되었습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID2">
+		            &nbsp;일부 구조체는 Win32 API 호출에 전달되는 경우 마샬링이 필요합니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="C429C3A5-5D47-4CD9-8F51-74A1616405DC"'>구조체에는 이 Declare 문에 인수로 전달할 마샬링 특성이 있어야 합니다.</a>
+		        </td>
+		        <td class="SummaryCount">1</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType2GUID2">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID2File0">
+		                        &nbsp;functions.bas
+		                    </td>
+		                    <td class="SummaryFileCount">1</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType2GUID2File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">FindFirstFile</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="C429C3A5-5D47-4CD9-8F51-74A1616405DC"'>WIN32_FIND_DATA 구조체에는 이 Declare 문에 인수로 전달할 마샬링 특성이 있어야 합니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID3">
+		            &nbsp;Win32 API 호출에 전달된 고정 길이 문자열이 할당된 버퍼 길이에 맞아야 합니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="3C1E4426-0B80-443E-B943-0627CD55D48B"'>고정 길이 문자열 크기가 버퍼와 맞아야 합니다.</a>
+		        </td>
+		        <td class="SummaryCount">2</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType2GUID3">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID3File0">
+		                        &nbsp;functions.bas
+		                    </td>
+		                    <td class="SummaryFileCount">2</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType2GUID3File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">WIN32_FIND_DATA</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="3C1E4426-0B80-443E-B943-0627CD55D48B"'>고정 길이 문자열 크기가 버퍼와 맞아야 합니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">2</td>
+		                            <td class="issuecontent">WIN32_FIND_DATA</td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"></td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="3C1E4426-0B80-443E-B943-0627CD55D48B"'>고정 길이 문자열 크기가 버퍼와 맞아야 합니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td class="SummaryIssueContent">
+		            <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID4">
+		            &nbsp;일부 속성 및 메서드에 새 동작이 있습니다.
+		        </td>
+		        <td class="SummaryIssueHelp">
+		            <a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>속성 또는 메서드에 새 동작이 있습니다.</a>
+		        </td>
+		        <td class="SummaryCount">3</td>
+		    </tr>
+		    <tr class="collapsed" bgcolor="white" id="SummaryIssueType2GUID4">
+		        <td colspan="3">
+		            <table cellpadding="2" cellspacing="0" width="100%" border="1" bordercolor="white" class="content">
+		                <tr class="row">
+		                    <td colspan="3" width="97%" class="SummaryFileContent">
+		                        <IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="SummaryIssueType2GUID4File0">
+		                        &nbsp;functions.bas
+		                    </td>
+		                    <td class="SummaryFileCount">3</td>
+		                </tr>
+		                <tr class="collapsed" id="SummaryIssueType2GUID4File0" bgcolor="#ffffff">
+		                    <td colspan="4">
+		                    <table cellpadding="2" cellspacing="0" width="97%" border="1" bordercolor="#dcdcdc" class="content">
+		                        <tr bgcolor="#ffffff">
+		                            <td width="10" class="issuehdr">#</td>
+		                            <td nowrap class="issuehdr">위치</td>
+		                            <td nowrap class="issuehdr">개체 형식</td>
+		                            <td nowrap class="issuehdr">개체 이름</td>
+		                            <td nowrap class="issuehdr">속성</td>
+		                            <td nowrap class="issuehdr">설명</td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">1</td>
+		                            <td class="issuecontent">AddToLog</td>
+		                            <td class="issuecontent">App</td>
+		                            <td class="issuecontent">App</td>
+		                            <td class="issuecontent">EXEName</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>App 속성 App.EXEName에 새 동작이 있습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">2</td>
+		                            <td class="issuecontent">AddToLog</td>
+		                            <td class="issuecontent">App</td>
+		                            <td class="issuecontent">App</td>
+		                            <td class="issuecontent">EXEName</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>App 속성 App.EXEName에 새 동작이 있습니다.</a></td>
+		                        </tr>
+		                        <tr bgcolor="#ffffff">
+		                            <td class="issuecontent">3</td>
+		                            <td class="issuecontent">AddToLog</td>
+		                            <td class="issuecontent">App</td>
+		                            <td class="issuecontent">App</td>
+		                            <td class="issuecontent">EXEName</td>
+		                            <td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>App 속성 App.EXEName에 새 동작이 있습니다.</a></td>
+		                        </tr>
+		                    </table>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </tr>
+		            </table>
+		        </td>
+		    </tr>
+		    <tr class="row">
+		        <td colspan=2 class="content">합계</td>
+		        <td class="SummaryCount">22</td>
+		    </tr>
+		</table>
+		
+		<h2><IMG alt="섹션을 확장/축소합니다." class="expandable" height="11" onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="DetailList"> 프로젝트의 각 파일 정보</h2>
+		<span id="DetailList" class="collapsed">
+		<table cellpadding="2" cellspacing="0" width="98%" border="1"bordercolor="white" class="infotable">
+			<tr>
+				<td nowrap class="header">새 파일 이름</td>
+				<td nowrap class="header">원본 파일 이름</td>
+				<td nowrap class="header">파일 형식</td>
+				<td nowrap class="header">상태</td>
+				<td nowrap class="header">오류</td>
+				<td nowrap class="header">경고</td>
+				<td nowrap class="header">총 문제점 수</td>
+			</tr>
+		<tr class="row">
+			<td class="content"><IMG alt="섹션을 확장/축소합니다." class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue0">&nbsp;(전역 문제점)</td>
+			<td class="content"></td>
+			<td class="content"></td>
+			<td class="content">
+		</td>	<td class="content">0</td>
+			<td class="content">0</td>
+			<td class="content">0</td>
+		</tr>
+			<tr class="collapsed" id="issue0" bgcolor="#ffffff"><td colspan="7">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="7" class="issuetitle">전역 업데이트 문제점:</td></tr><tr><td class="issuenone">없음</td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="섹션을 확장/축소합니다." class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue1">&nbsp;functions.vb</td>
+			<td class="content">functions.bas</td>
+			<td class="content">모듈</td>
+			<td class="content">
+		업그레이드되었습니다(문제점 포함).</td>	<td class="content">2</td>
+			<td class="content">13</td>
+			<td class="content">15</td>
+		</tr>
+			<tr class="collapsed" id="issue1" bgcolor="#ffffff"><td colspan="7">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="7" class="issuetitle">functions.bas에 대한 업그레이드 문제점:</td></tr><tr><td width="10" class="issuehdr">#</td><td class="issuehdr" nowrap>심각도</td><td class="issuehdr">위치</td><td class="issuehdr">개체 형식</td><td class="issuehdr">개체 이름</td><td class="issuehdr">속성</td><td class="issuehdr">설명</td></tr>
+					<tr><td width="10" class="issuecontent">1</td><td class="issuecontent" nowrap>컴파일 오류</td><td class="issuecontent">CopyMemory</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="FAE78A8D-8978-4FD4-8208-5B7324A8F795"'>매개 변수를 'As Any'로 선언할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">2</td><td class="issuecontent" nowrap>컴파일 오류</td><td class="issuecontent">CopyMemory</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="FAE78A8D-8978-4FD4-8208-5B7324A8F795"'>매개 변수를 'As Any'로 선언할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">3</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">AddToLog</td><td class="issuecontent">App</td><td class="issuecontent">App</td><td class="issuecontent">EXEName</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>App 속성 App.EXEName에 새 동작이 있습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">4</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">AddToLog</td><td class="issuecontent">App</td><td class="issuecontent">App</td><td class="issuecontent">EXEName</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>App 속성 App.EXEName에 새 동작이 있습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">5</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">AddToLog</td><td class="issuecontent">App</td><td class="issuecontent">App</td><td class="issuecontent">EXEName</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6BA9B8D2-2A32-4B6E-8D36-44949974A5B4"'>App 속성 App.EXEName에 새 동작이 있습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">6</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">7</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">8</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">9</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent">Hex</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">10</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent">Hex</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">11</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent">Hex</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">12</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">BytesToHex</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent">Hex</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>b 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">13</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">FindFirstFile</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="C429C3A5-5D47-4CD9-8F51-74A1616405DC"'>WIN32_FIND_DATA 구조체에는 이 Declare 문에 인수로 전달할 마샬링 특성이 있어야 합니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">14</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">WIN32_FIND_DATA</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="3C1E4426-0B80-443E-B943-0627CD55D48B"'>고정 길이 문자열 크기가 버퍼와 맞아야 합니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">15</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">WIN32_FIND_DATA</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="3C1E4426-0B80-443E-B943-0627CD55D48B"'>고정 길이 문자열 크기가 버퍼와 맞아야 합니다.</a></td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="섹션을 확장/축소합니다." class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue2">&nbsp;Main.vb</td>
+			<td class="content">Main.frm</td>
+			<td class="content">폼</td>
+			<td class="content">
+		업그레이드되었습니다(문제점 포함).</td>	<td class="content">5</td>
+			<td class="content">2</td>
+			<td class="content">7</td>
+		</tr>
+			<tr class="collapsed" id="issue2" bgcolor="#ffffff"><td colspan="7">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="7" class="issuetitle">Main.frm에 대한 업그레이드 문제점:</td></tr><tr><td width="10" class="issuehdr">#</td><td class="issuehdr" nowrap>심각도</td><td class="issuehdr">위치</td><td class="issuehdr">개체 형식</td><td class="issuehdr">개체 이름</td><td class="issuehdr">속성</td><td class="issuehdr">설명</td></tr>
+					<tr><td width="10" class="issuecontent">1</td><td class="issuecontent" nowrap>컴파일 오류</td><td class="issuecontent">bntOpen_Click</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent">StrPtr</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="367764E5-F3F8-4E43-AC3E-7FE0B5E074E2"'>StrPtr 함수는 지원되지 않습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">2</td><td class="issuecontent" nowrap>컴파일 오류</td><td class="issuecontent">Form_Load</td><td class="issuecontent">VbStrConv</td><td class="issuecontent">VbStrConv</td><td class="issuecontent">vbFromUnicode</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="55B59875-9A95-4B71-9D6A-7C294BF7139D"'>vbFromUnicode 상수가 업그레이드되지 않았습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">3</td><td class="issuecontent" nowrap>디자인 오류</td><td class="issuecontent">(레이아웃)</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>New (System.Windows.Forms.Padding, 0) 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">4</td><td class="issuecontent" nowrap>디자인 오류</td><td class="issuecontent">(레이아웃)</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="6A50421D-15FE-4896-8A1B-2EC21E9037B2"'>New (System.Windows.Forms.Padding, 0) 개체의 기본 속성을 확인할 수 없습니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">5</td><td class="issuecontent" nowrap>디자인 오류</td><td class="issuecontent">(레이아웃)</td><td class="issuecontent">Label</td><td class="issuecontent">labTagFound</td><td class="issuecontent">Font</td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="971F4DF4-254E-44F4-861D-3AA0031FE361"'>Windows Forms에서는 트루타입 및 오픈타입 글꼴만 지원됩니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">6</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">cmbBlockCnt_Change</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="88B12AE1-6DE0-48A0-86F1-60C0686C026A"'>폼이 초기화될 때 cmbBlockCnt.TextChanged 이벤트가 발생합니다.</a></td></tr>
+					<tr><td width="10" class="issuecontent">7</td><td class="issuecontent" nowrap>런타임 경고</td><td class="issuecontent">cmbBlockCnt_Change</td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"></td><td class="issuecontent"><a href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="DFCDE711-9694-47D7-9C50-45A99CD8E91E"'>ComboBox 이벤트 cmbBlockCnt.Change이(가) 새로운 동작을 가진 cmbBlockCnt.TextChanged(으)로 업그레이드되었습니다.</a></td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="섹션을 확장/축소합니다." class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue3">&nbsp;rfidlib_aip_iso15683.vb</td>
+			<td class="content">rfidlib_aip_iso15683.bas</td>
+			<td class="content">모듈</td>
+			<td class="content">
+		업그레이드되었습니다.</td>	<td class="content">0</td>
+			<td class="content">0</td>
+			<td class="content">0</td>
+		</tr>
+			<tr class="collapsed" id="issue3" bgcolor="#ffffff"><td colspan="7">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="7" class="issuetitle">rfidlib_aip_iso15683.bas에 대한 업그레이드 문제점:</td></tr><tr><td class="issuenone">없음</td></tr>
+				</table>
+			</td></tr>
+		<tr class="row">
+			<td class="content"><IMG alt="섹션을 확장/축소합니다." class="expandable" height="11"onclick=changepic() src="_UpgradeReport_Files/UpgradeReport_Plus.gif" width="9" child="issue4">&nbsp;rfidlib_reader.vb</td>
+			<td class="content">rfidlib_reader.bas</td>
+			<td class="content">모듈</td>
+			<td class="content">
+		업그레이드되었습니다.</td>	<td class="content">0</td>
+			<td class="content">0</td>
+			<td class="content">0</td>
+		</tr>
+			<tr class="collapsed" id="issue4" bgcolor="#ffffff"><td colspan="7">
+				<table width="97%" border="1" bordercolor="#dcdcdc" rules="cols" class="issuetable">
+				<tr><td colspan="7" class="issuetitle">rfidlib_reader.bas에 대한 업그레이드 문제점:</td></tr><tr><td class="issuenone">없음</td></tr>
+				</table>
+			</td></tr>
+		<tr valign="top">
+			<td class="foot">4개 파일</td>
+			<td class="foot">&nbsp;</td>
+			<td class="foot">폼: 1<br>모듈: 3</td>
+			<td class="foot">
+		업그레이드되었습니다. 4<BR>
+		업그레이드되지 않았습니다. 0
+		</td>
+			<td class="foot">7</td>
+			<td class="foot">15</td>
+			<td class="foot">22</td>
+		</tr>
+		</table>
+		</span>
+		<p class="help">
+			<A href='ms-help://MS.VSCC.v90/dv_commoner/local/redirect.htm?keyword="a16bd8ca-916d-4cd3-821c-417999d3cb97"'>업그레이드한 프로젝트의 문제 해결 도움말을 보려면 여기를 클릭하십시오.</A>
+		</p>
+				<p>
+					<table class = "note">
+						<tr><td nowrap><b>업그레이드 설정</b></td></tr>
+						<tr><td nowrap><b>로그 파일:</b> TagAccess_VB.log</td></tr>
+						<tr><td nowrap><b>프로젝트 마이그레이션 위치:</b> WinExe</td></tr>
+						<tr><td nowrap><b>출력 디렉터리:</b> C:\Users\min-note\Documents\카카오톡 받은 파일\15693리더SDK\HF reader\samples\VB6\tagAccess\Project1.NET</td></tr>
+						<tr><td nowrap><b>출력 이름:</b> TagAccess_VB.vbproj</td></tr>
+						<tr><td nowrap><b>프로젝트 이름:</b> TagAccess_VB</td></tr>
+						<tr><td nowrap><b>프로젝트 경로:</b> C:\Users\min-note\Documents\카카오톡 받은 파일\15693리더SDK\HF reader\samples\VB6\tagAccess\TagAccess_VB.vbp</td></tr>
+					</table>
+				</p>
+	</body>
+</html>

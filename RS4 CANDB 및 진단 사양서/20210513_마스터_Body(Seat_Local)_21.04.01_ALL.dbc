@@ -1,0 +1,1354 @@
+VERSION ""
+
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: RRPSM RRSAU RLSAU RLPSS RRPSS RLPSM
+
+
+BO_ 127 Local_RRPSS_01_200ms: 8 RRPSS
+ SG_ RRPSS_StSldFwdMvBtn : 23|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StSldBwdMvBtn : 21|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StRclFwdMvBtn : 19|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StRclBwdMvBtn : 17|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StTltUpMvBtn : 27|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StTltDnMvBtn : 25|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StHRestUpMvBtn : 39|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StHRestDnMvBtn : 37|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StHRestFwdMvBtn : 35|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StHRestBwdMvBtn : 33|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StLegRestUpBtn : 47|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StLegRestDnBtn : 45|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StLegRestExtUpBtn : 43|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+ SG_ RRPSS_StLegRestExtDnBtn : 41|2@0+ (1,0) [0|0] ""  RLPSM,RRPSM
+
+BO_ 138 Local_RLPSS_01_200ms: 8 RLPSS
+ SG_ RLPSS_StSldFwdMvBtn : 23|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StSldBwdMvBtn : 21|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StRclFwdMvBtn : 19|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StRclBwdMvBtn : 17|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StTltUpMvBtn : 27|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StTltDnMvBtn : 25|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StHRestUpMvBtn : 39|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StHRestDnMvBtn : 37|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StHRestFwdMvBtn : 35|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StHRestBwdMvBtn : 33|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StLegRestUpBtn : 47|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StLegRestDnBtn : 45|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StLegRestExtUpBtn : 43|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSS_StLegRestExtDnBtn : 41|2@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 143 Local_RLSAU_02_200ms: 8 RLSAU
+ SG_ RLSAU_AirSptModeRValueSet : 3|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_AirSptStrRValueSet : 15|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_AirSptTimeRValueSet : 11|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_RLSmtAirSptRValueSet : 21|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_LumbarDefSta : 19|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_LumbarUpSta : 17|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_LumbarMidSta : 31|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_LumbarLowSta : 29|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_BolsterInfSta : 27|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_BolsterDefSta : 25|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_BackSoftRValueSet : 39|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_ActiveSw : 36|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_MoodTrpyRValueSet : 55|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_MoodTrpyCareSta : 53|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAU_MoodTrpyComfSta : 51|2@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 159 Local_RRSAU_02_200ms: 8 RRSAU
+ SG_ RRSAU_AirSptModeRValueSet : 3|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_AirSptStrRValueSet : 15|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_AirSptTimeRValueSet : 11|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_RRSmrAirSptRValueSet : 21|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_LumbarDefSta : 19|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_LumbarUpSta : 17|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_LumbarMidSta : 31|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_LumbarLowSta : 29|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_BolsterInfSta : 27|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_BolsterDefSta : 25|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_BackSoftRValueSet : 39|3@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_ActiveSw : 36|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_MoodTrpyRValueSet : 55|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_MoodTrpyCareSta : 53|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAU_MoodTrpyComfSta : 51|2@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 427 Local_CLU_01_20ms_1: 8 RLPSM
+ SG_ CLU_Crc1Val : 7|16@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ CLU_AlvCnt1Val : 23|8@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ CLU_DtntOutSta : 27|2@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ CLU_RhstaLvlSta : 44|5@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+
+BO_ 428 Local_CLU_01_20ms_2: 8 RLPSM
+ SG_ CLU_DisSpdVal_KPH : 7|9@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 559 Local_HU_MOOD_E_01: 8 RLPSM
+ SG_ HU_MoodTherapyRlSeat : 3|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ HU_MoodTherapyRrSeat : 1|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ HU_CareMassage : 31|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ HU_ComfortMassage : 39|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ HU_MoodTherapyMode : 35|3@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 575 Local_ATS_00_00ms: 8 RLPSM
+ SG_ ATS_RLMsgTimeSW : 14|3@0+ (1,0) [0|0] ""  RLSAU
+ SG_ ATS_RRMsgTimeSW : 11|3@0+ (1,0) [0|0] ""  RRSAU
+ SG_ ATS_RLMsgMod1SW : 20|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ ATS_RLMsgMod2SW : 18|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ ATS_RLMsgMod3SW : 16|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ ATS_RLMsgMod4SW : 30|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ ATS_RRMsgMod1SW : 28|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ ATS_RRMsgMod2SW : 26|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ ATS_RRMsgMod3SW : 24|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ ATS_RRMsgMod4SW : 38|2@0+ (1,0) [0|0] ""  RRSAU
+
+BO_ 577 Local_HU_APSU_PE_02: 8 RLPSM
+ SG_ C_RLHrestUpSw_HU : 9|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLHrestDnSw_HU : 23|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLHrestFwdSw_HU : 21|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLHrestBwdSw_HU : 19|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLLumbarUpSw_HU : 17|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLLumbarMidSw_HU : 31|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLLumbarLowSw_HU : 29|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLLumbarDefSw_HU : 27|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLBolsterInfSw_HU : 25|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLBolsterDefSw_HU : 39|2@0+ (1,0) [0|0] ""  RLSAU
+
+BO_ 578 Local_HU_APSU_PE_03: 8 RLPSM
+ SG_ C_RRLumbarUpSw_HU : 23|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRLumbarMidSw_HU : 21|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRLumbarLowSw_HU : 19|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRLumbarDefSw_HU : 17|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRBolsterInfSw_HU : 31|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRBolsterDefSw_HU : 41|2@0+ (1,0) [0|0] ""  RRSAU
+
+BO_ 591 Local_ATS_03_200ms: 8 RLPSM
+ SG_ ATS_RLStShoulderADJFwdBtn : 63|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RLStShoulderADJBwdBtn : 61|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 607 Local_ATS_04_200ms: 8 RLPSM
+ SG_ ATS_RRStShoulderADJFwdBtn : 55|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRStShoulderADJBwdBtn : 53|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 623 Local_ATS_05_200ms: 8 RLPSM
+ SG_ ATS_ARSOpenCloseStatus : 9|2@0+ (1,0) [0|0] ""  RLPSS,RRPSS
+ SG_ ATS_RLLumbarDefBtn : 23|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RLLumbarLowBtn : 21|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RLLumbarMidBtn : 19|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RLLumbarUpBtn : 17|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RLBolsterDefBtn : 31|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RLBolsterInfSw : 29|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRLumbarDefBtn : 47|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRLumbarLowBtn : 45|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRLumbarMidBtn : 43|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRLumbarUpBtn : 41|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRBolsterDefBtn : 55|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ ATS_RRBolsterInfSw : 53|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 676 Local_HU_APSU_EC_01: 8 RLPSM
+ SG_ C_RLAirSptNValueSet : 17|2@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RRAirSptNValueSet : 25|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRFootAirSptNValueSet : 33|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RLAirSptModeNValueSet : 44|3@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLAirSptStrNValueSet : 63|3@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RLAirSptTimeNValueSet : 60|3@0+ (1,0) [0|0] ""  RLSAU
+
+BO_ 677 Local_HU_APSU_EC_02: 8 RLPSM
+ SG_ C_RLBackSoftNValueSet : 7|3@0+ (1,0) [0|0] ""  RLSAU
+ SG_ C_RRAirSptModeNValueSet : 15|3@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRAirSptStrNValueSet : 12|3@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRAirSptTimeNValueSet : 23|3@0+ (1,0) [0|0] ""  RRSAU
+ SG_ C_RRBackSoftNValueSet : 20|3@0+ (1,0) [0|0] ""  RRSAU
+
+BO_ 715 Local_RRPSS_02_200ms: 8 RRPSS
+ SG_ RRPSS_WalkInSwitchSts : 7|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstHRestFwdMvBtn : 5|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstHRestBwdMvBtn : 3|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstHRestUpMvBtn : 1|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstHRestDnMvBtn : 15|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstRclFwdMvBtn : 13|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstRclBwdMvBtn : 11|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstSldFwdMvBtn : 9|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstSldBwdMvBtn : 23|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstHgtUpMvBtn : 21|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstHgtDnMvBtn : 19|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstFRestOpenMvBtn : 17|2@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSS_AstFRestCloseMvBtn : 31|2@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 992 Local_BCM_02_200ms: 8 RLPSM
+ SG_ BCM_AccInSta : 37|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ BCM_Ign1InSta : 35|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ BCM_Ign2InSta : 33|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ BCM_IgnSwSta : 47|3@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 1003 Local_RLPSM_01_200ms: 8 RLPSM
+ SG_ RLPSM_RearModeState : 7|3@0+ (1,0) [0|0] ""  RLSAU
+ SG_ RLPSM_RrLfSldStrtSta : 4|2@0+ (1,0) [0|0] ""  RLSAU
+
+BO_ 1052 NM_RLPSM: 8 RLPSM
+ SG_ Destination_RLPSM : 7|8@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RLPSS,RRPSS
+ SG_ NMSleepFlag_RLPSM : 13|2@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RLPSS,RRPSS
+ SG_ NMCommandCode_RLPSM : 10|3@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RLPSS,RRPSS
+
+BO_ 1053 NM_RRPSM: 8 RRPSM
+ SG_ Destination_RRPSM : 7|8@0+ (1,0) [0|0] ""  RRSAU,RLSAU,RLPSS,RRPSS,RLPSM
+ SG_ NMSleepFlag_RRPSM : 13|2@0+ (1,0) [0|0] ""  RRSAU,RLSAU,RLPSS,RRPSS,RLPSM
+ SG_ NMCommandCode_RRPSM : 10|3@0+ (1,0) [0|0] ""  RRSAU,RLSAU,RLPSS,RRPSS,RLPSM
+
+BO_ 1082 NM_RLPSS: 8 RLPSS
+ SG_ Destination_RLPSS : 7|8@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RRPSS,RLPSM
+ SG_ NMSleepFlag_RLPSS : 13|2@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RRPSS,RLPSM
+ SG_ NMCommandCode_RLPSS : 10|3@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RRPSS,RLPSM
+
+BO_ 1083 NM_RLSAU: 8 RLSAU
+ SG_ Destination_RLSAU : 7|8@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLPSS,RRPSS,RLPSM
+ SG_ NMSleepFlag_RLSAU : 13|2@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLPSS,RRPSS,RLPSM
+ SG_ NMCommandCode_RLSAU : 10|3@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLPSS,RRPSS,RLPSM
+
+BO_ 1084 NM_RRPSS: 8 RRPSS
+ SG_ Destination_RRPSS : 7|8@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RLPSS,RLPSM
+ SG_ NMSleepFlag_RRPSS : 13|2@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RLPSS,RLPSM
+ SG_ NMCommandCode_RRPSS : 10|3@0+ (1,0) [0|0] ""  RRPSM,RRSAU,RLSAU,RLPSS,RLPSM
+
+BO_ 1085 NM_RRSAU: 8 RRSAU
+ SG_ Destination_RRSAU : 7|8@0+ (1,0) [0|0] ""  RRPSM,RLSAU,RLPSS,RRPSS,RLPSM
+ SG_ NMSleepFlag_RRSAU : 13|2@0+ (1,0) [0|0] ""  RRPSM,RLSAU,RLPSS,RRPSS,RLPSM
+ SG_ NMCommandCode_RRSAU : 10|3@0+ (1,0) [0|0] ""  RRPSM,RLSAU,RLPSS,RRPSS,RLPSM
+
+BO_ 1314 Local_BCM_10_200ms: 8 RLPSM
+ SG_ BCM_GearPosPSta : 53|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 1345 Local_RRPSM_01_200ms: 8 RRPSM
+ SG_ PSM_RrRtSldStrtSta : 12|2@0+ (1,0) [0|0] ""  RRSAU
+ SG_ RRPSM_RearModeState : 55|4@0+ (1,0) [0|0] ""  RRSAU
+
+BO_ 1346 Local_BCM_12_200ms: 8 RLPSM
+ SG_ BCM_CntryConfgTyp : 23|4@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 1348 Local_SMK_02_200ms: 8 RLPSM
+ SG_ SMK_AuthSta : 26|3@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ SMK_TlEngRunSta : 63|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+ SG_ SMK_TlCrnkModSta : 61|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 1451 Local_HU_USM_E_04: 8 RLPSM
+ SG_ CF_AVN_CluUSMReset : 57|2@0+ (1,0) [0|0] ""  RLSAU,RRSAU
+
+BO_ 1456 Local_GST_RRSAU: 8 RLPSM
+ SG_ GSTRRSAUByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte1Data : 15|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte2Data : 23|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte3Data : 31|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte4Data : 39|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte5Data : 47|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte6Data : 55|8@0+ (1,0) [0|0] ""  RRSAU
+ SG_ GSTRRSAUByte7Data : 63|8@0+ (1,0) [0|0] ""  RRSAU
+
+BO_ 1457 Local_GST_RLSAU: 8 RLPSM
+ SG_ GSTRLSAUByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte1Data : 15|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte2Data : 23|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte3Data : 31|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte4Data : 39|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte5Data : 47|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte6Data : 55|8@0+ (1,0) [0|0] ""  RLSAU
+ SG_ GSTRLSAUByte7Data : 63|8@0+ (1,0) [0|0] ""  RLSAU
+
+BO_ 1464 Local_RRSAU_GST: 8 RRSAU
+ SG_ RRSAUGSTByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte1Data : 15|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte2Data : 23|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte3Data : 31|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte4Data : 39|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte5Data : 47|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte6Data : 55|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRSAUGSTByte7Data : 63|8@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 1465 Local_RLSAU_GST: 8 RLSAU
+ SG_ RLSAUGSTByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte1Data : 15|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte2Data : 23|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte3Data : 31|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte4Data : 39|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte5Data : 47|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte6Data : 55|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLSAUGSTByte7Data : 63|8@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 1478 Local_GST_RLPSS: 8 RLPSM
+ SG_ GSTRLPSSByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte1Data : 15|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte2Data : 23|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte3Data : 31|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte4Data : 39|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte5Data : 47|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte6Data : 55|8@0+ (1,0) [0|0] ""  RLPSS
+ SG_ GSTRLPSSByte7Data : 63|8@0+ (1,0) [0|0] ""  RLPSS
+
+BO_ 1479 Local_GST_RRPSS: 8 RLPSM
+ SG_ GSTRRPSSByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte1Data : 15|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte2Data : 23|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte3Data : 31|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte4Data : 39|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte5Data : 47|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte6Data : 55|8@0+ (1,0) [0|0] ""  RRPSS
+ SG_ GSTRRPSSByte7Data : 63|8@0+ (1,0) [0|0] ""  RRPSS
+
+BO_ 1486 Local_RLPSS_GST: 8 RLPSS
+ SG_ RLPSSGSTByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte1Data : 15|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte2Data : 23|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte3Data : 31|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte4Data : 39|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte5Data : 47|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte6Data : 55|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RLPSSGSTByte7Data : 63|8@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 1487 Local_RRPSS_GST: 8 RRPSS
+ SG_ RRPSSGSTByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte1Data : 15|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte2Data : 23|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte3Data : 31|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte4Data : 39|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte5Data : 47|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte6Data : 55|8@0+ (1,0) [0|0] ""  RLPSM
+ SG_ RRPSSGSTByte7Data : 63|8@0+ (1,0) [0|0] ""  RLPSM
+
+BO_ 2015 Local_GST_ALL: 8 RLPSM
+ SG_ GSTALLByte0Tpci : 7|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte1Data : 15|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte2Data : 23|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte3Data : 31|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte4Data : 39|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte5Data : 47|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte6Data : 55|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+ SG_ GSTALLByte7Data : 63|8@0+ (1,0) [0|0] ""  RLPSS,RLSAU,RRPSS,RRSAU
+
+
+
+CM_ BO_ 575 "[EC] On Event and On Change";
+CM_ SG_ 575 ATS_RLMsgTimeSW "Rear Left Massage Time Button";
+CM_ SG_ 575 ATS_RRMsgTimeSW "Rear Right Massage Time Button";
+CM_ SG_ 575 ATS_RLMsgMod1SW "Rear Left Massage Mode 1 Button";
+CM_ SG_ 575 ATS_RLMsgMod2SW "Rear Left Massage Mode 2 Button";
+CM_ SG_ 575 ATS_RLMsgMod3SW "Rear Left Massage Mode 3 Button";
+CM_ SG_ 575 ATS_RLMsgMod4SW "Rear Left Massage Mode 4 Button";
+CM_ SG_ 575 ATS_RRMsgMod1SW "Rear Right Massage Mode 1 Button";
+CM_ SG_ 575 ATS_RRMsgMod2SW "Rear Right Massage Mode 2 Button";
+CM_ SG_ 575 ATS_RRMsgMod3SW "Rear Right Massage Mode 3 Button";
+CM_ SG_ 575 ATS_RRMsgMod4SW "Rear Right Massage Mode 4 Button";
+CM_ BO_ 591 "[PE] Periodic and On Event";
+CM_ SG_ 591 ATS_RLStShoulderADJFwdBtn "후석 LH 숄더어져스터 FWD";
+CM_ SG_ 591 ATS_RLStShoulderADJBwdBtn "후석 LH 숄더어져스터 BWD";
+CM_ BO_ 607 "[PE] Periodic and On Event";
+CM_ SG_ 607 ATS_RRStShoulderADJFwdBtn "후석 RH 숄더어져스터 FWD";
+CM_ SG_ 607 ATS_RRStShoulderADJBwdBtn "후석 RH 숄더어져스터 BWD";
+CM_ BO_ 623 "[PE] Periodic and On Event";
+CM_ SG_ 623 ATS_ARSOpenCloseStatus "후석 암레스트 open/close 상태 신호";
+CM_ SG_ 623 ATS_RLLumbarDefBtn "후석 LH 럼버 배기 작동";
+CM_ SG_ 623 ATS_RLLumbarLowBtn "후석 LH 럼버 LOW 작동";
+CM_ SG_ 623 ATS_RLLumbarMidBtn "후석 LH 럼버 MID 작동";
+CM_ SG_ 623 ATS_RLLumbarUpBtn "후석 LH 럼버 UP 작동";
+CM_ SG_ 623 ATS_RLBolsterDefBtn "후석 LH 볼스터 배기 작동";
+CM_ SG_ 623 ATS_RLBolsterInfSw "후석 LH 볼스터 흡기 작동";
+CM_ SG_ 623 ATS_RRLumbarDefBtn "후석 LH 럼버 배기 작동";
+CM_ SG_ 623 ATS_RRLumbarLowBtn "후석 RH 럼버 LOW 작동";
+CM_ SG_ 623 ATS_RRLumbarMidBtn "후석 RH 럼버 MID 작동";
+CM_ SG_ 623 ATS_RRLumbarUpBtn "후석 RH 럼버 UP 작동";
+CM_ SG_ 623 ATS_RRBolsterDefBtn "후석 RH 볼스터 배기 작동";
+CM_ SG_ 623 ATS_RRBolsterInfSw "후석 RH 볼스터 흡기 작동";
+CM_ BO_ 992 "[PE] Periodic and On Event";
+CM_ BO_ 1314 "[PE] Periodic and On Event";
+CM_ BO_ 1346 "[PE] Periodic and On Event";
+CM_ BO_ 427 "[P] Periodic";
+CM_ BO_ 428 "[P] Periodic";
+CM_ BO_ 2015 "[EW] On Event and On Write";
+CM_ BO_ 1478 "[EW] On Event and On Write";
+CM_ BO_ 1457 "[EW] On Event and On Write";
+CM_ BO_ 1479 "[EW] On Event and On Write";
+CM_ BO_ 1456 "[EW] On Event and On Write";
+CM_ BO_ 676 "[EC] On Event and On Change";
+CM_ BO_ 677 "[EC] On Event and On Change";
+CM_ BO_ 577 "[PE] Periodic and On Event";
+CM_ BO_ 578 "[PE] Periodic and On Event";
+CM_ BO_ 559 "[EC] On Event and On Change";
+CM_ SG_ 559 HU_MoodTherapyRlSeat "MoodTherapy Rear Left Seat On/Off";
+CM_ SG_ 559 HU_MoodTherapyRrSeat "MoodTherapy Rear Right seat On/Off";
+CM_ SG_ 559 HU_CareMassage "Care Massage On/Off";
+CM_ SG_ 559 HU_ComfortMassage "Comfort Massage On/Off";
+CM_ SG_ 559 HU_MoodTherapyMode "MoodTherapy Mode Change Signal";
+CM_ BO_ 1451 "[EC] On Event and On Change";
+CM_ BO_ 1003 "[PE] Periodic and On Event";
+CM_ SG_ 1003 RLPSM_RearModeState "Rear Seat State for One Touch Mode";
+CM_ SG_ 1003 RLPSM_RrLfSldStrtSta "This signal indicates the start^finish of rear right slide motor.";
+CM_ BO_ 1348 "[PE] Periodic and On Event";
+CM_ BO_ 138 "[PE] Periodic and On Event";
+CM_ BO_ 1486 "[EW] On Event and On Write";
+CM_ BO_ 143 "[PE] Periodic and On Event";
+CM_ SG_ 143 RLSAU_AirSptModeRValueSet "Air Support Mode(Massage Mode) USM R Value";
+CM_ SG_ 143 RLSAU_AirSptStrRValueSet "Air Support Strenth(Massage Strenth) USM R Value";
+CM_ SG_ 143 RLSAU_AirSptTimeRValueSet "Air Support Time(Massage Time) USM R Value";
+CM_ SG_ 143 RLSAU_RLSmtAirSptRValueSet "Seat Smart Air Support Function USM R Value";
+CM_ SG_ 143 RLSAU_LumbarDefSta "Back Lumbar Deflate State";
+CM_ SG_ 143 RLSAU_LumbarUpSta "Back Lumbar Up state";
+CM_ SG_ 143 RLSAU_LumbarMidSta "Back Lumbar Mid State";
+CM_ SG_ 143 RLSAU_LumbarLowSta "Back Lumbar Low State";
+CM_ SG_ 143 RLSAU_BolsterInfSta "Back Bolster Inflate State";
+CM_ SG_ 143 RLSAU_BolsterDefSta "Back Bolster Deflate State";
+CM_ SG_ 143 RLSAU_BackSoftRValueSet "Back Soft USM R Value";
+CM_ SG_ 143 RLSAU_ActiveSw "Active Switch(Massage Strenth Control) Staus";
+CM_ SG_ 143 RLSAU_MoodTrpyRValueSet "Rear Left Seat Mood Therapy R Value";
+CM_ SG_ 143 RLSAU_MoodTrpyCareSta "Rear Left Seat Mood Therapy Care Mode R Value";
+CM_ SG_ 143 RLSAU_MoodTrpyComfSta "Rear Left  Seat Mood Therapy Comfort Mode R Value";
+CM_ BO_ 1465 "[EW] On Event and On Write";
+CM_ BO_ 1345 "[PE] Periodic and On Event";
+CM_ SG_ 1345 PSM_RrRtSldStrtSta "This signal indicates the start^finish of rear right slide motor.";
+CM_ SG_ 1345 RRPSM_RearModeState "Rear Seat State For One Touch Mode";
+CM_ BO_ 127 "[PE] Periodic and On Event";
+CM_ BO_ 715 "[PE] Periodic and On Event";
+CM_ SG_ 715 RRPSS_WalkInSwitchSts "Rear Right Walk In Switch Status";
+CM_ SG_ 715 RRPSS_AstHRestFwdMvBtn "Rear Right HeadRest Forward Move Button";
+CM_ SG_ 715 RRPSS_AstHRestBwdMvBtn "Rear Right HeadRest Backward Move Button";
+CM_ SG_ 715 RRPSS_AstHRestUpMvBtn "Rear Right HeadRest Up Move Button";
+CM_ SG_ 715 RRPSS_AstHRestDnMvBtn "Rear Right HeadRest Down Move Button";
+CM_ SG_ 715 RRPSS_AstRclFwdMvBtn "Rear Right Recliner Forward Move Button";
+CM_ SG_ 715 RRPSS_AstRclBwdMvBtn "Rear Right Recliner Backward Move Button";
+CM_ SG_ 715 RRPSS_AstSldFwdMvBtn "Rear Right Slide Forward Move Button";
+CM_ SG_ 715 RRPSS_AstSldBwdMvBtn "Rear Right Slide Backward Move Button";
+CM_ SG_ 715 RRPSS_AstHgtUpMvBtn "Rear Right Height Up Move Button";
+CM_ SG_ 715 RRPSS_AstHgtDnMvBtn "Rear Right Height Down Move Button";
+CM_ SG_ 715 RRPSS_AstFRestOpenMvBtn "Rear Right FootRest Open Move Button";
+CM_ SG_ 715 RRPSS_AstFRestCloseMvBtn "Rear Right FootRest Close Move Button";
+CM_ BO_ 1487 "[EW] On Event and On Write";
+CM_ BO_ 159 "[PE] Periodic and On Event";
+CM_ SG_ 159 RRSAU_AirSptModeRValueSet "Air Support Mode(Massage Mode) USM R Value";
+CM_ SG_ 159 RRSAU_AirSptStrRValueSet "Air Support Strength (Massage Strength) USM R Value";
+CM_ SG_ 159 RRSAU_AirSptTimeRValueSet "Air Support Time(Massage Time) USM R Value";
+CM_ SG_ 159 RRSAU_RRSmrAirSptRValueSet "Seat Smart Air Support Function USM R Value";
+CM_ SG_ 159 RRSAU_LumbarDefSta "Back Lumbar Deflate State";
+CM_ SG_ 159 RRSAU_LumbarUpSta "Back Lumbar Up State";
+CM_ SG_ 159 RRSAU_LumbarMidSta "Back Lumbar Mid State";
+CM_ SG_ 159 RRSAU_LumbarLowSta "Back Lumbar Low State";
+CM_ SG_ 159 RRSAU_BolsterInfSta "Back Bolster Inflate State";
+CM_ SG_ 159 RRSAU_BolsterDefSta "Back Bolster Deflate State";
+CM_ SG_ 159 RRSAU_BackSoftRValueSet "Back Soft USM R Value";
+CM_ SG_ 159 RRSAU_ActiveSw "Active Switch(Massage Strenth Control) Staus";
+CM_ SG_ 159 RRSAU_MoodTrpyRValueSet "Rear Right Seat Mood Therapy R Value";
+CM_ SG_ 159 RRSAU_MoodTrpyCareSta "Rear Right Seat Mood Therapy Care Mode R Value";
+CM_ SG_ 159 RRSAU_MoodTrpyComfSta "Rear Right  Seat Mood Therapy Comfort Mode R Value";
+CM_ BO_ 1464 "[EW] On Event and On Write";
+CM_ BO_ 1053 "NM Message";
+CM_ BO_ 1085 "NM Message";
+CM_ BO_ 1083 "NM Message";
+CM_ BO_ 1082 "NM Message";
+CM_ BO_ 1084 "NM Message";
+CM_ BO_ 1052 "NM Message";
+BA_DEF_ SG_ "NWM-WakeupAllowed" ENUM "<n.a.>" ;
+BA_DEF_ BO_ "NWM-Botschaft" ENUM "No","Yes" ;
+BA_DEF_ BU_ "TpTxIdentifier" HEX 0 0 ;
+BA_DEF_ BU_ "TpRxIdentifier" HEX 0 0 ;
+BA_DEF_ BU_ "NWM-Knoten" ENUM "No","Yes" ;
+BA_DEF_ BU_ "CANoeStartDelay" INT 0 0 ;
+BA_DEF_ BU_ "CANoeJitterMin" INT 0 0 ;
+BA_DEF_ BU_ "CANoeJitterMax" INT 0 0 ;
+BA_DEF_ BU_ "CANoeDrift" INT 0 0 ;
+BA_DEF_ BO_ "TpTxIndex" INT 0 255 ;
+BA_DEF_ SG_ "GenSigEnvVarType" ENUM "int","float","undef" ;
+BA_DEF_ SG_ "GenSigEVName" STRING ;
+BA_DEF_ SG_ "GwSigLatencyTime" INT 0 65535 ;
+BA_DEF_ SG_ "GwSigMissingSourceType" ENUM "Undef","OldValue","DefaultValue","InitialValue" ;
+BA_DEF_ SG_ "UndefinedValueRangeBegin" INT 0 0 ;
+BA_DEF_ SG_ "SignalCategory" HEX 10 15 ;
+BA_DEF_ SG_ "GenSigSendType" ENUM "Cyclic","OnWrite","OnWriteWithRepetition","OnChange","OnChangeWithRepetition","IfActive","IfActiveWithRepetition","NoSigSendType" ;
+BA_DEF_ SG_ "GenSigInactiveValue" INT 0 65535 ;
+BA_DEF_ SG_ "GenSigStartValue" INT 0 0 ;
+BA_DEF_ SG_ "NmNetworkRequest" ENUM "No","Yes" ;
+BA_DEF_ SG_ "NmNetworkRequestHoldingTime" INT 0 65535 ;
+BA_DEF_ BO_ "GenMsgDelayTime" INT 20 20 ;
+BA_DEF_ BO_ "GenMsgFastOnStart" INT 0 0 ;
+BA_DEF_ BO_ "NmMessage" ENUM "No","Yes" ;
+BA_DEF_ BO_ "GenMsgILSupport" ENUM "No","Yes" ;
+BA_DEF_ BO_ "GenMsgNrOfRepetition" INT 0 3 ;
+BA_DEF_ BO_ "GenMsgCycleTimeFast" INT 0 500 ;
+BA_DEF_ BO_ "GenMsgStartDelayTime" INT 0 100 ;
+BA_DEF_ BO_ "GenMsgSendType" ENUM "Cyclic","not_used","not_used","not_used","not_used","not_used","not_used","not_used","NoMsgSendType" ;
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 2000 ;
+BA_DEF_ BU_ "GenNodSleepTime" INT 1375 1650 ;
+BA_DEF_ BU_ "NodeLayerModules" STRING ;
+BA_DEF_ BU_ "ECU" STRING ;
+BA_DEF_ BU_ "NmNode" ENUM "No","Yes" ;
+BA_DEF_ BU_ "NmCAN" INT 1 2 ;
+BA_DEF_ BU_ "ILUsed" ENUM "No","Yes" ;
+BA_DEF_ BU_ "NmStationAddress" HEX 0 255 ;
+BA_DEF_ "GenNWMApBusSleep" STRING ;
+BA_DEF_ "GenNWMApCanNormal" STRING ;
+BA_DEF_ "GenNWMApCanOff" STRING ;
+BA_DEF_ "GenNWMApCanOn" STRING ;
+BA_DEF_ "GenNWMApCanSleep" STRING ;
+BA_DEF_ "GenNWMApCanWakeUp" STRING ;
+BA_DEF_ "GenNWMGotoMode_Awake" STRING ;
+BA_DEF_ "GenNWMGotoMode_BusSleep" STRING ;
+BA_DEF_ "GenNWMSleepTime" INT 1375 1650 ;
+BA_DEF_ "GenNWMTalkNM" STRING ;
+BA_DEF_ "GenEnvVarEndingDsp" STRING ;
+BA_DEF_ "GenEnvVarEndingSnd" STRING ;
+BA_DEF_ "GenEnvVarPrefix" STRING ;
+BA_DEF_ "VersionNumberInternal" INT 0 9999 ;
+BA_DEF_ "VersionNumber" INT 0 999999 ;
+BA_DEF_ "VersionWeek" INT 1 53 ;
+BA_DEF_ "VersionYear" INT 0 9999 ;
+BA_DEF_ "VersionMonth" INT 1 12 ;
+BA_DEF_ "VersionDay" INT 1 31 ;
+BA_DEF_ "BusType" STRING ;
+BA_DEF_ "NmType" STRING ;
+BA_DEF_ "NmBaseAddress" HEX 0 2047 ;
+BA_DEF_ "NmMessageCount" INT 0 128 ;
+BA_DEF_ "Manufacturer" STRING ;
+BA_DEF_ "Baudrate" INT 100000 500000 ;
+BA_DEF_ "SamplePointMin" INT 55 85 ;
+BA_DEF_ "SamplePointMax" INT 50 85 ;
+BA_DEF_ "SyncJumpWidthMin" INT 1 4 ;
+BA_DEF_ "SyncJumpWidthMax" INT 1 8 ;
+BA_DEF_REL_ BU_SG_REL_ "GenSigTimeoutMsg" HEX 0 2047 ;
+BA_DEF_REL_ BU_SG_REL_ "GenSigTimeoutTime" INT 175 3500 ;
+BA_DEF_DEF_ "NWM-WakeupAllowed" "<n.a.>" ;
+BA_DEF_DEF_ "NWM-Botschaft" "No" ;
+BA_DEF_DEF_ "TpTxIdentifier" 0 ;
+BA_DEF_DEF_ "TpRxIdentifier" 0 ;
+BA_DEF_DEF_ "NWM-Knoten" "Yes" ;
+BA_DEF_DEF_ "CANoeStartDelay" 0 ;
+BA_DEF_DEF_ "CANoeJitterMin" 0 ;
+BA_DEF_DEF_ "CANoeJitterMax" 0 ;
+BA_DEF_DEF_ "CANoeDrift" 0 ;
+BA_DEF_DEF_ "TpTxIndex" 0 ;
+BA_DEF_DEF_ "GenSigEnvVarType" "undef" ;
+BA_DEF_DEF_ "GenSigEVName" "" ;
+BA_DEF_DEF_ "GwSigLatencyTime" 40 ;
+BA_DEF_DEF_ "GwSigMissingSourceType" "Undef" ;
+BA_DEF_DEF_ "UndefinedValueRangeBegin" 0 ;
+BA_DEF_DEF_ "SignalCategory" 12 ;
+BA_DEF_DEF_ "GenSigSendType" "NoSigSendType" ;
+BA_DEF_DEF_ "GenSigInactiveValue" 0 ;
+BA_DEF_DEF_ "GenSigStartValue" 0 ;
+BA_DEF_DEF_ "NmNetworkRequest" "No" ;
+BA_DEF_DEF_ "NmNetworkRequestHoldingTime" 0 ;
+BA_DEF_DEF_ "GenMsgDelayTime" 20 ;
+BA_DEF_DEF_ "GenMsgFastOnStart" 0 ;
+BA_DEF_DEF_ "NmMessage" "No" ;
+BA_DEF_DEF_ "GenMsgILSupport" "Yes" ;
+BA_DEF_DEF_ "GenMsgNrOfRepetition" 3 ;
+BA_DEF_DEF_ "GenMsgCycleTimeFast" 60 ;
+BA_DEF_DEF_ "GenMsgStartDelayTime" 0 ;
+BA_DEF_DEF_ "GenMsgSendType" "NoMsgSendType" ;
+BA_DEF_DEF_ "GenMsgCycleTime" 200 ;
+BA_DEF_DEF_ "GenNodSleepTime" 1500 ;
+BA_DEF_DEF_ "NodeLayerModules" "oseknm01.dll" ;
+BA_DEF_DEF_ "ECU" "" ;
+BA_DEF_DEF_ "NmNode" "Yes" ;
+BA_DEF_DEF_ "NmCAN" 1 ;
+BA_DEF_DEF_ "ILUsed" "Yes" ;
+BA_DEF_DEF_ "NmStationAddress" 0 ;
+BA_DEF_DEF_ "GenNWMApBusSleep" "ApplNmCanBusSleep()" ;
+BA_DEF_DEF_ "GenNWMApCanNormal" "ApplNmCanNormal()" ;
+BA_DEF_DEF_ "GenNWMApCanOff" "ApplCanOffline()" ;
+BA_DEF_DEF_ "GenNWMApCanOn" "ApplCanOnline()" ;
+BA_DEF_DEF_ "GenNWMApCanSleep" "ApplNmCanSleep()" ;
+BA_DEF_DEF_ "GenNWMApCanWakeUp" "ApplCanWakeUp()" ;
+BA_DEF_DEF_ "GenNWMGotoMode_Awake" "GotoMode_Awake()" ;
+BA_DEF_DEF_ "GenNWMGotoMode_BusSleep" "GotoMode_BusSleep()" ;
+BA_DEF_DEF_ "GenNWMSleepTime" 1500 ;
+BA_DEF_DEF_ "GenNWMTalkNM" "TalkNM()" ;
+BA_DEF_DEF_ "GenEnvVarEndingDsp" "Dsp_" ;
+BA_DEF_DEF_ "GenEnvVarEndingSnd" "_" ;
+BA_DEF_DEF_ "GenEnvVarPrefix" "Env" ;
+BA_DEF_DEF_ "VersionNumberInternal" 0 ;
+BA_DEF_DEF_ "VersionNumber" 0 ;
+BA_DEF_DEF_ "VersionWeek" 1 ;
+BA_DEF_DEF_ "VersionYear" 0 ;
+BA_DEF_DEF_ "VersionMonth" 1 ;
+BA_DEF_DEF_ "VersionDay" 1 ;
+BA_DEF_DEF_ "BusType" "CAN" ;
+BA_DEF_DEF_ "NmType" "Vector" ;
+BA_DEF_DEF_ "NmBaseAddress" 1024 ;
+BA_DEF_DEF_ "NmMessageCount" 128 ;
+BA_DEF_DEF_ "Manufacturer" "HMC" ;
+BA_DEF_DEF_ "Baudrate" 500000 ;
+BA_DEF_DEF_ "SamplePointMin" 75 ;
+BA_DEF_DEF_ "SamplePointMax" 82 ;
+BA_DEF_DEF_ "SyncJumpWidthMin" 2 ;
+BA_DEF_DEF_ "SyncJumpWidthMax" 3 ;
+BA_DEF_DEF_REL_ "GenSigTimeoutMsg" 0 ;
+BA_DEF_DEF_REL_ "GenSigTimeoutTime" 700 ;
+BA_ "VersionDay" 1;
+BA_ "VersionMonth" 1;
+BA_ "VersionYear" 1;
+BA_ "VersionWeek" 1;
+BA_ "VersionNumber" 210401;
+BA_ "VersionNumberInternal" 0;
+BA_ "NmStationAddress" BU_ RLPSM 28;
+BA_ "GenMsgCycleTime" BO_ 575 0;
+BA_ "GenMsgCycleTimeFast" BO_ 575 40;
+BA_ "GenMsgStartDelayTime" BO_ 575 0;
+BA_ "NmStationAddress" BU_ RLSAU 59;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 575 ATS_RLMsgTimeSW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RLMsgTimeSW 4;
+BA_ "NmStationAddress" BU_ RRSAU 61;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 575 ATS_RRMsgTimeSW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RRMsgTimeSW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 575 ATS_RLMsgMod1SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RLMsgMod1SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 575 ATS_RLMsgMod2SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RLMsgMod2SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 575 ATS_RLMsgMod3SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RLMsgMod3SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 575 ATS_RLMsgMod4SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RLMsgMod4SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 575 ATS_RRMsgMod1SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RRMsgMod1SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 575 ATS_RRMsgMod2SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RRMsgMod2SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 575 ATS_RRMsgMod3SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RRMsgMod3SW 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 575 ATS_RRMsgMod4SW 0;
+BA_ "GenSigSendType" SG_ 575 ATS_RRMsgMod4SW 4;
+BA_ "GenMsgSendType" BO_ 591 0;
+BA_ "GenMsgCycleTimeFast" BO_ 591 40;
+BA_ "GenMsgStartDelayTime" BO_ 591 80;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 591 ATS_RLStShoulderADJFwdBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 591 ATS_RLStShoulderADJFwdBtn 0;
+BA_ "GenSigSendType" SG_ 591 ATS_RLStShoulderADJFwdBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 591 ATS_RLStShoulderADJBwdBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 591 ATS_RLStShoulderADJBwdBtn 0;
+BA_ "GenSigSendType" SG_ 591 ATS_RLStShoulderADJBwdBtn 4;
+BA_ "GenMsgSendType" BO_ 607 0;
+BA_ "GenMsgCycleTimeFast" BO_ 607 40;
+BA_ "GenMsgStartDelayTime" BO_ 607 100;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 607 ATS_RRStShoulderADJFwdBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 607 ATS_RRStShoulderADJFwdBtn 0;
+BA_ "GenSigSendType" SG_ 607 ATS_RRStShoulderADJFwdBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 607 ATS_RRStShoulderADJBwdBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 607 ATS_RRStShoulderADJBwdBtn 0;
+BA_ "GenSigSendType" SG_ 607 ATS_RRStShoulderADJBwdBtn 4;
+BA_ "GenMsgSendType" BO_ 623 0;
+BA_ "GenMsgCycleTimeFast" BO_ 623 40;
+BA_ "GenMsgStartDelayTime" BO_ 623 120;
+BA_ "NmStationAddress" BU_ RLPSS 58;
+BA_ "NmStationAddress" BU_ RRPSS 60;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 623 ATS_ARSOpenCloseStatus 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 623 ATS_ARSOpenCloseStatus 0;
+BA_ "GenSigSendType" SG_ 623 ATS_ARSOpenCloseStatus 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RLLumbarDefBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RLLumbarDefBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RLLumbarDefBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RLLumbarLowBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RLLumbarLowBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RLLumbarLowBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RLLumbarMidBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RLLumbarMidBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RLLumbarMidBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RLLumbarUpBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RLLumbarUpBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RLLumbarUpBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RLBolsterDefBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RLBolsterDefBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RLBolsterDefBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RLBolsterInfSw 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RLBolsterInfSw 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RLBolsterInfSw 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RRLumbarDefBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RRLumbarDefBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RRLumbarDefBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RRLumbarLowBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RRLumbarLowBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RRLumbarLowBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RRLumbarMidBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RRLumbarMidBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RRLumbarMidBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RRLumbarUpBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RRLumbarUpBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RRLumbarUpBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RRBolsterDefBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RRBolsterDefBtn 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RRBolsterDefBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 623 ATS_RRBolsterInfSw 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 623 ATS_RRBolsterInfSw 0;
+BA_ "GenSigSendType" SG_ 623 ATS_RRBolsterInfSw 4;
+BA_ "GenMsgSendType" BO_ 992 0;
+BA_ "GenMsgCycleTimeFast" BO_ 992 40;
+BA_ "GenMsgStartDelayTime" BO_ 992 140;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 992 BCM_AccInSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 992 BCM_AccInSta 0;
+BA_ "GenSigSendType" SG_ 992 BCM_AccInSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 992 BCM_Ign1InSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 992 BCM_Ign1InSta 0;
+BA_ "GenSigSendType" SG_ 992 BCM_Ign1InSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 992 BCM_Ign2InSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 992 BCM_Ign2InSta 0;
+BA_ "GenSigSendType" SG_ 992 BCM_Ign2InSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 992 BCM_IgnSwSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 992 BCM_IgnSwSta 0;
+BA_ "GenSigSendType" SG_ 992 BCM_IgnSwSta 4;
+BA_ "GenMsgSendType" BO_ 1314 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1314 40;
+BA_ "GenMsgStartDelayTime" BO_ 1314 180;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1314 BCM_GearPosPSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1314 BCM_GearPosPSta 0;
+BA_ "GenSigSendType" SG_ 1314 BCM_GearPosPSta 4;
+BA_ "GenMsgSendType" BO_ 1346 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1346 40;
+BA_ "GenMsgStartDelayTime" BO_ 1346 200;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1346 BCM_CntryConfgTyp 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1346 BCM_CntryConfgTyp 0;
+BA_ "GenSigSendType" SG_ 1346 BCM_CntryConfgTyp 4;
+BA_ "GenMsgSendType" BO_ 427 0;
+BA_ "GenMsgCycleTimeFast" BO_ 427 0;
+BA_ "GenMsgNrOfRepetition" BO_ 427 0;
+BA_ "GenMsgStartDelayTime" BO_ 427 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 427 CLU_Crc1Val 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 427 CLU_Crc1Val 0;
+BA_ "GenSigStartValue" SG_ 427 CLU_Crc1Val 65535;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 427 CLU_AlvCnt1Val 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 427 CLU_AlvCnt1Val 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 427 CLU_DtntOutSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 427 CLU_DtntOutSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 427 CLU_DtntOutSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 427 CLU_DtntOutSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 427 CLU_RhstaLvlSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 427 CLU_RhstaLvlSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 427 CLU_RhstaLvlSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 427 CLU_RhstaLvlSta 0;
+BA_ "GenMsgSendType" BO_ 428 0;
+BA_ "GenMsgCycleTimeFast" BO_ 428 0;
+BA_ "GenMsgNrOfRepetition" BO_ 428 0;
+BA_ "GenMsgStartDelayTime" BO_ 428 20;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 428 CLU_DisSpdVal_KPH 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 428 CLU_DisSpdVal_KPH 0;
+BA_ "GenMsgCycleTime" BO_ 2015 0;
+BA_ "GenMsgCycleTimeFast" BO_ 2015 40;
+BA_ "GenMsgStartDelayTime" BO_ 2015 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 2015 GSTALLByte7Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 2015 GSTALLByte7Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 2015 GSTALLByte7Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 2015 GSTALLByte7Data 0;
+BA_ "GenSigSendType" SG_ 2015 GSTALLByte7Data 2;
+BA_ "GenMsgCycleTime" BO_ 1478 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1478 40;
+BA_ "GenMsgStartDelayTime" BO_ 1478 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSS SG_ 1478 GSTRLPSSByte7Data 0;
+BA_ "GenSigSendType" SG_ 1478 GSTRLPSSByte7Data 2;
+BA_ "GenMsgCycleTime" BO_ 1457 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1457 40;
+BA_ "GenMsgStartDelayTime" BO_ 1457 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1457 GSTRLSAUByte7Data 0;
+BA_ "GenSigSendType" SG_ 1457 GSTRLSAUByte7Data 2;
+BA_ "GenMsgCycleTime" BO_ 1479 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1479 40;
+BA_ "GenMsgStartDelayTime" BO_ 1479 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSS SG_ 1479 GSTRRPSSByte7Data 0;
+BA_ "GenSigSendType" SG_ 1479 GSTRRPSSByte7Data 2;
+BA_ "GenMsgCycleTime" BO_ 1456 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1456 40;
+BA_ "GenMsgStartDelayTime" BO_ 1456 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1456 GSTRRSAUByte7Data 0;
+BA_ "GenSigSendType" SG_ 1456 GSTRRSAUByte7Data 2;
+BA_ "GenMsgCycleTime" BO_ 676 0;
+BA_ "GenMsgCycleTimeFast" BO_ 676 40;
+BA_ "GenMsgStartDelayTime" BO_ 676 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 676 C_RLAirSptNValueSet 0;
+BA_ "GenSigSendType" SG_ 676 C_RLAirSptNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 676 C_RRAirSptNValueSet 0;
+BA_ "GenSigSendType" SG_ 676 C_RRAirSptNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 676 C_RRFootAirSptNValueSet 0;
+BA_ "GenSigSendType" SG_ 676 C_RRFootAirSptNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 676 C_RLAirSptModeNValueSet 0;
+BA_ "GenSigSendType" SG_ 676 C_RLAirSptModeNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 676 C_RLAirSptStrNValueSet 0;
+BA_ "GenSigSendType" SG_ 676 C_RLAirSptStrNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 676 C_RLAirSptTimeNValueSet 0;
+BA_ "GenSigSendType" SG_ 676 C_RLAirSptTimeNValueSet 4;
+BA_ "GenMsgCycleTime" BO_ 677 0;
+BA_ "GenMsgCycleTimeFast" BO_ 677 40;
+BA_ "GenMsgStartDelayTime" BO_ 677 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 677 C_RLBackSoftNValueSet 0;
+BA_ "GenSigSendType" SG_ 677 C_RLBackSoftNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 677 C_RRAirSptModeNValueSet 0;
+BA_ "GenSigSendType" SG_ 677 C_RRAirSptModeNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 677 C_RRAirSptStrNValueSet 0;
+BA_ "GenSigSendType" SG_ 677 C_RRAirSptStrNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 677 C_RRAirSptTimeNValueSet 0;
+BA_ "GenSigSendType" SG_ 677 C_RRAirSptTimeNValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 677 C_RRBackSoftNValueSet 0;
+BA_ "GenSigSendType" SG_ 677 C_RRBackSoftNValueSet 4;
+BA_ "GenMsgSendType" BO_ 577 0;
+BA_ "GenMsgCycleTimeFast" BO_ 577 40;
+BA_ "GenMsgStartDelayTime" BO_ 577 40;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLHrestUpSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLHrestUpSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLHrestDnSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLHrestDnSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLHrestFwdSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLHrestFwdSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLHrestBwdSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLHrestBwdSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLLumbarUpSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLLumbarUpSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLLumbarMidSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLLumbarMidSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLLumbarLowSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLLumbarLowSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLLumbarDefSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLLumbarDefSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLBolsterInfSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLBolsterInfSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 577 C_RLBolsterDefSw_HU 0;
+BA_ "GenSigSendType" SG_ 577 C_RLBolsterDefSw_HU 4;
+BA_ "GenMsgSendType" BO_ 578 0;
+BA_ "GenMsgCycleTimeFast" BO_ 578 40;
+BA_ "GenMsgStartDelayTime" BO_ 578 60;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 578 C_RRLumbarUpSw_HU 0;
+BA_ "GenSigSendType" SG_ 578 C_RRLumbarUpSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 578 C_RRLumbarMidSw_HU 0;
+BA_ "GenSigSendType" SG_ 578 C_RRLumbarMidSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 578 C_RRLumbarLowSw_HU 0;
+BA_ "GenSigSendType" SG_ 578 C_RRLumbarLowSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 578 C_RRLumbarDefSw_HU 0;
+BA_ "GenSigSendType" SG_ 578 C_RRLumbarDefSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 578 C_RRBolsterInfSw_HU 0;
+BA_ "GenSigSendType" SG_ 578 C_RRBolsterInfSw_HU 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 578 C_RRBolsterDefSw_HU 0;
+BA_ "GenSigSendType" SG_ 578 C_RRBolsterDefSw_HU 4;
+BA_ "GenMsgCycleTime" BO_ 559 0;
+BA_ "GenMsgCycleTimeFast" BO_ 559 40;
+BA_ "GenMsgStartDelayTime" BO_ 559 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 559 HU_MoodTherapyRlSeat 0;
+BA_ "GenSigSendType" SG_ 559 HU_MoodTherapyRlSeat 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 559 HU_MoodTherapyRrSeat 0;
+BA_ "GenSigSendType" SG_ 559 HU_MoodTherapyRrSeat 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 559 HU_CareMassage 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 559 HU_CareMassage 0;
+BA_ "GenSigSendType" SG_ 559 HU_CareMassage 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 559 HU_ComfortMassage 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 559 HU_ComfortMassage 0;
+BA_ "GenSigSendType" SG_ 559 HU_ComfortMassage 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 559 HU_MoodTherapyMode 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 559 HU_MoodTherapyMode 0;
+BA_ "GenSigSendType" SG_ 559 HU_MoodTherapyMode 4;
+BA_ "GenMsgCycleTime" BO_ 1451 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1451 40;
+BA_ "GenMsgStartDelayTime" BO_ 1451 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1451 CF_AVN_CluUSMReset 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1451 CF_AVN_CluUSMReset 0;
+BA_ "GenSigSendType" SG_ 1451 CF_AVN_CluUSMReset 4;
+BA_ "GenMsgSendType" BO_ 1003 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1003 40;
+BA_ "GenMsgStartDelayTime" BO_ 1003 160;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1003 RLPSM_RearModeState 0;
+BA_ "GenSigSendType" SG_ 1003 RLPSM_RearModeState 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1003 RLPSM_RrLfSldStrtSta 0;
+BA_ "GenSigSendType" SG_ 1003 RLPSM_RrLfSldStrtSta 4;
+BA_ "GenMsgSendType" BO_ 1348 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1348 40;
+BA_ "GenMsgStartDelayTime" BO_ 1348 220;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1348 SMK_AuthSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1348 SMK_AuthSta 0;
+BA_ "GenSigSendType" SG_ 1348 SMK_AuthSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1348 SMK_TlEngRunSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1348 SMK_TlEngRunSta 0;
+BA_ "GenSigSendType" SG_ 1348 SMK_TlEngRunSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLSAU SG_ 1348 SMK_TlCrnkModSta 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1348 SMK_TlCrnkModSta 0;
+BA_ "GenSigSendType" SG_ 1348 SMK_TlCrnkModSta 4;
+BA_ "GenMsgSendType" BO_ 138 0;
+BA_ "GenMsgCycleTimeFast" BO_ 138 40;
+BA_ "GenMsgStartDelayTime" BO_ 138 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StSldFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StSldFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StSldBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StSldBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StRclFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StRclFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StRclBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StRclBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StTltUpMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StTltUpMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StTltDnMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StTltDnMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StHRestUpMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StHRestUpMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StHRestDnMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StHRestDnMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StHRestFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StHRestFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StHRestBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StHRestBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StLegRestUpBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StLegRestUpBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StLegRestDnBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StLegRestDnBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StLegRestExtUpBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StLegRestExtUpBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 138 RLPSS_StLegRestExtDnBtn 0;
+BA_ "GenSigSendType" SG_ 138 RLPSS_StLegRestExtDnBtn 4;
+BA_ "GenMsgCycleTime" BO_ 1486 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1486 40;
+BA_ "GenMsgStartDelayTime" BO_ 1486 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1486 RLPSSGSTByte7Data 0;
+BA_ "GenSigSendType" SG_ 1486 RLPSSGSTByte7Data 2;
+BA_ "GenMsgSendType" BO_ 143 0;
+BA_ "GenMsgCycleTimeFast" BO_ 143 40;
+BA_ "GenMsgStartDelayTime" BO_ 143 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_AirSptModeRValueSet 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_AirSptModeRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_AirSptStrRValueSet 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_AirSptStrRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_AirSptTimeRValueSet 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_AirSptTimeRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_RLSmtAirSptRValueSet 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_RLSmtAirSptRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_LumbarDefSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_LumbarDefSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_LumbarUpSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_LumbarUpSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_LumbarMidSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_LumbarMidSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_LumbarLowSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_LumbarLowSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_BolsterInfSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_BolsterInfSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_BolsterDefSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_BolsterDefSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_BackSoftRValueSet 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_BackSoftRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_ActiveSw 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_ActiveSw 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_MoodTrpyRValueSet 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_MoodTrpyRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_MoodTrpyCareSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_MoodTrpyCareSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 143 RLSAU_MoodTrpyComfSta 0;
+BA_ "GenSigSendType" SG_ 143 RLSAU_MoodTrpyComfSta 4;
+BA_ "GenMsgCycleTime" BO_ 1465 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1465 40;
+BA_ "GenMsgStartDelayTime" BO_ 1465 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1465 RLSAUGSTByte7Data 0;
+BA_ "GenSigSendType" SG_ 1465 RLSAUGSTByte7Data 2;
+BA_ "NmStationAddress" BU_ RRPSM 29;
+BA_ "GenMsgSendType" BO_ 1345 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1345 40;
+BA_ "GenMsgStartDelayTime" BO_ 1345 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1345 PSM_RrRtSldStrtSta 0;
+BA_ "GenSigSendType" SG_ 1345 PSM_RrRtSldStrtSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRSAU SG_ 1345 RRPSM_RearModeState 0;
+BA_ "GenSigSendType" SG_ 1345 RRPSM_RearModeState 4;
+BA_ "GenMsgSendType" BO_ 127 0;
+BA_ "GenMsgCycleTimeFast" BO_ 127 40;
+BA_ "GenMsgStartDelayTime" BO_ 127 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StSldFwdMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StSldFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StSldFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StSldBwdMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StSldBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StSldBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StRclFwdMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StRclFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StRclFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StRclBwdMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StRclBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StRclBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StTltUpMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StTltUpMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StTltUpMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StTltDnMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StTltDnMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StTltDnMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StHRestUpMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StHRestUpMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StHRestUpMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StHRestDnMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StHRestDnMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StHRestDnMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StHRestFwdMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StHRestFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StHRestFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StHRestBwdMvBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StHRestBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StHRestBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StLegRestUpBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StLegRestUpBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StLegRestUpBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StLegRestDnBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StLegRestDnBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StLegRestDnBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StLegRestExtUpBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StLegRestExtUpBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StLegRestExtUpBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 127 RRPSS_StLegRestExtDnBtn 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RRPSM SG_ 127 RRPSS_StLegRestExtDnBtn 0;
+BA_ "GenSigSendType" SG_ 127 RRPSS_StLegRestExtDnBtn 4;
+BA_ "GenMsgSendType" BO_ 715 0;
+BA_ "GenMsgCycleTimeFast" BO_ 715 40;
+BA_ "GenMsgStartDelayTime" BO_ 715 20;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_WalkInSwitchSts 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_WalkInSwitchSts 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstHRestFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstHRestFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstHRestBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstHRestBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstHRestUpMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstHRestUpMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstHRestDnMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstHRestDnMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstRclFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstRclFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstRclBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstRclBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstSldFwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstSldFwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstSldBwdMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstSldBwdMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstHgtUpMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstHgtUpMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstHgtDnMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstHgtDnMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstFRestOpenMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstFRestOpenMvBtn 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 715 RRPSS_AstFRestCloseMvBtn 0;
+BA_ "GenSigSendType" SG_ 715 RRPSS_AstFRestCloseMvBtn 4;
+BA_ "GenMsgCycleTime" BO_ 1487 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1487 40;
+BA_ "GenMsgStartDelayTime" BO_ 1487 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1487 RRPSSGSTByte7Data 0;
+BA_ "GenSigSendType" SG_ 1487 RRPSSGSTByte7Data 2;
+BA_ "GenMsgSendType" BO_ 159 0;
+BA_ "GenMsgCycleTimeFast" BO_ 159 40;
+BA_ "GenMsgStartDelayTime" BO_ 159 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_AirSptModeRValueSet 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_AirSptModeRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_AirSptStrRValueSet 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_AirSptStrRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_AirSptTimeRValueSet 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_AirSptTimeRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_RRSmrAirSptRValueSet 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_RRSmrAirSptRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_LumbarDefSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_LumbarDefSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_LumbarUpSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_LumbarUpSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_LumbarMidSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_LumbarMidSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_LumbarLowSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_LumbarLowSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_BolsterInfSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_BolsterInfSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_BolsterDefSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_BolsterDefSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_BackSoftRValueSet 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_BackSoftRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_ActiveSw 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_ActiveSw 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_MoodTrpyRValueSet 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_MoodTrpyRValueSet 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_MoodTrpyCareSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_MoodTrpyCareSta 4;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 159 RRSAU_MoodTrpyComfSta 0;
+BA_ "GenSigSendType" SG_ 159 RRSAU_MoodTrpyComfSta 4;
+BA_ "GenMsgCycleTime" BO_ 1464 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1464 40;
+BA_ "GenMsgStartDelayTime" BO_ 1464 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte0Tpci 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte1Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte2Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte3Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte4Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte5Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte6Data 0;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ RLPSM SG_ 1464 RRSAUGSTByte7Data 0;
+BA_ "GenSigSendType" SG_ 1464 RRSAUGSTByte7Data 2;
+BA_ "NmMessage" BO_ 1053 1;
+BA_ "GenMsgILSupport" BO_ 1053 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1053 40;
+BA_ "NWM-Botschaft" BO_ 1053 1;
+BA_ "NmMessage" BO_ 1085 1;
+BA_ "GenMsgILSupport" BO_ 1085 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1085 40;
+BA_ "NWM-Botschaft" BO_ 1085 1;
+BA_ "NmMessage" BO_ 1083 1;
+BA_ "GenMsgILSupport" BO_ 1083 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1083 40;
+BA_ "NWM-Botschaft" BO_ 1083 1;
+BA_ "NmMessage" BO_ 1082 1;
+BA_ "GenMsgILSupport" BO_ 1082 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1082 40;
+BA_ "NWM-Botschaft" BO_ 1082 1;
+BA_ "NmMessage" BO_ 1084 1;
+BA_ "GenMsgILSupport" BO_ 1084 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1084 40;
+BA_ "NWM-Botschaft" BO_ 1084 1;
+BA_ "NmMessage" BO_ 1052 1;
+BA_ "GenMsgILSupport" BO_ 1052 0;
+BA_ "GenMsgCycleTimeFast" BO_ 1052 40;
+BA_ "NWM-Botschaft" BO_ 1052 1;
+VAL_ 575 ATS_RLMsgTimeSW 0 "Default" 1 "Short" 2 "Medium" 3 "Long" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 575 ATS_RRMsgTimeSW 0 "Default" 1 "Short" 2 "Medium" 3 "Long" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 575 ATS_RLMsgMod1SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RLMsgMod2SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RLMsgMod3SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RLMsgMod4SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RRMsgMod1SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RRMsgMod2SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RRMsgMod3SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 575 ATS_RRMsgMod4SW 0 "Default" 1 "Short On" 2 "Long On" 3 "Invalid" ;
+VAL_ 591 ATS_RLStShoulderADJFwdBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 591 ATS_RLStShoulderADJBwdBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 607 ATS_RRStShoulderADJFwdBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 607 ATS_RRStShoulderADJBwdBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_ARSOpenCloseStatus 0 "Default" 1 "Open" 2 "Close" 3 "Invalid" ;
+VAL_ 623 ATS_RLLumbarDefBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RLLumbarLowBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RLLumbarMidBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RLLumbarUpBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RLBolsterDefBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RLBolsterInfSw 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RRLumbarDefBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RRLumbarLowBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RRLumbarMidBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RRLumbarUpBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RRBolsterDefBtn 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 623 ATS_RRBolsterInfSw 0 "Default" 1 "Off" 2 "On" 3 "Reserved" ;
+VAL_ 992 BCM_AccInSta 0 "Acc Off" 1 "Acc On" 2 "Not Used" 3 "Error Indicator" ;
+VAL_ 992 BCM_Ign1InSta 0 "IGN1 Off" 1 "IGN1 On" 2 "Not Used" 3 "Error Indicator" ;
+VAL_ 992 BCM_Ign2InSta 0 "IGN2 Off" 1 "IGN2 On" 2 "Not Used" 3 "Error Indicator" ;
+VAL_ 992 BCM_IgnSwSta 0 "KeyOff" 1 "KeyIn" 2 "Acc" 3 "Ign" 4 "St" 5 "Reseved" 6 "Not Used" 7 "Error Indicator" ;
+VAL_ 1314 BCM_GearPosPSta 0 "Off" 1 "P" 2 "Not Used" 3 "Error Indicator" ;
+VAL_ 1346 BCM_CntryConfgTyp 0 "Dom" 1 "Na" 2 "Eu" 3 "Aus" 4 "China" 5 "Gen,Mes" 6 "India" 7 "Reserved" 8 "Reserved" 9 "Reserved" 10 "Reserved" 11 "Reserved" 12 "Reserved" 13 "Reserved" 14 "Not Used" 15 "Error Indicator" ;
+VAL_ 427 CLU_DtntOutSta 0 "Detent Off" 1 "Detent On" 2 "Not used" 3 "Error Indicator" ;
+VAL_ 427 CLU_RhstaLvlSta 0 "Reserved" 1 "Step 1" 2 "Step 2" 3 "Step 3" 4 "Step 4" 5 "Step 5" 6 "Step 6" 7 "Step 7" 8 "Step 8" 9 "Step 9" 10 "Step 10" 11 "Step 11" 12 "Step 12" 13 "Step 13" 14 "Step 14" 15 "Step 15" 16 "Step 16" 17 "Step 17" 18 "Step 18" 19 "Step 19" 20 "Step 20 (Reset Value)" 21 "Step 21 (Detent)" ;
+VAL_ 428 CLU_DisSpdVal_KPH 511 "Error" ;
+VAL_ 676 C_RLAirSptNValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 676 C_RRAirSptNValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 676 C_RRFootAirSptNValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 676 C_RLAirSptModeNValueSet 0 "Default" 1 "Mode 1" 2 "Mode 2" 3 "Mode 3" 4 "Mode 4" 5 "Mode 5" 6 "Reserved" 7 "Invalid" ;
+VAL_ 676 C_RLAirSptStrNValueSet 0 "Default" 1 "Weak" 2 "Normal" 3 "Strong" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 676 C_RLAirSptTimeNValueSet 0 "Default" 1 "Short" 2 "Normal" 3 "Long" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 677 C_RLBackSoftNValueSet 0 "Default" 1 "Off" 2 "Low" 3 "Mid" 4 "High" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 677 C_RRAirSptModeNValueSet 0 "Default" 1 "Mode 1" 2 "Mode 2" 3 "Mode 3" 4 "Mode 4" 5 "Mode 5" 6 "Reserved" 7 "Invalid" ;
+VAL_ 677 C_RRAirSptStrNValueSet 0 "Default" 1 "Weak" 2 "Normal" 3 "Strong" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 677 C_RRAirSptTimeNValueSet 0 "Default" 1 "Short" 2 "Normal" 3 "Long" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 677 C_RRBackSoftNValueSet 0 "Default" 1 "Off" 2 "Low" 3 "Mid" 4 "High" 5 "Reserved" 6 "Reserved" 7 "Invalid" ;
+VAL_ 577 C_RLHrestUpSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLHrestDnSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLHrestFwdSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLHrestBwdSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLLumbarUpSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLLumbarMidSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLLumbarLowSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLLumbarDefSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLBolsterInfSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 577 C_RLBolsterDefSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 578 C_RRLumbarUpSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 578 C_RRLumbarMidSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 578 C_RRLumbarLowSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 578 C_RRLumbarDefSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 578 C_RRBolsterInfSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 578 C_RRBolsterDefSw_HU 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 559 HU_MoodTherapyRlSeat 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 559 HU_MoodTherapyRrSeat 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 559 HU_CareMassage 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 559 HU_ComfortMassage 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 559 HU_MoodTherapyMode 0 "Default" 1 "Off" 2 "Vitality" 3 "Delight" 4 "Care" 5 "Comfort" 6 "Reserved" 7 "Invalid" ;
+VAL_ 1451 CF_AVN_CluUSMReset 0 "Default" 1 "USM Reset" 2 "Reserved" 3 "Invalid" ;
+VAL_ 1003 RLPSM_RearModeState 0 "Default" 1 "Off" 2 "Relax Mode" 3 "Return Mode" 4 "Invalid" ;
+VAL_ 1003 RLPSM_RrLfSldStrtSta 0 "OFF" 1 "ON(SLIDE START)" 2 "STOP" 3 "FINISH" ;
+VAL_ 1348 SMK_AuthSta 0 "No Auth" 1 "Preauthentication" 2 "Authentication" 3 "Fast Restart" 4 "Reserved" 5 "Reseved" 6 "Not Used" 7 "Error Indicator" ;
+VAL_ 1348 SMK_TlEngRunSta 0 "Off" 1 "Tele Engine Running" 2 "Not Used" 3 "Error Indicator" ;
+VAL_ 1348 SMK_TlCrnkModSta 0 "Normal Mode" 1 "Tele Cranking Mode" 2 "Not Used" 3 "Error Indicator" ;
+VAL_ 138 RLPSS_StSldFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StSldBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StRclFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StRclBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StTltUpMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StTltDnMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StHRestUpMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StHRestDnMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StHRestFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StHRestBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StLegRestUpBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StLegRestDnBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StLegRestExtUpBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 138 RLPSS_StLegRestExtDnBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_AirSptModeRValueSet 0 "Default" 1 "Mode 1" 2 "Mode 2" 3 "Mode 3" 4 "Mode 4" 5 "Mode 5" 6 "Reserved" 7 "Reserved" ;
+VAL_ 143 RLSAU_AirSptStrRValueSet 0 "Default" 1 "Low" 2 "Mid" 3 "High" 4 "Off" 5 "Reserved" 6 "Reserved" 7 "Reserved" ;
+VAL_ 143 RLSAU_AirSptTimeRValueSet 0 "Default" 1 "Short" 2 "Normal" 3 "Long" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Reserved" ;
+VAL_ 143 RLSAU_RLSmtAirSptRValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_LumbarDefSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_LumbarUpSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_LumbarMidSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_LumbarLowSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_BolsterInfSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_BolsterDefSta 0 "Default" 1 "Off" 2 "On" 3 "Invaild" ;
+VAL_ 143 RLSAU_BackSoftRValueSet 0 "Default" 1 "Off" 2 "Soft" 3 "Mid" 4 "Hard" 5 "Reserved" 6 "Reserved" 7 "Reserved" ;
+VAL_ 143 RLSAU_ActiveSw 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_MoodTrpyRValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_MoodTrpyCareSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 143 RLSAU_MoodTrpyComfSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 1345 PSM_RrRtSldStrtSta 0 "OFF" 1 "ON(SLIDE START)" 2 "STOP" 3 "FINISH" ;
+VAL_ 1345 RRPSM_RearModeState 0 "Default" 1 "Off" 2 "Relax Mode" 3 "Relax Mode (rear only)" 4 "Return Mode" 5 "Monitor Mode" 6 "Reading Mode" 7 "Reserved" 8 "Reserved" 9 "Reserved" 10 "Reserved" 11 "Reserved" 12 "Reserved" 13 "Reserved" 14 "Reserved" 15 "Invalid" ;
+VAL_ 127 RRPSS_StSldFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StSldBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StRclFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StRclBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StTltUpMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StTltDnMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StHRestUpMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StHRestDnMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StHRestFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StHRestBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StLegRestUpBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StLegRestDnBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StLegRestExtUpBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 127 RRPSS_StLegRestExtDnBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_WalkInSwitchSts 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstHRestFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstHRestBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstHRestUpMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstHRestDnMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstRclFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstRclBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstSldFwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstSldBwdMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstHgtUpMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstHgtDnMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstFRestOpenMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 715 RRPSS_AstFRestCloseMvBtn 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_AirSptModeRValueSet 0 "Default" 1 "Mode 1" 2 "Mode 2" 3 "Mode 3" 4 "Mode 4" 5 "Mode 5" 6 "Reserved" 7 "Reserved" ;
+VAL_ 159 RRSAU_AirSptStrRValueSet 0 "Default" 1 "Low" 2 "Mid" 3 "High" 4 "Off" 5 "Reserved" 6 "Reserved" 7 "Reserved" ;
+VAL_ 159 RRSAU_AirSptTimeRValueSet 0 "Default" 1 "Short" 2 "Normal" 3 "Long" 4 "Reserved" 5 "Reserved" 6 "Reserved" 7 "Reserved" ;
+VAL_ 159 RRSAU_RRSmrAirSptRValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_LumbarDefSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_LumbarUpSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_LumbarMidSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_LumbarLowSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_BolsterInfSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_BolsterDefSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_BackSoftRValueSet 0 "Default" 1 "Off" 2 "Soft" 3 "Mid" 4 "Hard" 5 "Reserved" 6 "Reserved" 7 "Reserved" ;
+VAL_ 159 RRSAU_ActiveSw 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_MoodTrpyRValueSet 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_MoodTrpyCareSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 159 RRSAU_MoodTrpyComfSta 0 "Default" 1 "Off" 2 "On" 3 "Invalid" ;
+VAL_ 1053 NMSleepFlag_RRPSM 0 "Alive" 1 "SleepInd" 3 "SleepAck" ;
+VAL_ 1053 NMCommandCode_RRPSM 0 "None" 1 "Alive" 2 "Ring" 4 "Limphome" ;
+VAL_ 1085 NMSleepFlag_RRSAU 0 "Alive" 1 "SleepInd" 3 "SleepAck" ;
+VAL_ 1085 NMCommandCode_RRSAU 0 "None" 1 "Alive" 2 "Ring" 4 "Limphome" ;
+VAL_ 1083 NMSleepFlag_RLSAU 0 "Alive" 1 "SleepInd" 3 "SleepAck" ;
+VAL_ 1083 NMCommandCode_RLSAU 0 "None" 1 "Alive" 2 "Ring" 4 "Limphome" ;
+VAL_ 1082 NMSleepFlag_RLPSS 0 "Alive" 1 "SleepInd" 3 "SleepAck" ;
+VAL_ 1082 NMCommandCode_RLPSS 0 "None" 1 "Alive" 2 "Ring" 4 "Limphome" ;
+VAL_ 1084 NMSleepFlag_RRPSS 0 "Alive" 1 "SleepInd" 3 "SleepAck" ;
+VAL_ 1084 NMCommandCode_RRPSS 0 "None" 1 "Alive" 2 "Ring" 4 "Limphome" ;
+VAL_ 1052 NMSleepFlag_RLPSM 0 "Alive" 1 "SleepInd" 3 "SleepAck" ;
+VAL_ 1052 NMCommandCode_RLPSM 0 "None" 1 "Alive" 2 "Ring" 4 "Limphome" ;
+

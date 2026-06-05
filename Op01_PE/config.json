@@ -1,0 +1,12 @@
+{
+  "fbei": {
+    "inputModuleIp": "192.168.250.10",
+    "outputModuleIp": "192.168.250.11",
+    "rpiMs": 20
+  },
+  "logging": {
+    "path": "./logs",
+    "retentionDays": 30,
+    "maxFileSizeMb": 10
+  }
+}

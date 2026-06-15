@@ -912,14 +912,16 @@ Partial Class FrmMain
         '
         Me.txtMessage.BackColor = System.Drawing.Color.Black
         Me.txtMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.txtMessage.Enabled = False
         Me.txtMessage.Font = New System.Drawing.Font("Arial Narrow", 12.0!)
         Me.txtMessage.ForeColor = System.Drawing.Color.White
         Me.txtMessage.Location = New System.Drawing.Point(0, 939)
         Me.txtMessage.Multiline = True
         Me.txtMessage.Name = "txtMessage"
+        Me.txtMessage.ReadOnly = True
+        Me.txtMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtMessage.Size = New System.Drawing.Size(760, 107)
         Me.txtMessage.TabIndex = 51
+        Me.txtMessage.WordWrap = False
         '
         'Serial_Scanner
         '

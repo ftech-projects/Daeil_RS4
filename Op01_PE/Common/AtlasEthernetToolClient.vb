@@ -29,6 +29,7 @@ Public Class AtlasEthernetToolClient
     Private _disposed As Boolean
     Private _connected As Boolean
     Private _lastKeepAlive As DateTime = DateTime.MinValue
+    Private _commErrorLogged As Boolean
 
     Public Event LogMessage(message As String)
     Public Event ResultReceived(result As AtlasToolResult)
@@ -96,7 +97,10 @@ Public Class AtlasEthernetToolClient
                     Thread.Sleep(READ_SLEEP_MS)
                 End While
             Catch ex As Exception
-                RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 통신 예외: {ex.Message}")
+                If Not _commErrorLogged Then
+                    _commErrorLogged = True
+                    RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 통신 예외: {ex.Message}")
+                End If
             Finally
                 SetConnected(False)
                 CloseSocket()
@@ -114,8 +118,8 @@ Public Class AtlasEthernetToolClient
         _client.SendTimeout = 1000
         _client.Connect(_ipAddress, ATLAS_PORT)
         _stream = _client.GetStream()
+        _commErrorLogged = False
         SetConnected(True)
-        RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 연결 {_ipAddress}:{ATLAS_PORT}")
     End Sub
 
     Private Sub SetConnected(value As Boolean)
@@ -159,7 +163,6 @@ Public Class AtlasEthernetToolClient
         Dim bytes As Byte() = Encoding.ASCII.GetBytes(frame)
         _stream.Write(bytes, 0, bytes.Length)
         _stream.Flush()
-        RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1} TX] MID {mid:0000}")
     End Sub
 
     Private Sub ParseFrames()
@@ -194,12 +197,8 @@ Public Class AtlasEthernetToolClient
         If frame.Length < 8 Then Return
 
         Dim midCode As String = Mid(frame, 5, 4)
-        If midCode = "0002" Then
-            RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 통신 시작 ACK")
-        ElseIf midCode = "0005" Then
-            RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 명령 ACK")
-        ElseIf midCode = "9999" Then
-            RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] KeepAlive ACK")
+        If midCode = "0002" OrElse midCode = "0005" OrElse midCode = "9999" Then
+            Return
         ElseIf frame.Contains("0061001") Then
             SendAckLastTightening()
             ParseTighteningResult(frame)

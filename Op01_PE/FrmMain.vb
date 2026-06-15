@@ -1,4 +1,4 @@
-﻿Imports System.Runtime.InteropServices
+Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Net
 Imports System.IO
@@ -29,7 +29,8 @@ Public Class FrmMain
     Private AtlasToolEnabled As Boolean
 
     Private Timer As New HiResTimer()
-    Private TxtCount As Integer
+    Private Const LogMaxLines As Integer = 500
+    Private ReadOnly _logDedup As New Dictionary(Of String, String)
 
     ' === IO보드 (FBEI EtherNet/IP, 입력1 + 출력1) — 멜섹 PLC 대체 ===
     ' IP는 상수. 추후 config.json 로드/실측 보정.
@@ -38,6 +39,17 @@ Public Class FrmMain
     Private Const IoRpiMs As Integer = 20
     Private WithEvents Ios As FbeiIoClient
     Private IoConnected As Boolean
+
+    ' FBEI 운전 스위치 상태 (ch1=Start, ch2=Reset, ch3=비상정지)
+    Private IoInStart As Boolean
+    Private IoInReset As Boolean
+    Private IoInEStop As Boolean
+    Private IoStartPrev As Boolean
+    Private IoResetPrev As Boolean
+    Private IoEStopPrev As Boolean
+    Private _eStopLatched As Boolean
+    Private _readyForDown As Boolean   ' wStep 3 다운前 판정 OK → Start로 지그다운
+    Private _readyForUp As Boolean     ' wStep 3.4 다운後 공구 판정 OK → Start로 지그업
 
     Declare Function Wow64DisableWow64FsRedirection Lib "kernel32" (ByRef oldvalue As Long) As Boolean
     Declare Function Wow64EnableWow64FsRedirection Lib "kernel32" (ByRef oldvalue As Long) As Boolean
@@ -162,6 +174,9 @@ Public Class FrmMain
         srclbDecTool.Text = ""
         srclbDecTool.BackColor = Color.Black
 
+        _readyForDown = False
+        _readyForUp = False
+
     End Sub
 
     Sub SerialOpen()
@@ -179,23 +194,27 @@ Public Class FrmMain
             WriteTxtMessage("Serial Printer Open Fail")
         End Try
 
-        Try
-            If Serial_Tool.IsOpen() = True Then
-                Serial_Tool.Close()
-            End If
-            Serial_Tool.PortName = PortNumber_Tool
-            Serial_Tool.BaudRate = 9600
-            Serial_Tool.DataBits = 8
-            Serial_Tool.Open()
-            WriteTxtMessage("Serial Printer Open Success" & PortNumber_Tool)
-            Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200001            " & Chr("0") & Chr("3"))
-            Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200060            " & Chr("0") & Chr("3"))
-            tmr_Tool.Interval = 5000
-            tmr_Tool.Start()
-
-        Catch ex As Exception
-            WriteTxtMessage("Serial Printer Open Fail")
-        End Try
+        ' 시리얼 툴(COM3) — 코드 유지, Atlas LAN 사용 시 비활성화만 (포트 미오픈·스레드 미시작)
+        If AtlasToolEnabled Then
+            WriteTxtMessage("시리얼 툴 비활성 — Atlas LAN 토크툴 사용")
+        Else
+            Try
+                If Serial_Tool.IsOpen() = True Then
+                    Serial_Tool.Close()
+                End If
+                Serial_Tool.PortName = PortNumber_Tool
+                Serial_Tool.BaudRate = 9600
+                Serial_Tool.DataBits = 8
+                Serial_Tool.Open()
+                WriteTxtMessage("Serial Tool Open Success " & PortNumber_Tool)
+                Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200001            " & Chr("0") & Chr("3"))
+                Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200060            " & Chr("0") & Chr("3"))
+                tmr_Tool.Interval = 5000
+                tmr_Tool.Start()
+            Catch ex As Exception
+                WriteTxtMessage("Serial Tool Open Fail")
+            End Try
+        End If
 
         Try
             If Serial_Scanner.IsOpen() = True Then
@@ -365,16 +384,44 @@ Public Class FrmMain
 
     End Function
 
-    Private Sub WriteTxtMessage(ByVal strMessage As String)
-
-        TxtCount = TxtCount + 1
-        If TxtCount = 5 Then
-            txtMessage.Text = Format(Now, "yyyy-MM-dd") & " " & Format(Now, "HH:mm:ss") & ": " & strMessage & vbCrLf
-            TxtCount = 1
-        Else
-            txtMessage.Text = txtMessage.Text & Format(Now, "yyyy-MM-dd") & " " & Format(Now, "HH:mm:ss") & ": " & strMessage & vbCrLf
+    ''' <summary>로그 추가 — dedupKey 동일 메시지 반복 억제(상태 변경·재시도 시 다시 출력)</summary>
+    Private Sub WriteTxtMessage(ByVal strMessage As String, Optional dedupKey As String = Nothing)
+        If dedupKey IsNot Nothing Then
+            Dim prev As String = Nothing
+            If _logDedup.TryGetValue(dedupKey, prev) AndAlso prev = strMessage Then Return
+            _logDedup(dedupKey) = strMessage
         End If
 
+        If InvokeRequired Then
+            BeginInvoke(New Action(Of String, String)(AddressOf WriteTxtMessage), strMessage, dedupKey)
+            Return
+        End If
+
+        Dim scrollToEnd As Boolean = (txtMessage.TextLength = 0) OrElse
+            (txtMessage.SelectionStart >= txtMessage.TextLength - 2)
+        Dim line As String = Format(Now, "yyyy-MM-dd HH:mm:ss") & ": " & strMessage & Environment.NewLine
+
+        txtMessage.AppendText(line)
+        TrimLogLines()
+
+        If scrollToEnd Then
+            txtMessage.SelectionStart = txtMessage.Text.Length
+            txtMessage.ScrollToCaret()
+        End If
+    End Sub
+
+    Private Sub ClearLogDedup(dedupKey As String)
+        If dedupKey IsNot Nothing Then _logDedup.Remove(dedupKey)
+    End Sub
+
+    Private Sub TrimLogLines()
+        Dim lines() As String = txtMessage.Lines
+        If lines.Length <= LogMaxLines Then Return
+        Dim keep(LogMaxLines - 1) As String
+        Array.Copy(lines, lines.Length - LogMaxLines, keep, 0, LogMaxLines)
+        txtMessage.Lines = keep
+        txtMessage.SelectionStart = txtMessage.Text.Length
+        txtMessage.ScrollToCaret()
     End Sub
 
     Private Function ASC2STR(ByVal str As String) As String
@@ -435,6 +482,7 @@ Public Class FrmMain
             LoadALarmMessage()
             InitControl()
             WriteTxtMessage("Init Complete")
+            InitializeAtlasTools()   ' SerialOpen 전 — Atlas 활성 시 시리얼 툴 비활성 판단
             SerialOpen()
             InitGrid()
             LoadGrid()
@@ -450,13 +498,15 @@ Public Class FrmMain
         ' 멜섹 PLC 삭제 → IO보드(FBEI EtherNet/IP, 입력1+출력1) 사용.
         HideDeadPlcDisplay()      ' 죽은 D번지 표시 숨김
         InitializeIoDevices()     ' IO보드 연결
-        InitializeAtlasTools()    ' Atlas Ethernet Tool1/2 게더링
+        AddHandler JigClampSequence.JigLog, AddressOf OnJigClampLog
+        JigClampSequence.EnableAllMotionSensors()   ' IN 센서 필수 — OUT 후 IN 확인까지 다음 단계 진행
         AddIoMenu()               ' 상단 'IO 제어' 메뉴 추가
         AddressOfPLc = IoInputIp
         Label11.Text = AddressOfPLc
         FlagPlcConnection = False
 
-        If Serial_Tool.IsOpen = True Then
+        ' Atlas 활성 시 시리얼 툴 스레드 생략 (이중 토크 경로 방지)
+        If Serial_Tool.IsOpen = True AndAlso Not AtlasToolEnabled Then
             Trd1 = New Thread(AddressOf ThreadTask1)
             Trd1.IsBackground = True
             Trd1.Start()
@@ -477,7 +527,12 @@ Public Class FrmMain
     End Sub
 
     Private Sub FrmMain_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        ' IO보드 스캔 스레드/세션 정리 (리소스 정리)
+        RemoveHandler JigClampSequence.JigLog, AddressOf OnJigClampLog
+        Try
+            JigClampSequence.Abort()
+            If Ios IsNot Nothing Then JigClampSequence.AllMotionOutputsOff(Ios)
+        Catch
+        End Try
         Try
             If Ios IsNot Nothing Then Ios.Dispose()
         Catch
@@ -496,24 +551,207 @@ Public Class FrmMain
             Ios = New FbeiIoClient(IoInputIp, IoOutputIp, rpiMs:=IoRpiMs)
             Ios.Connect()
             IoConnected = True
-            WriteTxtMessage($"[FBEI] 연결 (IN={IoInputIp}, OUT={IoOutputIp})")
+            ClearLogDedup("FBEI_DI_SCAN")
+            ClearLogDedup("FBEI_OUT_WRITE")
+            WriteTxtMessage($"[FBEI] 연결 (IN={IoInputIp}, OUT={IoOutputIp})", "FBEI_CONN_OK")
         Catch ex As Exception
             IoConnected = False
-            WriteTxtMessage("[FBEI] 초기화 실패: " & ex.Message)
+            WriteTxtMessage("[FBEI] 초기화 실패: " & ex.Message, "FBEI_CONN_FAIL")
         End Try
     End Sub
 
     Private Sub Ios_LogMessage(message As String) Handles Ios.LogMessage
+        Dim dedupKey As String = Nothing
+        If message.Contains("스캔 예외") Then dedupKey = "FBEI_DI_SCAN"
+        If message.Contains("출력 쓰기 예외") Then dedupKey = "FBEI_OUT_WRITE"
+        If message.Contains("전원 에러") Then dedupKey = "FBEI_POWER_ERR"
+        WriteTxtMessage(message, dedupKey)
+    End Sub
+
+    ''' <summary>입력 채널 변화 → PlcValue + Start/Reset/비상정지 엣지 처리</summary>
+    Private Sub Ios_InputChanged(channel As Integer, value As Boolean) Handles Ios.InputChanged
+        If InvokeRequired Then
+            BeginInvoke(New Action(Of Integer, Boolean)(AddressOf Ios_InputChanged), channel, value)
+            Return
+        End If
+        IoSignalMap.ApplyInputChange(channel, value)
+
+        Select Case IoMap.ChannelToPin(channel)
+            Case IoMap.PinStart
+                IoInStart = value
+                If value AndAlso Not IoStartPrev Then HandleStartPress()
+                IoStartPrev = value
+            Case IoMap.PinReset
+                IoInReset = value
+                If value AndAlso Not IoResetPrev Then HandleResetPress()
+                IoResetPrev = value
+            Case IoMap.PinEStop
+                ' NC 접점: 정상=ON, 누름(회로 단선)=OFF → 비상정지
+                IoInEStop = Not value
+                If IoInEStop AndAlso Not IoEStopPrev Then HandleEmergencyStop()
+                IoEStopPrev = IoInEStop
+            Case IoMap.PinAirTool
+                If value AndAlso wStep = 3.4 AndAlso Not AtlasToolEnabled Then HandleAirToolPulse()
+        End Select
+    End Sub
+
+    ''' <summary>Start — wStep 0 공정시작 / wStep 3 지그다운 / wStep 3.4 지그업</summary>
+    Private Sub HandleStartPress()
+        If _eStopLatched OrElse IoInEStop Then
+            WriteTxtMessage("[IO] Start 무시 — 비상정지 상태")
+            Return
+        End If
+
+        If Ios Is Nothing OrElse Not IoConnected Then
+            srclbAlarm.Visible = True
+            srclbAlarm.Text = "IO 보드 미연결 — Start 불가"
+            WriteTxtMessage("[IO] Start 거부 — IO 미연결")
+            Return
+        End If
+
+        If wStep = 3 AndAlso _readyForDown Then
+            If Not JigClampSequence.IsJigAtUp(Ios) Then
+                srclbAlarm.Visible = True
+                srclbAlarm.Text = "지그 업 위치(IN:14) 미확인 — 다운 불가"
+                WriteTxtMessage("[IO] Start 거부 — 지그 업 센서(IN:14 ON, IN:13 OFF) 필요")
+                NG()
+                Return
+            End If
+            _readyForDown = False
+            srclbAlarm.Visible = False
+            JigClampSequence.BeginJigDown()
+            wStep = 3.2
+            WriteTxtMessage("[IO] Start(2회) → 지그 다운 (wStep 3.2)")
+            Return
+        End If
+
+        If wStep = 3.4 AndAlso _readyForUp Then
+            If Not JigClampSequence.IsJigAtDown(Ios) Then
+                srclbAlarm.Visible = True
+                srclbAlarm.Text = "지그 다운 위치(IN:13) 미확인 — 업 불가"
+                WriteTxtMessage("[IO] Start 거부 — 지그 다운 센서(IN:13 ON, IN:14 OFF) 필요")
+                NG()
+                Return
+            End If
+            _readyForUp = False
+            srclbAlarm.Visible = False
+            JigClampSequence.BeginJigUp()
+            wStep = 3.6
+            WriteTxtMessage("[IO] Start(3회) → 지그 업 (wStep 3.6)")
+            Return
+        End If
+
+        If wStep = 3 AndAlso Not _readyForDown Then
+            WriteTxtMessage("[IO] Start 무시 — 다운前 판정(바코드·토크) 미완료")
+            Return
+        End If
+
+        If wStep = 3.4 AndAlso Not _readyForUp Then
+            WriteTxtMessage("[IO] Start 무시 — 다운後 공구 판정 미완료")
+            Return
+        End If
+
+        If wStep <> 0 Then Return
+
+        Dim homeFault As String = JigClampSequence.GetHomePositionFault(Ios)
+        If homeFault <> "" Then
+            srclbAlarm.Visible = True
+            srclbAlarm.Text = homeFault
+            WriteTxtMessage("[IO] Start 거부 — " & homeFault)
+            NG()
+            Return
+        End If
+
+        WritePlc("D", "4051", "0000000")
+        InitControl()
+        srclbAlarm.Visible = False
+        StartTime = Format(Now, "HH:mm:ss")
+        WriteTxtMessage("[IO] Start(1회) → wStep 2 (원위치 확인 OK)")
+        wStep = 2
+    End Sub
+
+    ''' <summary>Reset — 시퀀스 초기화 + 원위치 복귀</summary>
+    Private Sub HandleResetPress()
+        _eStopLatched = False
+        _readyForDown = False
+        _readyForUp = False
+        JigClampSequence.Abort()
+        InitControl()
+        WritePlc("D", "4051", "0000000")
+
+        If Ios Is Nothing OrElse Not IoConnected Then
+            wStep = 0
+            srclbAlarm.Visible = False
+            WriteTxtMessage("[IO] Reset → wStep 0 (IO 미연결)")
+            Return
+        End If
+
+        JigClampSequence.AllMotionOutputsOff(Ios)
+
+        If JigClampSequence.IsHomePosition(Ios) Then
+            wStep = 0
+            srclbAlarm.Visible = False
+            WriteTxtMessage("[IO] Reset → wStep 0 (이미 원위치)")
+            Return
+        End If
+
+        JigClampSequence.BeginHoming()
+        wStep = 0.1
+        srclbAlarm.Visible = True
+        srclbAlarm.Text = "원위치 복귀 중… (Reset)"
+        WriteTxtMessage("[IO] Reset → 원위치 복귀 시작 (wStep 0.1)")
+    End Sub
+
+    ''' <summary>비상정지 — 공정 정지·알람</summary>
+    Private Sub HandleEmergencyStop()
+        _eStopLatched = True
+        _readyForDown = False
+        _readyForUp = False
+        JigClampSequence.Abort()
+        If Ios IsNot Nothing Then JigClampSequence.AllMotionOutputsOff(Ios)
+        srclbAlarm.Visible = True
+        srclbAlarm.Text = "비상정지 — 리셋 후 재시작"
+        WriteTxtMessage("[IO] 비상정지")
+    End Sub
+
+    Private Sub OnJigClampLog(message As String)
         WriteTxtMessage(message)
     End Sub
 
-    ''' <summary>입력 채널 1~32 변화. LED 표시는 FrmIo가 별도 구독. (여기선 머신로직용 훅만)</summary>
-    Private Sub Ios_InputChanged(channel As Integer, value As Boolean) Handles Ios.InputChanged
-        ' TODO: 필요 시 입력채널 → PlcValue/머신로직 매핑
+    Private Sub HandleJigIoResult(result As String, okStep As Double, faultMessage As String)
+        If result = "COMPLETE" Then
+            If okStep = 3.4 AndAlso Not JigClampSequence.IsJigAtDown(Ios) Then
+                WriteTxtMessage("[IO] 지그 다운 도착 신호 미확인 — IN:13/14 대기 (wStep 유지)")
+                Return
+            End If
+            If okStep = 3.8 AndAlso Not JigClampSequence.IsJigAtUp(Ios) Then
+                WriteTxtMessage("[IO] 지그 업 도착 신호 미확인 — IN:13/14 대기 (wStep 유지)")
+                Return
+            End If
+            wStep = okStep
+        End If
+    End Sub
+
+    Private Sub HandleHomingTick()
+        Dim result As String = JigClampSequence.Tick(Ios)
+        If result = "COMPLETE" Then
+            wStep = 0
+            srclbAlarm.Visible = False
+            WriteTxtMessage("[HOME] 원위치 복귀 완료 → wStep 0")
+        End If
+    End Sub
+
+    ''' <summary>에어 툴 입력 펄스 (Atlas 미사용 시 공구 OK 보조)</summary>
+    Private Sub HandleAirToolPulse()
+        If srclbDecTool.Text = "OK" Then Exit Sub
+        srclbDataTool.Text = CStr(TargetToolNum)
+        srclbDecTool.Text = "OK"
+        srclbDecTool.BackColor = Color.Blue
+        DingDOng()
     End Sub
 
     Private Sub Ios_PowerError(moduleName As String, hasError As Boolean) Handles Ios.PowerError
-        If hasError Then WriteTxtMessage($"[FBEI-{moduleName}] 전원 에러")
+        If hasError Then WriteTxtMessage($"[FBEI-{moduleName}] 전원 에러", "FBEI_POWER_ERR")
     End Sub
 
     Private Sub InitializeAtlasTools()
@@ -543,6 +781,14 @@ Public Class FrmMain
 
     Public Sub ReinitializeAtlasTools()
         InitializeAtlasTools()
+        If AtlasToolEnabled Then
+            tmr_Tool.Stop()
+            Try
+                If Serial_Tool.IsOpen Then Serial_Tool.Close()
+            Catch
+            End Try
+            WriteTxtMessage("시리얼 툴 비활성 — Atlas LAN 전환")
+        End If
     End Sub
 
     Private Sub StopAtlasTools()
@@ -564,11 +810,25 @@ Public Class FrmMain
     End Sub
 
     Private Sub Atlas_LogMessage(message As String)
-        WriteTxtMessage(message)
+        ' 토크 수신(0061)은 매 체결마다 기록, 통신 예외는 툴별 1회(재연결 시 해제)
+        Dim dedupKey As String = Nothing
+        If message.Contains("통신 예외") Then dedupKey = $"ATLAS_T{ExtractAtlasToolNum(message)}_ERR"
+        WriteTxtMessage(message, dedupKey)
     End Sub
 
+    Private Shared Function ExtractAtlasToolNum(message As String) As Integer
+        Dim m As System.Text.RegularExpressions.Match = System.Text.RegularExpressions.Regex.Match(message, "T(\d+)")
+        Return If(m.Success, CInt(m.Groups(1).Value), 0)
+    End Function
+
     Private Sub Atlas_ConnectionChanged(toolIndex As Integer, connected As Boolean)
-        WriteTxtMessage($"[ATLAS T{toolIndex + 1}] 상태={If(connected, "OK", "DISCONNECTED")}")
+        Dim stateKey As String = $"ATLAS_T{toolIndex + 1}_STATE"
+        If connected Then
+            ClearLogDedup($"ATLAS_T{toolIndex + 1}_ERR")
+            WriteTxtMessage($"[ATLAS T{toolIndex + 1}] 연결됨", stateKey)
+        Else
+            WriteTxtMessage($"[ATLAS T{toolIndex + 1}] 연결 끊김", stateKey)
+        End If
     End Sub
 
     Private Sub Atlas_ResultReceived(result As AtlasToolResult)
@@ -578,11 +838,15 @@ Public Class FrmMain
         End If
 
         Dim toolNo As Integer = result.ToolIndex + 1
-        srclbDataTool.Text = CStr(toolNo)
 
-        If TargetToolNum = toolNo AndAlso srclbDecTool.Text <> "OK" Then
-            srclbDecTool.Text = "OK"
-            srclbDecTool.BackColor = Color.Blue
+        If wStep = 3.4 Then
+            srclbDataTool.Text = CStr(toolNo)
+            If TargetToolNum = toolNo AndAlso srclbDecTool.Text <> "OK" Then
+                srclbDecTool.Text = "OK"
+                srclbDecTool.BackColor = Color.Blue
+                DingDOng()
+            End If
+            Exit Sub
         End If
 
         If wStep <> 3 Then Exit Sub
@@ -629,101 +893,53 @@ Public Class FrmMain
     End Sub
 
     Private Sub WritePlc(ByVal strChr As String, ByVal StartArry As String, ByVal ArryMessage As String)
-
-        Dim iReturnCode As Integer              'Return code
-        Dim szDeviceName As String = ""         'List data for 'DeviceName'
-        Dim sharrDeviceValue() As Short          'Data for 'DeviceValue'
-
-        If srcLbPlcConnectionState.Text = "OK" Then
-
-            ReDim sharrDeviceValue(Len(ArryMessage))
-
-            For i As Integer = 0 To Len(ArryMessage) - 1
-                szDeviceName = szDeviceName & strChr & Format((Int(StartArry) + i), "0000")
-                'If i <> Len(ArryMessage - 1) Then szDeviceName = szDeviceName + ControlChars.Lf
-                If i < Len(ArryMessage) - 1 Then szDeviceName = szDeviceName & ControlChars.Lf
-                sharrDeviceValue(i) = Mid(ArryMessage, i + 1, 1)
-            Next
-            ' 멜섹 삭제: PLC D레지스터 쓰기 제거. IO보드 출력 매핑은 다음 단계(와꾸).
-            ' TODO: ArryMessage → FBEI 출력채널(Ios.SetOutput) 매핑
-
-        End If
-
-        'The return code of the method Is displayed by the hexadecimal.
-        'txt_ReturnCode.Text = String.Format("0x{0:x8} [HEX]", iReturnCode)
-
+        If Ios Is Nothing OrElse Not IoConnected Then Exit Sub
+        If srcLbPlcConnectionState.Text <> "OK" Then Exit Sub
+        Try
+            IoSignalMap.ApplyPlcWrite(Ios, CInt(StartArry), ArryMessage)
+        Catch ex As Exception
+            WriteTxtMessage("[FBEI-OUT] WritePlc 예외: " & ex.Message)
+        End Try
     End Sub
 
     Private Sub ReadPLc()
-
-        Dim tmpPlcValue(200) As Integer
-        Dim i As Integer
-        Dim j As Integer
-        Dim iReturnCode As Integer              'Return code
-        Dim szDeviceName As String = ""         'List data for 'DeviceName'
-        Dim iNumberOfDeviceName As Integer = 0  'Data for 'DeviceSize'
-        Dim sharrDeviceValue() As Short         'Data for 'DeviceValue'
-        Dim szarrData() As String               'Array for 'Data'
-        Dim iNumber As Integer                  'Loop counter
-        Dim Arrysize As Integer = 20
-
-        ReDim sharrDeviceValue(Arrysize - 1)
-        ReDim szarrData(Arrysize - 1)
-
-        szDeviceName = "D4000" & vbLf & "D4001" & vbLf & "D4002" & vbLf & "D4003" & vbLf & "D4004" & vbLf & "D4005" & vbLf & "D4006" & vbLf & "D4007" & vbLf & "D4008" & vbLf & "D4009" & vbLf &
-                       "D4050" & vbLf & "D4051" & vbLf & "D4052" & vbLf & "D4053" & vbLf & "D4054" & vbLf & "D4055" & vbLf & "D4056" & vbLf & "D4057" & vbLf & "D4058" & vbLf & "D4059"
-        ' 멜섹 삭제: PLC D레지스터 읽기 제거. IO보드 입력→PlcValue 매핑은 다음 단계(와꾸).
-        ' TODO: Ios.GetInput(1~64) → PlcValue(...) 매핑
-        iReturnCode = 0
-
-        'When the ReadDeviceRandom2 method is succeeded, display the read data.
-        If iReturnCode = 0 Then
-
-            'Copy the read data to the 'lpszarrData'.
-            For iNumber = 0 To iNumberOfDeviceName - 1
-                szarrData(iNumber) = sharrDeviceValue(iNumber).ToString()
-            Next iNumber
-            For i = 0 To Arrysize - 1
-                tmpPlcValue(i) = CInt(sharrDeviceValue(i))
-            Next i
-
-            For i = 0 To 9
-                PlcValue(i + 4000) = tmpPlcValue(i)
-            Next
-            For i = 10 To 19
-                PlcValue(i + 4040) = tmpPlcValue(i)
-            Next
-
-            lbD4000.Text = PlcValue(4000)
-            lbD4001.Text = PlcValue(4001)
-            lbD4002.Text = PlcValue(4002)
-            lbD4003.Text = PlcValue(4003)
-            lbD4004.Text = PlcValue(4004)
-            lbD4005.Text = PlcValue(4005)
-            lbD4006.Text = PlcValue(4006)
-            lbD4007.Text = PlcValue(4007)
-            lbD4008.Text = PlcValue(4008)
-            lbD4009.Text = PlcValue(4009)
-
-            lbD4050.Text = PlcValue(4050)
-            lbD4051.Text = PlcValue(4051)
-            lbD4052.Text = PlcValue(4052)
-            lbD4053.Text = PlcValue(4053)
-            lbD4054.Text = PlcValue(4054)
-            lbD4055.Text = PlcValue(4055)
-            lbD4056.Text = PlcValue(4056)
-            lbD4057.Text = PlcValue(4057)
-            lbD4058.Text = PlcValue(4058)
-            lbD4059.Text = PlcValue(4059)
-
-            PlcConnectionError = "OK"
-
-        Else
-
-            PlcConnectionError = Dec2Hex(iReturnCode)
-
+        If Ios Is Nothing OrElse Not IoConnected Then
+            PlcConnectionError = "DISCONNECTED"
+            Exit Sub
         End If
+        Try
+            IoSignalMap.SyncInputsToPlc(Ios)
+            IoInStart = IoMap.GetIn(Ios, IoMap.PinStart)
+            IoInReset = IoMap.GetIn(Ios, IoMap.PinReset)
+            IoInEStop = Not IoMap.GetIn(Ios, IoMap.PinEStop)
+            UpdatePlcDisplayLabels()
+            PlcConnectionError = "OK"
+        Catch ex As Exception
+            PlcConnectionError = ex.Message
+        End Try
+    End Sub
 
+    Private Sub UpdatePlcDisplayLabels()
+        lbD4000.Text = CStr(PlcValue(4000))
+        lbD4001.Text = CStr(PlcValue(4001))
+        lbD4002.Text = CStr(PlcValue(4002))
+        lbD4003.Text = CStr(PlcValue(4003))
+        lbD4004.Text = CStr(PlcValue(4004))
+        lbD4005.Text = CStr(PlcValue(4005))
+        lbD4006.Text = CStr(PlcValue(4006))
+        lbD4007.Text = CStr(PlcValue(4007))
+        lbD4008.Text = CStr(PlcValue(4008))
+        lbD4009.Text = CStr(PlcValue(4009))
+        lbD4050.Text = CStr(PlcValue(4050))
+        lbD4051.Text = CStr(PlcValue(4051))
+        lbD4052.Text = CStr(PlcValue(4052))
+        lbD4053.Text = CStr(PlcValue(4053))
+        lbD4054.Text = CStr(PlcValue(4054))
+        lbD4055.Text = CStr(PlcValue(4055))
+        lbD4056.Text = CStr(PlcValue(4056))
+        lbD4057.Text = CStr(PlcValue(4057))
+        lbD4058.Text = CStr(PlcValue(4058))
+        lbD4059.Text = CStr(PlcValue(4059))
     End Sub
 
 
@@ -1017,7 +1233,7 @@ Public Class FrmMain
         If PlcValue(4009) <> 0 And srclbAlarm.Visible = False Then
             srclbAlarm.Visible = True
             srclbAlarm.Text = AlarmMessage(CInt(PlcValue(4009)))
-        ElseIf PlcValue(4009) = 0 And srclbAlarm.Visible = True Then
+        ElseIf PlcValue(4009) = 0 And srclbAlarm.Visible = True AndAlso Not _eStopLatched Then
             srclbAlarm.Visible = False
         End If
 
@@ -1029,27 +1245,17 @@ Public Class FrmMain
             PcAliveCount = 0
         End If
 
-        If PlcValue(4000) = 0 And wStep <> 0 Then
-            wStep = 0
-            WritePlc("D", "4051", "0000000")
-            InitControl()
+        ' Reset 원위치 복귀 (비상정지 중에도 Reset으로 복귀 가능)
+        If wStep = 0.1 Then
+            HandleHomingTick()
+            Return
         End If
 
+        ' 비상정지 래치 시 공정 진행 차단
+        If _eStopLatched OrElse IoInEStop Then Exit Sub
+
         If wStep = 0 Then
-
-            If PlcValue(4000) = 1 Then
-                WritePlc("D", "4051", "0000000")
-                InitControl()
-                'InitGrid(Grid1)
-                wStep = 1
-            End If
-
-        ElseIf wStep = 1 Then
-
-            If PlcValue(4003) = 1 Then 'Start
-                StartTime = Format(Now, "HH:mm:ss")
-                wStep = 2
-            End If
+            ' Start는 Ios_InputChanged 엣지에서 처리
 
         ElseIf wStep = 2 Then
 
@@ -1125,10 +1331,37 @@ Public Class FrmMain
                 WritePlc("D", "4055", "0")
             End If
             WritePlc("D", "4056", "1")
-            wStep = 3
+            JigClampSequence.BeginClamp()
+            wStep = 2.4
 
-        ElseIf wStep = 3 Then 'Check
+        ElseIf wStep = 2.4 Then
+            ' 제품 고정: 핀전진 → 클램프 (1번 지그)
+            HandleJigIoResult(JigClampSequence.Tick(Ios), 3, "제품 고정")
 
+        ElseIf wStep = 3 Then
+            ' 다운前 판정: 모터바코드 + 프레임바코드 + 토크
+            If (srclbDecMotorBarcode.Text = "OK" Or srclbDecMotorBarcode.Text = "PASS" Or srclbDecMotorBarcode.Text = "NA") And _
+                (srclbDecFrameBarcode.Text = "OK" Or srclbDecFrameBarcode.Text = "PASS" Or srclbDecFrameBarcode.Text = "NA") And _
+                (srclbDecMotorTq.Text = "OK" Or srclbDecMotorTq.Text = "PASS" Or srclbDecMotorTq.Text = "NA") Then
+                If Not _readyForDown Then
+                    _readyForDown = True
+                    srclbAlarm.Visible = True
+                    srclbAlarm.Text = "다운前 판정 OK — Start로 지그 다운"
+                    WriteTxtMessage("[IO] 다운前 판정 OK — Start(2회) 대기")
+                End If
+            End If
+
+        ElseIf wStep = 3.2 Then
+            HandleJigIoResult(JigClampSequence.Tick(Ios), 3.4, "지그 다운")
+
+        ElseIf wStep = 3.4 Then
+            ' 다운後 판정: 지그 다운 위치(IN:13) 유지 중에만 공구 작업
+            If Not JigClampSequence.IsJigAtDown(Ios) Then
+                srclbAlarm.Visible = True
+                srclbAlarm.Text = "지그 다운 위치 이탈 — IN:13/14 확인 후 Reset"
+                _readyForUp = False
+                Exit Sub
+            End If
             If srclbDecTool.Text <> "OK" AndAlso Not AtlasToolEnabled Then srclbDataTool.Text = PlcValue(4002)
 
             If (CInt(srclbDataTool.Text) = TargetToolNum) And srclbDecTool.Text <> "OK" Then
@@ -1137,13 +1370,30 @@ Public Class FrmMain
                 DingDOng()
             End If
 
-            If (srclbDecMotorBarcode.Text = "OK" Or srclbDecMotorBarcode.Text = "PASS" Or srclbDecMotorBarcode.Text = "NA") And _
-                (srclbDecFrameBarcode.Text = "OK" Or srclbDecFrameBarcode.Text = "PASS" Or srclbDecFrameBarcode.Text = "NA") And _
-                (srclbDecMotorTq.Text = "OK" Or srclbDecMotorTq.Text = "PASS" Or srclbDecMotorTq.Text = "NA") And _
-                (srclbDecTool.Text = "OK") Then
-                WritePlc("D", "4057", "1")
-                wStep = 4
+            If srclbDecTool.Text = "OK" Then
+                If Not _readyForUp Then
+                    _readyForUp = True
+                    srclbAlarm.Visible = True
+                    srclbAlarm.Text = "공구 판정 OK — Start로 지그 업"
+                    WriteTxtMessage("[IO] 다운後 공구 판정 OK — Start(3회) 대기")
+                End If
             End If
+
+        ElseIf wStep = 3.6 Then
+            HandleJigIoResult(JigClampSequence.Tick(Ios), 3.8, "지그 업")
+
+        ElseIf wStep = 3.8 Then
+            If Not JigClampSequence.IsJigAtUp(Ios) Then
+                WriteTxtMessage("[IO] 지그 업 도착 신호 미확인 — IN:14 대기 (해제 대기)", "WSTEP38_WAIT_UP")
+                Exit Sub
+            End If
+            JigClampSequence.BeginRelease()
+            wStep = 3.9
+            WriteTxtMessage("[IO] 제품 해제 시작 (wStep 3.9)")
+
+        ElseIf wStep = 3.9 Then
+            ' 제품 해제: 언클램프 → 핀후진 (1번 지그)
+            HandleJigIoResult(JigClampSequence.Tick(Ios), 4, "제품 해제")
 
         ElseIf wStep = 4 Then
 
@@ -1153,7 +1403,8 @@ Public Class FrmMain
 
         ElseIf wStep = 5 Then
 
-            If PlcValue(4001) = 1 Then
+            ' 지그 업은 wStep 3.6에서 IN:14 확인 완료 — 센서 재확인 후 라벨 인쇄
+            If JigClampSequence.IsJigAtUp(Ios) OrElse PlcValue(4001) = 1 Then
                 WritePlc("D", "4051", "0000000")
                 BarcodePrint(srcLbSerial.Text, srcLbPartNo.Text)
                 AddGrid(srcLbPartNo.Text)
@@ -1323,6 +1574,8 @@ Public Class FrmMain
     End Sub
 
     Private Sub tmr_Tool_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tmr_Tool.Tick
+
+        If AtlasToolEnabled OrElse Not Serial_Tool.IsOpen Then Exit Sub
 
         If Tool_Connection1 = False Then
             Tool_Connection1 = True

@@ -1,5 +1,6 @@
-' 제품 고정 시퀀스 — 핀 전진 → 클램프 / 언클램프 → 핀 후진
+' 제품 고정 시퀀스 — 핀전진+클램프 동시 / 언클램프 → 핀후진 (1·2번 지그 병행)
 ' OUT:00~05 = 1번 지그, OUT:06~11 = 2번 지그
+' ★ 추후: 지그 회전(IN:07/08) 또는 전용 DI로 GetActiveJigs() 1/2 선택 예정 — 현재 1·2번 항상 동시
 ' 지그 업/다운: 공정(wStep 3.2/3.6) + Reset 원위치복귀·Start 원위치검사
 '
 ' === I/O 위치 확인 원칙 (전장) ===
@@ -18,8 +19,15 @@
 ' 센서 미장착/고장 시 SetSensorRequired(핀번호, False) 로 우회(정비 후 True 복구).
 Module JigClampSequence
 
+    ''' <summary>구버전 1번만 사용 — GetActiveJigs() 사용</summary>
+    <Obsolete("GetActiveJigs() 사용 — 현재 1·2번 동시")>
     Public Const ActiveJigStation As Integer = 1
     Public Const SensorBypassSettleTicks As Integer = 30  ' 센서 우회 시 3초 안정 대기
+
+    ''' <summary>동시 구동 대상 지그 — 추후 IN:07/08·전용 DI로 1만/2만 선택 예정</summary>
+    Public Function GetActiveJigs() As Integer()
+        Return New Integer() {1, 2}
+    End Function
 
     ' IN 핀별 필수 여부 (0-base, True=IN 확인 필수, False=우회·타이머만)
     Private _sensorRequired(31) As Boolean
@@ -36,16 +44,12 @@ Module JigClampSequence
 
     Private Enum SeqPhase
         None
-        PinForwardOn
-        WaitPinForward
-        ClampOn
-        WaitClamp
+        PinClampOn
+        WaitPinClamp
         UnclampOn
         WaitUnclamp
         UnclampOff
-        PinBackOn
         WaitPinBack
-        PinBackOff
         JigDownOn
         WaitJigDown
         WaitJigUp
@@ -165,25 +169,25 @@ Module JigClampSequence
     Public Function GetHomePositionFault(ios As FbeiIoClient) As String
         If ios Is Nothing Then Return "IO 보드 미연결"
         If Not IoMap.GetIn(ios, InPinBack(1)) Then Return "1번 핀후진 센서(IN:04) — 원위치 아님"
-        If Not IoMap.GetIn(ios, InUnclamp(1)) Then Return "1번 언클램프 센서(IN:06) — 원위치 아님"
+        If IsSensorRequired(InUnclamp(1)) AndAlso Not IoMap.GetIn(ios, InUnclamp(1)) Then Return "1번 언클램프 센서(IN:06) — 원위치 아님"
         If Not IoMap.GetIn(ios, InJigRotClamp) Then Return "지그회전 클램프 센서(IN:07) — 원위치 아님"
         If Not IoMap.GetIn(ios, InPinBack(2)) Then Return "2번 핀후진 센서(IN:10) — 원위치 아님"
-        If Not IoMap.GetIn(ios, InUnclamp(2)) Then Return "2번 언클램프 센서(IN:12) — 원위치 아님"
+        If IsSensorRequired(InUnclamp(2)) AndAlso Not IoMap.GetIn(ios, InUnclamp(2)) Then Return "2번 언클램프 센서(IN:12) — 원위치 아님"
         If Not IoMap.GetIn(ios, InJigUp) Then Return "지그 업 센서(IN:14) — 원위치 아님 (지그 업=원위치)"
         If IoMap.GetIn(ios, InJigDown) Then Return "지그 다운 센서(IN:13) ON — 원위치 아님"
         If IoMap.GetIn(ios, InPinForward(1)) Then Return "1번 핀전진 센서(IN:03) ON — 원위치 아님"
-        If IoMap.GetIn(ios, InClamp(1)) Then Return "1번 클램프 센서(IN:05) ON — 원위치 아님"
+        If IsSensorRequired(InClamp(1)) AndAlso IoMap.GetIn(ios, InClamp(1)) Then Return "1번 클램프 센서(IN:05) ON — 원위치 아님"
         If IoMap.GetIn(ios, InJigRotUnclamp) Then Return "지그회전 언클램프 센서(IN:08) ON — 원위치 아님"
         If IoMap.GetIn(ios, InPinForward(2)) Then Return "2번 핀전진 센서(IN:09) ON — 원위치 아님"
-        If IoMap.GetIn(ios, InClamp(2)) Then Return "2번 클램프 센서(IN:11) ON — 원위치 아님"
+        If IsSensorRequired(InClamp(2)) AndAlso IoMap.GetIn(ios, InClamp(2)) Then Return "2번 클램프 센서(IN:11) ON — 원위치 아님"
         Return ""
     End Function
 
     Private Function NeedsProductHome(ios As FbeiIoClient, jig As Integer) As Boolean
-        If IoMap.GetIn(ios, InClamp(jig)) Then Return True
-        If IoMap.GetIn(ios, InPinForward(jig)) Then Return True
-        If Not IoMap.GetIn(ios, InPinBack(jig)) Then Return True
-        If Not IoMap.GetIn(ios, InUnclamp(jig)) Then Return True
+        If IsSensorRequired(InClamp(jig)) AndAlso IoMap.GetIn(ios, InClamp(jig)) Then Return True
+        If IsSensorRequired(InPinForward(jig)) AndAlso IoMap.GetIn(ios, InPinForward(jig)) Then Return True
+        If IsSensorRequired(InPinBack(jig)) AndAlso Not IoMap.GetIn(ios, InPinBack(jig)) Then Return True
+        If IsSensorRequired(InUnclamp(jig)) AndAlso Not IoMap.GetIn(ios, InUnclamp(jig)) Then Return True
         Return False
     End Function
 
@@ -202,17 +206,17 @@ Module JigClampSequence
     Public Sub BeginClamp()
         EnsureSensorConfig()
         _mode = SeqMode.Clamp
-        _runJig = ActiveJigStation
-        _phase = SeqPhase.PinForwardOn
+        _phase = SeqPhase.PinClampOn
         _ticks = 0
+        _phaseTicks = 0
     End Sub
 
     Public Sub BeginRelease()
         EnsureSensorConfig()
         _mode = SeqMode.Release
-        _runJig = ActiveJigStation
         _phase = SeqPhase.UnclampOn
         _ticks = 0
+        _phaseTicks = 0
     End Sub
 
     Public Sub BeginHoming()
@@ -254,9 +258,9 @@ Module JigClampSequence
 
         Select Case _mode
             Case SeqMode.Clamp
-                TickClamp(ios, _runJig)
+                TickClampDual(ios)
             Case SeqMode.Release
-                TickRelease(ios, _runJig)
+                TickReleaseDual(ios)
             Case SeqMode.Homing
                 TickHoming(ios)
                 If _mode = SeqMode.Idle Then Return "COMPLETE"
@@ -435,66 +439,145 @@ Module JigClampSequence
         End Select
     End Sub
 
-    Private Sub TickClamp(ios As FbeiIoClient, jig As Integer)
+    ''' <summary>1·2번 지그 핀전진+클램프 동시 구동·센서 확인</summary>
+    Private Sub TickClampDual(ios As FbeiIoClient)
         Select Case _phase
-            Case SeqPhase.PinForwardOn
-                SafeOff(ios, jig, clamp:=False, unclamp:=False, pinBack:=False)
-                IoMap.SetOut(ios, OutPinForward(jig), True)
-                LogMoveOut(jig, $"{jig}번 핀전진", OutPinForward(jig), InPinForward(jig))
-                _phase = SeqPhase.WaitPinForward
+            Case SeqPhase.PinClampOn
+                For Each jig As Integer In GetActiveJigs()
+                    SafeOff(ios, jig, clamp:=False, unclamp:=False, pinBack:=False)
+                    IoMap.SetOut(ios, OutPinForward(jig), True)
+                    IoMap.SetOut(ios, OutClamp(jig), True)
+                Next
+                WriteJigDualLog("1·2번 핀전진+클램프 동시 출력 — OUT:00,02,06,08 → IN:03,05,09,11 대기")
+                _phase = SeqPhase.WaitPinClamp
                 StartMotion()
 
-            Case SeqPhase.WaitPinForward
-                Dim rf As Integer = TickWaitForPosition(ios, InPinForward(jig), True, $"{jig}번 핀전진", OutPinForward(jig), jig, InPinBack(jig), False)
-                If rf = 1 Then
-                    _phase = SeqPhase.ClampOn
-                    StartMotion()
-                End If
-
-            Case SeqPhase.ClampOn
-                IoMap.SetOut(ios, OutClamp(jig), True)
-                LogMoveOut(jig, $"{jig}번 클램프", OutClamp(jig), InClamp(jig))
-                _phase = SeqPhase.WaitClamp
-                StartMotion()
-
-            Case SeqPhase.WaitClamp
-                Dim rc As Integer = TickWaitForPosition(ios, InClamp(jig), True, $"{jig}번 클램프", OutClamp(jig), jig)
-                If rc = 1 Then _phase = SeqPhase.Done
+            Case SeqPhase.WaitPinClamp
+                If TickWaitDualPinClamp(ios) = 1 Then _phase = SeqPhase.Done
         End Select
     End Sub
 
-    Private Sub TickRelease(ios As FbeiIoClient, jig As Integer)
+    ''' <summary>1·2번 지그 언클램프 → 핀후진 동시 구동·센서 확인</summary>
+    Private Sub TickReleaseDual(ios As FbeiIoClient)
         Select Case _phase
             Case SeqPhase.UnclampOn
-                IoMap.SetOut(ios, OutClamp(jig), False)
-                IoMap.SetOut(ios, OutUnclamp(jig), True)
-                LogMoveOut(jig, $"{jig}번 언클램프", OutUnclamp(jig), InUnclamp(jig))
+                For Each jig As Integer In GetActiveJigs()
+                    IoMap.SetOut(ios, OutClamp(jig), False)
+                    IoMap.SetOut(ios, OutUnclamp(jig), True)
+                Next
+                WriteJigDualLog("1·2번 언클램프 동시 출력 — OUT:03,09 → IN:06,12 대기")
                 _phase = SeqPhase.WaitUnclamp
                 StartMotion()
 
             Case SeqPhase.WaitUnclamp
-                Dim ru As Integer = TickWaitForPosition(ios, InUnclamp(jig), True, $"{jig}번 언클램프", OutUnclamp(jig), jig)
-                If ru = 1 Then
+                If TickWaitDualUnclamp(ios) = 1 Then
                     _phase = SeqPhase.UnclampOff
                     StartMotion()
                 End If
 
             Case SeqPhase.UnclampOff
-                IoMap.SetOut(ios, OutUnclamp(jig), False)
-                IoMap.SetOut(ios, OutPinForward(jig), False)
-                IoMap.SetOut(ios, OutPinBack(jig), True)
-                LogMoveOut(jig, $"{jig}번 핀후진", OutPinBack(jig), InPinBack(jig))
+                For Each jig As Integer In GetActiveJigs()
+                    IoMap.SetOut(ios, OutUnclamp(jig), False)
+                    IoMap.SetOut(ios, OutPinForward(jig), False)
+                    IoMap.SetOut(ios, OutPinBack(jig), True)
+                Next
+                WriteJigDualLog("1·2번 핀후진 동시 출력 — OUT:01,07 → IN:04,10 대기")
                 _phase = SeqPhase.WaitPinBack
                 StartMotion()
 
             Case SeqPhase.WaitPinBack
-                Dim rb As Integer = TickWaitForPosition(ios, InPinBack(jig), True, $"{jig}번 핀후진", OutPinBack(jig), jig, InPinForward(jig), False)
-                If rb = 1 Then
-                    IoMap.SetOut(ios, OutPinBack(jig), False)
+                If TickWaitDualPinBack(ios) = 1 Then
+                    For Each jig As Integer In GetActiveJigs()
+                        IoMap.SetOut(ios, OutPinBack(jig), False)
+                    Next
                     _phase = SeqPhase.Done
                 End If
         End Select
     End Sub
+
+    Private Function TickWaitDualPinClamp(ios As FbeiIoClient) As Integer
+        Dim anyRequired As Boolean = False
+        For Each jig As Integer In GetActiveJigs()
+            If IsSensorRequired(InPinForward(jig)) OrElse IsSensorRequired(InClamp(jig)) Then
+                anyRequired = True
+                If IsSensorRequired(InPinForward(jig)) Then
+                    If Not IoMap.GetIn(ios, InPinForward(jig)) Then Return 0
+                    If IoMap.GetIn(ios, InPinBack(jig)) Then Return 0
+                End If
+                If IsSensorRequired(InClamp(jig)) Then
+                    If Not IoMap.GetIn(ios, InClamp(jig)) Then Return 0
+                End If
+            End If
+        Next
+
+        If Not anyRequired Then
+            _phaseTicks += 1
+            If _phaseTicks = 1 Then
+                WriteJigDualLog("핀·클램프 센서 우회 — " & CStr(SensorBypassSettleTicks * 100) & "ms 후 진행")
+            End If
+            If _phaseTicks >= SensorBypassSettleTicks Then Return 1
+            Return 0
+        End If
+
+        If _phaseTicks = 0 Then
+            For Each jig As Integer In GetActiveJigs()
+                LogArrival(jig, $"{jig}번 핀전진", InPinForward(jig))
+                LogArrival(jig, $"{jig}번 클램프", InClamp(jig))
+            Next
+        End If
+        Return 1
+    End Function
+
+    Private Function TickWaitDualUnclamp(ios As FbeiIoClient) As Integer
+        Dim anyRequired As Boolean = False
+        For Each jig As Integer In GetActiveJigs()
+            If IsSensorRequired(InUnclamp(jig)) Then
+                anyRequired = True
+                If Not IoMap.GetIn(ios, InUnclamp(jig)) Then Return 0
+            End If
+        Next
+
+        If Not anyRequired Then
+            _phaseTicks += 1
+            If _phaseTicks >= SensorBypassSettleTicks Then Return 1
+            Return 0
+        End If
+
+        If _phaseTicks = 0 Then
+            For Each jig As Integer In GetActiveJigs()
+                LogArrival(jig, $"{jig}번 언클램프", InUnclamp(jig))
+            Next
+        End If
+        Return 1
+    End Function
+
+    Private Function TickWaitDualPinBack(ios As FbeiIoClient) As Integer
+        Dim anyRequired As Boolean = False
+        For Each jig As Integer In GetActiveJigs()
+            If IsSensorRequired(InPinBack(jig)) OrElse IsSensorRequired(InPinForward(jig)) Then
+                anyRequired = True
+                If IsSensorRequired(InPinBack(jig)) Then
+                    If Not IoMap.GetIn(ios, InPinBack(jig)) Then Return 0
+                End If
+                If IsSensorRequired(InPinForward(jig)) Then
+                    If IoMap.GetIn(ios, InPinForward(jig)) Then Return 0
+                End If
+            End If
+        Next
+
+        If Not anyRequired Then
+            _phaseTicks += 1
+            If _phaseTicks >= SensorBypassSettleTicks Then Return 1
+            Return 0
+        End If
+
+        If _phaseTicks = 0 Then
+            For Each jig As Integer In GetActiveJigs()
+                LogArrival(jig, $"{jig}번 핀후진", InPinBack(jig))
+            Next
+        End If
+        Return 1
+    End Function
 
     Public Sub AllOutputsOff(ios As FbeiIoClient, jig As Integer)
         If ios Is Nothing Then Return
@@ -526,6 +609,10 @@ Module JigClampSequence
 
     Private Sub LogArrival(jig As Integer, action As String, inPin As Integer)
         WriteJigLog(jig, $"{action} 도착 신호 수신 — {IoMap.InLabel(inPin)}")
+    End Sub
+
+    Private Sub WriteJigDualLog(detail As String)
+        RaiseEvent JigLog($"[JIG] {detail}")
     End Sub
 
     Private Sub WriteJigLog(jig As Integer, detail As String)

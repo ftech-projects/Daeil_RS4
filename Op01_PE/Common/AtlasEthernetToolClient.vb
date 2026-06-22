@@ -73,9 +73,9 @@ Public Class AtlasEthernetToolClient
 
         While Not token.IsCancellationRequested
             Try
-                EnsureConnected()
-                SendSessionStart()
-                SendSubscribeLastTightening()
+                OpenTcp()
+                EstablishOpenProtocolSession()
+                SetConnected(True)
                 _lastKeepAlive = DateTime.UtcNow
 
                 Dim buffer(1023) As Byte
@@ -110,17 +110,60 @@ Public Class AtlasEthernetToolClient
         End While
     End Sub
 
-    Private Sub EnsureConnected()
+    Private Sub OpenTcp()
         CloseSocket()
 
         _client = New TcpClient()
-        _client.ReceiveTimeout = 1000
-        _client.SendTimeout = 1000
+        _client.ReceiveTimeout = 3000
+        _client.SendTimeout = 3000
         _client.Connect(_ipAddress, ATLAS_PORT)
         _stream = _client.GetStream()
+        _rxBuffer.Clear()
         _commErrorLogged = False
-        SetConnected(True)
     End Sub
+
+    Private Sub EstablishOpenProtocolSession()
+        SendSessionStart()
+        If Not WaitForSessionReady(2500) Then
+            RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] MID0002 미수신 — 구독 시도")
+        End If
+        SendSubscribeLastTightening()
+    End Sub
+
+    ''' <summary>MID0001 후 0002(ACK) 또는 0004(거부) 대기</summary>
+    Private Function WaitForSessionReady(timeoutMs As Integer) As Boolean
+        Dim deadline As DateTime = DateTime.UtcNow.AddMilliseconds(timeoutMs)
+        Dim buffer(1023) As Byte
+
+        While DateTime.UtcNow < deadline
+            If _stream Is Nothing OrElse Not _stream.DataAvailable Then
+                Thread.Sleep(READ_SLEEP_MS)
+                Continue While
+            End If
+
+            Dim readCount As Integer = _stream.Read(buffer, 0, buffer.Length)
+            If readCount <= 0 Then Return False
+
+            Dim chunk As String = Encoding.ASCII.GetString(buffer, 0, readCount)
+            _rxBuffer.Append(chunk)
+            Dim text As String = _rxBuffer.ToString()
+
+            If text.Contains("0004001") Then
+                RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] MID0004 세션 거부")
+                Throw New InvalidOperationException("Atlas MID0004 session rejected")
+            End If
+            If text.Length >= 8 AndAlso Mid(text, 5, 4) = "0002" Then
+                _rxBuffer.Clear()
+                Return True
+            End If
+            If text.Contains("0061001") Then
+                ParseFrames()
+                Return True
+            End If
+        End While
+
+        Return False
+    End Function
 
     Private Sub SetConnected(value As Boolean)
         If _connected = value Then Return
@@ -199,6 +242,8 @@ Public Class AtlasEthernetToolClient
         Dim midCode As String = Mid(frame, 5, 4)
         If midCode = "0002" OrElse midCode = "0005" OrElse midCode = "9999" Then
             Return
+        ElseIf midCode = "0004" Then
+            RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] MID0004 오류 프레임")
         ElseIf frame.Contains("0061001") Then
             SendAckLastTightening()
             ParseTighteningResult(frame)
@@ -207,17 +252,25 @@ Public Class AtlasEthernetToolClient
 
     Private Sub ParseTighteningResult(frame As String)
         Try
-            If frame.Length < 171 Then
+            Dim anchor0 As Integer = frame.IndexOf("0061", StringComparison.Ordinal)
+            If anchor0 < 0 Then
+                RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 0061 앵커 없음")
+                Return
+            End If
+
+            ' 시리얼 Tool_String1 과 동일 — "0061" 기준 상대 오프셋 (상태=+103, 토크=+137~+141)
+            Dim base1 As Integer = anchor0 + 1
+            If frame.Length < base1 + 141 Then
                 RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1}] 0061 프레임 길이 부족: {frame.Length}")
                 Return
             End If
 
-            Dim statusText As String = Mid(frame, 105, 1)
-            Dim torqueText As String = Mid(frame, 138, 6)
-            Dim angleText As String = Mid(frame, 167, 5)
-
-            Dim torque As Double = CDbl(Val(Strings.Left(torqueText, 4) & "." & Strings.Right(torqueText, 2)))
-            Dim angle As Double = CDbl(Val(Strings.Left(angleText, 3) & "." & Strings.Right(angleText, 2)))
+            Dim statusText As String = Mid(frame, base1 + 103, 1)
+            Dim torque As Double = CDbl(Val(Mid(frame, base1 + 137, 3) & "." & Mid(frame, base1 + 140, 2)))
+            Dim angle As Double = 0
+            If frame.Length >= base1 + 166 Then
+                angle = CDbl(Val(Mid(frame, base1 + 161, 3) & "." & Mid(frame, base1 + 164, 2)))
+            End If
             Dim controllerOk As Boolean = (statusText = "1")
 
             RaiseEvent LogMessage($"[ATLAS T{_toolIndex + 1} RX] 0061 DEC={If(controllerOk, "OK", "NG")}, TQ={torque:0.00}, ANG={angle:0.00}")

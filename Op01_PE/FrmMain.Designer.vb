@@ -23,6 +23,7 @@ Partial Class FrmMain
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmMain))
         Me.Tmr_Work = New System.Windows.Forms.Timer(Me.components)
         Me.Serial_Printer = New System.IO.Ports.SerialPort(Me.components)
@@ -94,18 +95,17 @@ Partial Class FrmMain
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.srclbTargetMotorBarcode = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.srclbDataMotorBarcode = New System.Windows.Forms.Label()
-        Me.srclbDecMotorBarcode = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.srclbSpecMotorTq = New System.Windows.Forms.Label()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.srclbDecMotorTq = New System.Windows.Forms.Label()
-        Me.srclbDataMotorTq = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.srclbTargetMonitorbracketTq = New System.Windows.Forms.Label()
+        Me.srclbDataMonitorbracketTq1 = New System.Windows.Forms.Label()
+        Me.srclbDecMonitorbracketTq1 = New System.Windows.Forms.Label()
+        Me.srclbDataMonitorbracketTq2 = New System.Windows.Forms.Label()
+        Me.srclbDecMonitorbracketTq2 = New System.Windows.Forms.Label()
+        Me.srclbDataMonitorbracketTq3 = New System.Windows.Forms.Label()
+        Me.srclbDecMonitorbracketTq3 = New System.Windows.Forms.Label()
+        Me.srclbDataMonitorbracketTq4 = New System.Windows.Forms.Label()
+        Me.srclbDecMonitorbracketTq4 = New System.Windows.Forms.Label()
         Me.GridCount = New System.Windows.Forms.DataGridView()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -118,16 +118,11 @@ Partial Class FrmMain
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.Label23 = New System.Windows.Forms.Label()
-        Me.srclbDecFrameBarcode = New System.Windows.Forms.Label()
-        Me.srclbDataFrameBarcode = New System.Windows.Forms.Label()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.srclbTargetFrameBarcode = New System.Windows.Forms.Label()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.Label26 = New System.Windows.Forms.Label()
         Me.srclbAlarm = New System.Windows.Forms.Label()
         Me.srcPictureBox = New System.Windows.Forms.PictureBox()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel11.SuspendLayout()
+        CType(Me.GridCount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         CType(Me.srcPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -978,169 +973,159 @@ Partial Class FrmMain
         Me.Label10.Text = "관리 항목"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Label12
-        '
-        Me.Label12.BackColor = System.Drawing.Color.Black
-        Me.Label12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label12.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
-        Me.Label12.ForeColor = System.Drawing.Color.White
-        Me.Label12.Location = New System.Drawing.Point(760, 624)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(143, 104)
-        Me.Label12.TabIndex = 125
-        Me.Label12.Text = "모터 바코드"
-        Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label13
-        '
-        Me.Label13.BackColor = System.Drawing.Color.Black
-        Me.Label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label13.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.Label13.ForeColor = System.Drawing.Color.White
-        Me.Label13.Location = New System.Drawing.Point(903, 624)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(106, 52)
-        Me.Label13.TabIndex = 127
-        Me.Label13.Text = "목표"
-        Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'srclbTargetMotorBarcode
-        '
-        Me.srclbTargetMotorBarcode.BackColor = System.Drawing.Color.Black
-        Me.srclbTargetMotorBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbTargetMotorBarcode.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbTargetMotorBarcode.ForeColor = System.Drawing.Color.White
-        Me.srclbTargetMotorBarcode.Location = New System.Drawing.Point(1009, 624)
-        Me.srclbTargetMotorBarcode.Name = "srclbTargetMotorBarcode"
-        Me.srclbTargetMotorBarcode.Size = New System.Drawing.Size(484, 52)
-        Me.srclbTargetMotorBarcode.TabIndex = 128
-        Me.srclbTargetMotorBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label15
-        '
-        Me.Label15.BackColor = System.Drawing.Color.Black
-        Me.Label15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label15.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.Label15.ForeColor = System.Drawing.Color.White
-        Me.Label15.Location = New System.Drawing.Point(903, 676)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(106, 52)
-        Me.Label15.TabIndex = 129
-        Me.Label15.Text = "입력"
-        Me.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'srclbDataMotorBarcode
-        '
-        Me.srclbDataMotorBarcode.BackColor = System.Drawing.Color.Black
-        Me.srclbDataMotorBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbDataMotorBarcode.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbDataMotorBarcode.ForeColor = System.Drawing.Color.White
-        Me.srclbDataMotorBarcode.Location = New System.Drawing.Point(1009, 676)
-        Me.srclbDataMotorBarcode.Name = "srclbDataMotorBarcode"
-        Me.srclbDataMotorBarcode.Size = New System.Drawing.Size(385, 52)
-        Me.srclbDataMotorBarcode.TabIndex = 130
-        Me.srclbDataMotorBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'srclbDecMotorBarcode
-        '
-        Me.srclbDecMotorBarcode.BackColor = System.Drawing.Color.Black
-        Me.srclbDecMotorBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbDecMotorBarcode.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbDecMotorBarcode.ForeColor = System.Drawing.Color.White
-        Me.srclbDecMotorBarcode.Location = New System.Drawing.Point(1394, 676)
-        Me.srclbDecMotorBarcode.Name = "srclbDecMotorBarcode"
-        Me.srclbDecMotorBarcode.Size = New System.Drawing.Size(99, 52)
-        Me.srclbDecMotorBarcode.TabIndex = 131
-        Me.srclbDecMotorBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label18
-        '
-        Me.Label18.BackColor = System.Drawing.Color.Black
-        Me.Label18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label18.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.Label18.ForeColor = System.Drawing.Color.White
-        Me.Label18.Location = New System.Drawing.Point(903, 780)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(106, 52)
-        Me.Label18.TabIndex = 132
-        Me.Label18.Text = "토크"
-        Me.Label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'Label19
         '
         Me.Label19.BackColor = System.Drawing.Color.Black
         Me.Label19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label19.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
         Me.Label19.ForeColor = System.Drawing.Color.White
-        Me.Label19.Location = New System.Drawing.Point(760, 728)
+        Me.Label19.Location = New System.Drawing.Point(760, 624)
         Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(143, 104)
+        Me.Label19.Size = New System.Drawing.Size(143, 276)
         Me.Label19.TabIndex = 133
-        Me.Label19.Text = "모터 T/Q"
+        Me.Label19.Text = "모니터브라켓 T/Q"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'srclbSpecMotorTq
+        'Label24
         '
-        Me.srclbSpecMotorTq.BackColor = System.Drawing.Color.Black
-        Me.srclbSpecMotorTq.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbSpecMotorTq.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbSpecMotorTq.ForeColor = System.Drawing.Color.White
-        Me.srclbSpecMotorTq.Location = New System.Drawing.Point(1009, 728)
-        Me.srclbSpecMotorTq.Name = "srclbSpecMotorTq"
-        Me.srclbSpecMotorTq.Size = New System.Drawing.Size(484, 52)
-        Me.srclbSpecMotorTq.TabIndex = 135
-        Me.srclbSpecMotorTq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label24.BackColor = System.Drawing.Color.Black
+        Me.Label24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Label24.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.Label24.ForeColor = System.Drawing.Color.White
+        Me.Label24.Location = New System.Drawing.Point(903, 624)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(106, 55)
+        Me.Label24.TabIndex = 147
+        Me.Label24.Text = "목표"
+        Me.Label24.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Label21
+        'srclbTargetMonitorbracketTq
         '
-        Me.Label21.BackColor = System.Drawing.Color.Black
-        Me.Label21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label21.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.Label21.ForeColor = System.Drawing.Color.White
-        Me.Label21.Location = New System.Drawing.Point(903, 728)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(106, 52)
-        Me.Label21.TabIndex = 134
-        Me.Label21.Text = "기준"
-        Me.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.srclbTargetMonitorbracketTq.BackColor = System.Drawing.Color.Black
+        Me.srclbTargetMonitorbracketTq.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbTargetMonitorbracketTq.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbTargetMonitorbracketTq.ForeColor = System.Drawing.Color.White
+        Me.srclbTargetMonitorbracketTq.Location = New System.Drawing.Point(1009, 624)
+        Me.srclbTargetMonitorbracketTq.Name = "srclbTargetMonitorbracketTq"
+        Me.srclbTargetMonitorbracketTq.Size = New System.Drawing.Size(484, 55)
+        Me.srclbTargetMonitorbracketTq.TabIndex = 148
+        Me.srclbTargetMonitorbracketTq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'srclbDecMotorTq
+        'srclbDataMonitorbracketTq1
         '
-        Me.srclbDecMotorTq.BackColor = System.Drawing.Color.Black
-        Me.srclbDecMotorTq.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbDecMotorTq.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbDecMotorTq.ForeColor = System.Drawing.Color.White
-        Me.srclbDecMotorTq.Location = New System.Drawing.Point(1394, 780)
-        Me.srclbDecMotorTq.Name = "srclbDecMotorTq"
-        Me.srclbDecMotorTq.Size = New System.Drawing.Size(99, 52)
-        Me.srclbDecMotorTq.TabIndex = 137
-        Me.srclbDecMotorTq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.srclbDataMonitorbracketTq1.BackColor = System.Drawing.Color.Black
+        Me.srclbDataMonitorbracketTq1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDataMonitorbracketTq1.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDataMonitorbracketTq1.ForeColor = System.Drawing.Color.White
+        Me.srclbDataMonitorbracketTq1.Location = New System.Drawing.Point(903, 679)
+        Me.srclbDataMonitorbracketTq1.Name = "srclbDataMonitorbracketTq1"
+        Me.srclbDataMonitorbracketTq1.Size = New System.Drawing.Size(491, 55)
+        Me.srclbDataMonitorbracketTq1.TabIndex = 136
+        Me.srclbDataMonitorbracketTq1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'srclbDataMotorTq
+        'srclbDecMonitorbracketTq1
         '
-        Me.srclbDataMotorTq.BackColor = System.Drawing.Color.Black
-        Me.srclbDataMotorTq.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbDataMotorTq.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbDataMotorTq.ForeColor = System.Drawing.Color.White
-        Me.srclbDataMotorTq.Location = New System.Drawing.Point(1009, 780)
-        Me.srclbDataMotorTq.Name = "srclbDataMotorTq"
-        Me.srclbDataMotorTq.Size = New System.Drawing.Size(385, 52)
-        Me.srclbDataMotorTq.TabIndex = 136
-        Me.srclbDataMotorTq.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.srclbDecMonitorbracketTq1.BackColor = System.Drawing.Color.Black
+        Me.srclbDecMonitorbracketTq1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDecMonitorbracketTq1.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDecMonitorbracketTq1.ForeColor = System.Drawing.Color.White
+        Me.srclbDecMonitorbracketTq1.Location = New System.Drawing.Point(1394, 679)
+        Me.srclbDecMonitorbracketTq1.Name = "srclbDecMonitorbracketTq1"
+        Me.srclbDecMonitorbracketTq1.Size = New System.Drawing.Size(99, 55)
+        Me.srclbDecMonitorbracketTq1.TabIndex = 137
+        Me.srclbDecMonitorbracketTq1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srclbDataMonitorbracketTq2
+        '
+        Me.srclbDataMonitorbracketTq2.BackColor = System.Drawing.Color.Black
+        Me.srclbDataMonitorbracketTq2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDataMonitorbracketTq2.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDataMonitorbracketTq2.ForeColor = System.Drawing.Color.White
+        Me.srclbDataMonitorbracketTq2.Location = New System.Drawing.Point(903, 734)
+        Me.srclbDataMonitorbracketTq2.Name = "srclbDataMonitorbracketTq2"
+        Me.srclbDataMonitorbracketTq2.Size = New System.Drawing.Size(491, 55)
+        Me.srclbDataMonitorbracketTq2.TabIndex = 139
+        Me.srclbDataMonitorbracketTq2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srclbDecMonitorbracketTq2
+        '
+        Me.srclbDecMonitorbracketTq2.BackColor = System.Drawing.Color.Black
+        Me.srclbDecMonitorbracketTq2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDecMonitorbracketTq2.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDecMonitorbracketTq2.ForeColor = System.Drawing.Color.White
+        Me.srclbDecMonitorbracketTq2.Location = New System.Drawing.Point(1394, 734)
+        Me.srclbDecMonitorbracketTq2.Name = "srclbDecMonitorbracketTq2"
+        Me.srclbDecMonitorbracketTq2.Size = New System.Drawing.Size(99, 55)
+        Me.srclbDecMonitorbracketTq2.TabIndex = 140
+        Me.srclbDecMonitorbracketTq2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srclbDataMonitorbracketTq3
+        '
+        Me.srclbDataMonitorbracketTq3.BackColor = System.Drawing.Color.Black
+        Me.srclbDataMonitorbracketTq3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDataMonitorbracketTq3.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDataMonitorbracketTq3.ForeColor = System.Drawing.Color.White
+        Me.srclbDataMonitorbracketTq3.Location = New System.Drawing.Point(903, 789)
+        Me.srclbDataMonitorbracketTq3.Name = "srclbDataMonitorbracketTq3"
+        Me.srclbDataMonitorbracketTq3.Size = New System.Drawing.Size(491, 55)
+        Me.srclbDataMonitorbracketTq3.TabIndex = 142
+        Me.srclbDataMonitorbracketTq3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srclbDecMonitorbracketTq3
+        '
+        Me.srclbDecMonitorbracketTq3.BackColor = System.Drawing.Color.Black
+        Me.srclbDecMonitorbracketTq3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDecMonitorbracketTq3.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDecMonitorbracketTq3.ForeColor = System.Drawing.Color.White
+        Me.srclbDecMonitorbracketTq3.Location = New System.Drawing.Point(1394, 789)
+        Me.srclbDecMonitorbracketTq3.Name = "srclbDecMonitorbracketTq3"
+        Me.srclbDecMonitorbracketTq3.Size = New System.Drawing.Size(99, 55)
+        Me.srclbDecMonitorbracketTq3.TabIndex = 143
+        Me.srclbDecMonitorbracketTq3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srclbDataMonitorbracketTq4
+        '
+        Me.srclbDataMonitorbracketTq4.BackColor = System.Drawing.Color.Black
+        Me.srclbDataMonitorbracketTq4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDataMonitorbracketTq4.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDataMonitorbracketTq4.ForeColor = System.Drawing.Color.White
+        Me.srclbDataMonitorbracketTq4.Location = New System.Drawing.Point(903, 844)
+        Me.srclbDataMonitorbracketTq4.Name = "srclbDataMonitorbracketTq4"
+        Me.srclbDataMonitorbracketTq4.Size = New System.Drawing.Size(491, 55)
+        Me.srclbDataMonitorbracketTq4.TabIndex = 145
+        Me.srclbDataMonitorbracketTq4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srclbDecMonitorbracketTq4
+        '
+        Me.srclbDecMonitorbracketTq4.BackColor = System.Drawing.Color.Black
+        Me.srclbDecMonitorbracketTq4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srclbDecMonitorbracketTq4.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
+        Me.srclbDecMonitorbracketTq4.ForeColor = System.Drawing.Color.White
+        Me.srclbDecMonitorbracketTq4.Location = New System.Drawing.Point(1394, 844)
+        Me.srclbDecMonitorbracketTq4.Name = "srclbDecMonitorbracketTq4"
+        Me.srclbDecMonitorbracketTq4.Size = New System.Drawing.Size(99, 55)
+        Me.srclbDecMonitorbracketTq4.TabIndex = 146
+        Me.srclbDecMonitorbracketTq4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'GridCount
         '
         Me.GridCount.AllowUserToAddRows = False
         Me.GridCount.AllowUserToDeleteRows = False
-        Me.GridCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.GridCount.DefaultCellStyle.Font = New System.Drawing.Font("Arial Narrow", 18.0!)
-        Me.GridCount.RowTemplate.Height = 30
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Arial Narrow", 18.0!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.GridCount.DefaultCellStyle = DataGridViewCellStyle1
         Me.GridCount.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.GridCount.GridColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(192, Byte), Integer))
         Me.GridCount.Location = New System.Drawing.Point(1493, 624)
         Me.GridCount.Name = "GridCount"
         Me.GridCount.ReadOnly = True
         Me.GridCount.RowHeadersVisible = False
+        Me.GridCount.RowTemplate.Height = 30
         Me.GridCount.ScrollBars = System.Windows.Forms.ScrollBars.None
         Me.GridCount.Size = New System.Drawing.Size(423, 422)
         Me.GridCount.TabIndex = 138
@@ -1189,9 +1174,9 @@ Partial Class FrmMain
         Me.srclbDecTool.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbDecTool.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbDecTool.ForeColor = System.Drawing.Color.White
-        Me.srclbDecTool.Location = New System.Drawing.Point(1394, 884)
+        Me.srclbDecTool.Location = New System.Drawing.Point(1394, 970)
         Me.srclbDecTool.Name = "srclbDecTool"
-        Me.srclbDecTool.Size = New System.Drawing.Size(99, 52)
+        Me.srclbDecTool.Size = New System.Drawing.Size(99, 69)
         Me.srclbDecTool.TabIndex = 145
         Me.srclbDecTool.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -1201,9 +1186,9 @@ Partial Class FrmMain
         Me.srclbDataTool.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbDataTool.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbDataTool.ForeColor = System.Drawing.Color.White
-        Me.srclbDataTool.Location = New System.Drawing.Point(1009, 884)
+        Me.srclbDataTool.Location = New System.Drawing.Point(1009, 970)
         Me.srclbDataTool.Name = "srclbDataTool"
-        Me.srclbDataTool.Size = New System.Drawing.Size(385, 52)
+        Me.srclbDataTool.Size = New System.Drawing.Size(385, 69)
         Me.srclbDataTool.TabIndex = 144
         Me.srclbDataTool.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -1213,9 +1198,9 @@ Partial Class FrmMain
         Me.srclbTargetTool.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbTargetTool.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbTargetTool.ForeColor = System.Drawing.Color.White
-        Me.srclbTargetTool.Location = New System.Drawing.Point(1009, 832)
+        Me.srclbTargetTool.Location = New System.Drawing.Point(1009, 901)
         Me.srclbTargetTool.Name = "srclbTargetTool"
-        Me.srclbTargetTool.Size = New System.Drawing.Size(484, 52)
+        Me.srclbTargetTool.Size = New System.Drawing.Size(484, 69)
         Me.srclbTargetTool.TabIndex = 143
         Me.srclbTargetTool.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -1225,9 +1210,9 @@ Partial Class FrmMain
         Me.Label20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label20.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label20.ForeColor = System.Drawing.Color.White
-        Me.Label20.Location = New System.Drawing.Point(903, 832)
+        Me.Label20.Location = New System.Drawing.Point(903, 901)
         Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(106, 52)
+        Me.Label20.Size = New System.Drawing.Size(106, 69)
         Me.Label20.TabIndex = 142
         Me.Label20.Text = "목표"
         Me.Label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1238,9 +1223,9 @@ Partial Class FrmMain
         Me.Label22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label22.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
         Me.Label22.ForeColor = System.Drawing.Color.White
-        Me.Label22.Location = New System.Drawing.Point(760, 832)
+        Me.Label22.Location = New System.Drawing.Point(760, 900)
         Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(143, 104)
+        Me.Label22.Size = New System.Drawing.Size(143, 138)
         Me.Label22.TabIndex = 141
         Me.Label22.Text = "에어툴"
         Me.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1251,87 +1236,12 @@ Partial Class FrmMain
         Me.Label23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label23.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label23.ForeColor = System.Drawing.Color.White
-        Me.Label23.Location = New System.Drawing.Point(903, 884)
+        Me.Label23.Location = New System.Drawing.Point(903, 970)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(106, 52)
+        Me.Label23.Size = New System.Drawing.Size(106, 69)
         Me.Label23.TabIndex = 140
         Me.Label23.Text = "체결"
         Me.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'srclbDecFrameBarcode
-        '
-        Me.srclbDecFrameBarcode.BackColor = System.Drawing.Color.Black
-        Me.srclbDecFrameBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbDecFrameBarcode.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbDecFrameBarcode.ForeColor = System.Drawing.Color.White
-        Me.srclbDecFrameBarcode.Location = New System.Drawing.Point(1394, 988)
-        Me.srclbDecFrameBarcode.Name = "srclbDecFrameBarcode"
-        Me.srclbDecFrameBarcode.Size = New System.Drawing.Size(99, 52)
-        Me.srclbDecFrameBarcode.TabIndex = 151
-        Me.srclbDecFrameBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'srclbDataFrameBarcode
-        '
-        Me.srclbDataFrameBarcode.BackColor = System.Drawing.Color.Black
-        Me.srclbDataFrameBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbDataFrameBarcode.Font = New System.Drawing.Font("Arial Narrow", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbDataFrameBarcode.ForeColor = System.Drawing.Color.White
-        Me.srclbDataFrameBarcode.Location = New System.Drawing.Point(1009, 988)
-        Me.srclbDataFrameBarcode.Name = "srclbDataFrameBarcode"
-        Me.srclbDataFrameBarcode.Size = New System.Drawing.Size(385, 52)
-        Me.srclbDataFrameBarcode.TabIndex = 150
-        Me.srclbDataFrameBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label17
-        '
-        Me.Label17.BackColor = System.Drawing.Color.Black
-        Me.Label17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label17.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.Label17.ForeColor = System.Drawing.Color.White
-        Me.Label17.Location = New System.Drawing.Point(903, 988)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(106, 52)
-        Me.Label17.TabIndex = 149
-        Me.Label17.Text = "입력"
-        Me.Label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'srclbTargetFrameBarcode
-        '
-        Me.srclbTargetFrameBarcode.BackColor = System.Drawing.Color.Black
-        Me.srclbTargetFrameBarcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.srclbTargetFrameBarcode.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
-        Me.srclbTargetFrameBarcode.ForeColor = System.Drawing.Color.White
-        Me.srclbTargetFrameBarcode.Location = New System.Drawing.Point(1009, 936)
-        Me.srclbTargetFrameBarcode.Name = "srclbTargetFrameBarcode"
-        Me.srclbTargetFrameBarcode.Size = New System.Drawing.Size(484, 52)
-        Me.srclbTargetFrameBarcode.TabIndex = 148
-        Me.srclbTargetFrameBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label25
-        '
-        Me.Label25.BackColor = System.Drawing.Color.Black
-        Me.Label25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label25.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.Label25.ForeColor = System.Drawing.Color.White
-        Me.Label25.Location = New System.Drawing.Point(903, 936)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(106, 52)
-        Me.Label25.TabIndex = 147
-        Me.Label25.Text = "목표"
-        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label26
-        '
-        Me.Label26.BackColor = System.Drawing.Color.Black
-        Me.Label26.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label26.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
-        Me.Label26.ForeColor = System.Drawing.Color.White
-        Me.Label26.Location = New System.Drawing.Point(760, 936)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(143, 104)
-        Me.Label26.TabIndex = 146
-        Me.Label26.Text = "프레임 바코드"
-        Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'srclbAlarm
         '
@@ -1363,12 +1273,14 @@ Partial Class FrmMain
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1917, 1047)
         Me.Controls.Add(Me.srclbAlarm)
-        Me.Controls.Add(Me.srclbDecFrameBarcode)
-        Me.Controls.Add(Me.srclbDataFrameBarcode)
-        Me.Controls.Add(Me.Label17)
-        Me.Controls.Add(Me.srclbTargetFrameBarcode)
-        Me.Controls.Add(Me.Label25)
-        Me.Controls.Add(Me.Label26)
+        Me.Controls.Add(Me.srclbDecMonitorbracketTq4)
+        Me.Controls.Add(Me.srclbDataMonitorbracketTq4)
+        Me.Controls.Add(Me.srclbDecMonitorbracketTq3)
+        Me.Controls.Add(Me.srclbDataMonitorbracketTq3)
+        Me.Controls.Add(Me.srclbDecMonitorbracketTq2)
+        Me.Controls.Add(Me.srclbDataMonitorbracketTq2)
+        Me.Controls.Add(Me.srclbDecMonitorbracketTq1)
+        Me.Controls.Add(Me.srclbDataMonitorbracketTq1)
         Me.Controls.Add(Me.srclbDecTool)
         Me.Controls.Add(Me.srclbDataTool)
         Me.Controls.Add(Me.srclbTargetTool)
@@ -1377,18 +1289,9 @@ Partial Class FrmMain
         Me.Controls.Add(Me.Label23)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.GridCount)
-        Me.Controls.Add(Me.srclbDecMotorTq)
-        Me.Controls.Add(Me.srclbDataMotorTq)
-        Me.Controls.Add(Me.srclbSpecMotorTq)
-        Me.Controls.Add(Me.Label21)
         Me.Controls.Add(Me.Label19)
-        Me.Controls.Add(Me.Label18)
-        Me.Controls.Add(Me.srclbDecMotorBarcode)
-        Me.Controls.Add(Me.srclbDataMotorBarcode)
-        Me.Controls.Add(Me.Label15)
-        Me.Controls.Add(Me.srclbTargetMotorBarcode)
-        Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.Label24)
+        Me.Controls.Add(Me.srclbTargetMonitorbracketTq)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.srcLbSerial)
         Me.Controls.Add(Me.Label9)
@@ -1419,6 +1322,7 @@ Partial Class FrmMain
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.Panel11.ResumeLayout(False)
+        CType(Me.GridCount, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         CType(Me.srcPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -1453,18 +1357,17 @@ Partial Class FrmMain
     Friend WithEvents srcPictureBox As System.Windows.Forms.PictureBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents srclbTargetMotorBarcode As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents srclbDataMotorBarcode As System.Windows.Forms.Label
-    Friend WithEvents srclbDecMotorBarcode As System.Windows.Forms.Label
-    Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents Label19 As System.Windows.Forms.Label
-    Friend WithEvents srclbSpecMotorTq As System.Windows.Forms.Label
-    Friend WithEvents Label21 As System.Windows.Forms.Label
-    Friend WithEvents srclbDecMotorTq As System.Windows.Forms.Label
-    Friend WithEvents srclbDataMotorTq As System.Windows.Forms.Label
+    Friend WithEvents Label24 As System.Windows.Forms.Label
+    Friend WithEvents srclbTargetMonitorbracketTq As System.Windows.Forms.Label
+    Friend WithEvents srclbDataMonitorbracketTq1 As System.Windows.Forms.Label
+    Friend WithEvents srclbDecMonitorbracketTq1 As System.Windows.Forms.Label
+    Friend WithEvents srclbDataMonitorbracketTq2 As System.Windows.Forms.Label
+    Friend WithEvents srclbDecMonitorbracketTq2 As System.Windows.Forms.Label
+    Friend WithEvents srclbDataMonitorbracketTq3 As System.Windows.Forms.Label
+    Friend WithEvents srclbDecMonitorbracketTq3 As System.Windows.Forms.Label
+    Friend WithEvents srclbDataMonitorbracketTq4 As System.Windows.Forms.Label
+    Friend WithEvents srclbDecMonitorbracketTq4 As System.Windows.Forms.Label
     Friend WithEvents GridCount As System.Windows.Forms.DataGridView
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
@@ -1520,11 +1423,5 @@ Partial Class FrmMain
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents srclbDecFrameBarcode As System.Windows.Forms.Label
-    Friend WithEvents srclbDataFrameBarcode As System.Windows.Forms.Label
-    Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents srclbTargetFrameBarcode As System.Windows.Forms.Label
-    Friend WithEvents Label25 As System.Windows.Forms.Label
-    Friend WithEvents Label26 As System.Windows.Forms.Label
     Friend WithEvents srclbAlarm As System.Windows.Forms.Label
 End Class

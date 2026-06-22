@@ -106,35 +106,5 @@ Module IoSignalMap
 
     End Sub
 
-
-
-    Public Sub ApplyPlcWrite(ios As FbeiIoClient, startReg As Integer, message As String)
-
-        If message Is Nothing Then Exit Sub
-
-        For i As Integer = 0 To message.Length - 1
-
-            Dim reg As Integer = startReg + i
-
-            Dim val As Integer = 0
-
-            Integer.TryParse(message.Substring(i, 1), val)
-
-            PlcValue(reg) = val
-
-            Dim outPin As Integer = PlcRegToOutputPin(reg)
-
-            If outPin >= 0 AndAlso ios IsNot Nothing Then
-
-                IoMap.SetOut(ios, outPin, val <> 0)
-
-            End If
-
-        Next
-
-    End Sub
-
-
-
 End Module
 

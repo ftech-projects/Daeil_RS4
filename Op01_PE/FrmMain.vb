@@ -15,9 +15,6 @@ Imports System.IO.Ports
 
 Public Class FrmMain
 
-    Private TmpSeq As String
-    Private AlarmMessage(100) As String
-
     Private TmpToolCount As Integer
     Private StartTIme As String
     Private Tool1_Delay_count As Double
@@ -27,6 +24,7 @@ Public Class FrmMain
     Private Tool1_Count As Integer
     Private AtlasTools(1) As AtlasEthernetToolClient
     Private AtlasToolEnabled As Boolean
+    Private ReadOnly _atlasConnected(1) As Boolean  ' T1/T2 실제 TCP 연결
 
     Private Timer As New HiResTimer()
     Private Const LogMaxLines As Integer = 500
@@ -40,7 +38,7 @@ Public Class FrmMain
     Private WithEvents Ios As FbeiIoClient
     Private IoConnected As Boolean
 
-    ' FBEI 운전 스위치 상태 (ch1=Start, ch2=Reset, ch3=비상정지)
+    ' FBEI 운전 스위치 (ch1=Start, ch2=Reset, ch3=비상정지 NO — 누름=ON)
     Private IoInStart As Boolean
     Private IoInReset As Boolean
     Private IoInEStop As Boolean
@@ -48,8 +46,17 @@ Public Class FrmMain
     Private IoResetPrev As Boolean
     Private IoEStopPrev As Boolean
     Private _eStopLatched As Boolean
-    Private _readyForDown As Boolean   ' wStep 3 다운前 판정 OK → Start로 지그다운
-    Private _readyForUp As Boolean     ' wStep 3.4 다운後 공구 판정 OK → Start로 지그업
+    Private Enum PeStartWait
+        None = 0
+        JigDown = 1
+        JigUp = 2
+        Unclamp = 3
+    End Enum
+    Private _peStartWait As PeStartWait = PeStartWait.None
+    Private _partScannedReady As Boolean  ' wStep 0 품번 스캔·정보 표시 완료 → Start 대기
+    Private AlarmMessage(100) As String
+    Private _cachedMainSerialLength As Integer = -1
+    Private Const PeSerialSeqDigits As Integer = 4
 
     Declare Function Wow64DisableWow64FsRedirection Lib "kernel32" (ByRef oldvalue As Long) As Boolean
     Declare Function Wow64EnableWow64FsRedirection Lib "kernel32" (ByRef oldvalue As Long) As Boolean
@@ -61,10 +68,13 @@ Public Class FrmMain
     Private OptionFootRest As Boolean
     Private OptionMonitor As Boolean
 
-    Private TargetMotorBarcode As String
-    Private TargetFrameBarcode As String
     Private TargetToolNum As Integer
-    Private TargetMotorTQ As Boolean
+    Private _usePeMonitorbracketTq As Boolean
+
+    Private Const MonitorbracketTqCount As Integer = 4
+    Private _dataMonitorbracketTq() As Label
+    Private _decMonitorbracketTq() As Label
+    Private _monitorbracketTqWired As Boolean
 
     Private D_OutString As String
     Private rStep As Double
@@ -74,7 +84,6 @@ Public Class FrmMain
     Private EndTime As String
     Private wStep As Double
     Private wCount As Double
-    Private PcAliveCount As Integer
 
     Public D_Value(0 To 48) As Integer
     ' IO보드 IN/OUT 인디케이터 (CW LED→일반 Label 변경). 와꾸 — 생성/배치는 다음 단계
@@ -88,18 +97,42 @@ Public Class FrmMain
 
     Private Player As New SoundPlayer
 
+    Private ReadOnly Property SoundBasePath As String
+        Get
+            Return System.AppDomain.CurrentDomain.BaseDirectory & "\SOUND\"
+        End Get
+    End Property
+
+    Private Sub PlayNgSound()
+        Player.SoundLocation = SoundBasePath & "NG.wav"
+        Player.Load()
+        Player.Play()
+    End Sub
+
+    Private Sub PlayOkSound()
+        Player.SoundLocation = SoundBasePath & "DINGDONG.wav"
+        Player.Load()
+        Player.Play()
+    End Sub
+
     Private Sub NG()
-
-        Me.Player.SoundLocation = System.AppDomain.CurrentDomain.BaseDirectory & "\SOUND\NG.wav"
-        Me.Player.Play()
-
+        PlayNgSound()
     End Sub
 
     Private Sub DingDOng()
+        PlayOkSound()
+    End Sub
 
-        Me.Player.SoundLocation = System.AppDomain.CurrentDomain.BaseDirectory & "\SOUND\DINGDONG.wav"
-        Me.Player.Play()
+    ''' <summary>srclbAlarm — 비상정지 전용 (그 외 안내는 txtMessage 로그만)</summary>
+    Private Sub ShowEStopAlarm()
+        srclbAlarm.Visible = True
+        srclbAlarm.Text = "비상정지 — 리셋 후 재시작"
+    End Sub
 
+    Private Sub HideEStopAlarm()
+        If _eStopLatched OrElse IoInEStop Then Return
+        srclbAlarm.Visible = False
+        srclbAlarm.Text = ""
     End Sub
 
     Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -146,9 +179,225 @@ Public Class FrmMain
     '   ... (미사용)
     'End Sub
 
+    Private Sub EnsureMonitorbracketTqLabels()
+        If _monitorbracketTqWired Then Return
+        _dataMonitorbracketTq = {srclbDataMonitorbracketTq1, srclbDataMonitorbracketTq2, srclbDataMonitorbracketTq3, srclbDataMonitorbracketTq4}
+        _decMonitorbracketTq = {srclbDecMonitorbracketTq1, srclbDecMonitorbracketTq2, srclbDecMonitorbracketTq3, srclbDecMonitorbracketTq4}
+        _monitorbracketTqWired = True
+        UpdateMonitorbracketTqHeader()
+    End Sub
+
+    Private Sub UpdateMonitorbracketTqHeader()
+        Label19.Text = "모니터브라켓 T/Q"
+        If IsPeMonitorbracketTqNa() Then
+            srclbTargetMonitorbracketTq.Text = "NA"
+        Else
+            srclbTargetMonitorbracketTq.Text = MonitorbracketTqSpecText
+        End If
+    End Sub
+
+    Private ReadOnly Property MonitorbracketTqSpecText As String
+        Get
+            Return BasicToolMin & " ~ " & BasicToolMax & " " & BAsicUnit
+        End Get
+    End Property
+
+    Private Function IsPeMonitorbracketTqNa() As Boolean
+        Return Not _usePeMonitorbracketTq
+    End Function
+
+    ''' <summary>모니터브라켓 T/Q 검사 사용 (Use_PE_MonitorbracketTq=1)</summary>
+    Private Function PeNeedsMonitorbracketTq() As Boolean
+        Return _usePeMonitorbracketTq
+    End Function
+
+    ''' <summary>에어툴 사용 (Target_PE_ToolNum ≠ 0·NULL)</summary>
+    Private Function PeNeedsAirTool() As Boolean
+        Return TargetToolNum > 0
+    End Function
+
+    Private Function IsPeAirToolNa() As Boolean
+        Return Not PeNeedsAirTool()
+    End Function
+
+    Private Sub ResetMonitorbracketTqRow(ByVal index As Integer, ByVal markNa As Boolean)
+        EnsureMonitorbracketTqLabels()
+        If markNa Then
+            _dataMonitorbracketTq(index).Text = "NA"
+            _decMonitorbracketTq(index).Text = "NA"
+            _decMonitorbracketTq(index).BackColor = Color.Green
+        Else
+            _dataMonitorbracketTq(index).Text = ""
+            _decMonitorbracketTq(index).Text = ""
+            _decMonitorbracketTq(index).BackColor = Color.Black
+        End If
+    End Sub
+
+    Private Sub ResetAllMonitorbracketTq()
+        Dim markNa As Boolean = IsPeMonitorbracketTqNa()
+        For i As Integer = 0 To MonitorbracketTqCount - 1
+            ResetMonitorbracketTqRow(i, markNa)
+        Next
+    End Sub
+
+    Private Function GetNextMonitorbracketTqSlot() As Integer
+        EnsureMonitorbracketTqLabels()
+        For i As Integer = 0 To MonitorbracketTqCount - 1
+            Dim state As String = _decMonitorbracketTq(i).Text
+            If state <> "OK" AndAlso state <> "NA" Then Return i
+        Next
+        Return -1
+    End Function
+
+    Private Function AllMonitorbracketTqDone() As Boolean
+        EnsureMonitorbracketTqLabels()
+        For i As Integer = 0 To MonitorbracketTqCount - 1
+            Dim state As String = _decMonitorbracketTq(i).Text
+            If state <> "OK" AndAlso state <> "NA" AndAlso state <> "PASS" Then Return False
+        Next
+        Return True
+    End Function
+
+    Private Function SqlEscape(ByVal value As String) As String
+        Return Trim(If(value, "")).Replace("'", "''")
+    End Function
+
+    Private Function ReadDbUseFlag(ByVal field As Object) As Boolean
+        If field Is Nothing OrElse IsDBNull(field) Then Return False
+        Dim s As String = Trim(CStr(field))
+        If s = "" OrElse s = "0" Then Return False
+        If String.Equals(s, "false", StringComparison.OrdinalIgnoreCase) Then Return False
+        Return True
+    End Function
+
+    ''' <summary>클램프 완료 후 wStep 3 — 모니터브라켓 T/Q (Use_PE_MonitorbracketTq=1 일 때만)</summary>
+    Private Sub BeginMonitorbracketWorkStep()
+        _peStartWait = PeStartWait.None
+        For i As Integer = 0 To MonitorbracketTqCount - 1
+            ResetMonitorbracketTqRow(i, False)
+        Next
+
+        srclbDataTool.Text = ""
+        srclbDecTool.Text = ""
+        srclbDecTool.BackColor = Color.Black
+
+        WriteTxtMessage("[IO] 제품 고정 완료 — 모니터브라켓 T/Q 시작 (4회)")
+    End Sub
+
+    ''' <summary>클램프 완료(IN 확인) 후 다음 공정 분기</summary>
+    Private Sub RouteAfterClampComplete()
+        If PeNeedsMonitorbracketTq() Then
+            wStep = 3
+            BeginMonitorbracketWorkStep()
+        ElseIf PeNeedsAirTool() Then
+            wStep = 3.1
+            _peStartWait = PeStartWait.JigDown
+            WriteTxtMessage("[IO] 클램프 완료 — T/Q N/A, Start 대기 (지그 다운)")
+        Else
+            wStep = 3.7
+            _peStartWait = PeStartWait.Unclamp
+            WriteTxtMessage("[IO] 클램프 완료 — T/Q·에어툴 N/A, Start 대기 (언클램프)")
+        End If
+    End Sub
+
+    ''' <summary>모니터브라켓 T/Q 4회 완료 후 다음 공정 분기</summary>
+    Private Sub RouteAfterTqComplete()
+        If PeNeedsAirTool() Then
+            _peStartWait = PeStartWait.JigDown
+            WriteTxtMessage("[IO] 모니터브라켓 T/Q 완료 — Start 대기 (지그 다운)")
+        Else
+            wStep = 3.7
+            _peStartWait = PeStartWait.Unclamp
+            WriteTxtMessage("[IO] 모니터브라켓 T/Q 완료 — 에어툴 N/A, Start 대기 (언클램프)")
+        End If
+    End Sub
+
+    ''' <summary>언클램프 시작 — 1·2번 OUT:03,09→IN:06,12 / OUT:01,07→IN:04,10</summary>
+    Private Sub BeginPeUnclamp()
+        If Ios Is Nothing OrElse Not IoConnected Then
+            WriteTxtMessage("[IO] 언클램프 거부 — IO 미연결")
+            Return
+        End If
+        If Not JigClampSequence.IsJigAtUp(Ios) Then
+            WriteTxtMessage("[IO] 언클램프 거부 — IN:14 ON, IN:13 OFF 필요")
+            NG()
+            Return
+        End If
+        _peStartWait = PeStartWait.None
+        JigClampSequence.BeginRelease()
+        wStep = 3.9
+        WriteTxtMessage("[IO] 제품 해제 시작 (wStep 3.9)")
+    End Sub
+
+    Private Sub SavePeMonitorbracketTqToMain(ByVal slot As Integer, ByVal tqValue As String)
+        If srcLbSerial.Text = "" OrElse slot < 0 OrElse slot >= MonitorbracketTqCount Then Return
+        Dim col As String = "PE_MonitorbracketTq" & CStr(slot + 1)
+        Try
+            ConnectionOpenSQL()
+            Dim sql As String = "UPDATE TABLE_MAIN SET " & col & " = '" & SqlEscape(tqValue) &
+                "' WHERE SerialNo = '" & SqlEscape(srcLbSerial.Text) & "'"
+            SqlConnect.Execute(sql)
+            WriteTxtMessage("[DB] " & col & " 저장 — " & tqValue)
+        Catch ex As Exception
+            WriteTxtMessage("[DB] " & col & " 저장 실패 — " & ex.Message)
+        Finally
+            ConnectionCloseSQL()
+        End Try
+    End Sub
+
+    Private Sub SavePeWorkToMain()
+        EnsureMonitorbracketTqLabels()
+        Try
+            ConnectionOpenSQL()
+            Dim sql As String = "UPDATE TABLE_MAIN SET " &
+                "PE_Date = '" & Format(Now, "yyyy-MM-dd") & "'," &
+                "PE_StartTime = '" & SqlEscape(StartTime) & "'," &
+                "PE_EndTime = '" & Format(Now, "HH:mm:ss") & "'," &
+                "PE_MonitorbracketTq1 = '" & SqlEscape(_dataMonitorbracketTq(0).Text) & "'," &
+                "PE_MonitorbracketTq2 = '" & SqlEscape(_dataMonitorbracketTq(1).Text) & "'," &
+                "PE_MonitorbracketTq3 = '" & SqlEscape(_dataMonitorbracketTq(2).Text) & "'," &
+                "PE_MonitorbracketTq4 = '" & SqlEscape(_dataMonitorbracketTq(3).Text) & "'," &
+                "PE_Decision = 'OK' " &
+                "WHERE SerialNo = '" & SqlEscape(srcLbSerial.Text) & "'"
+            SqlConnect.Execute(sql)
+            WriteTxtMessage("[DB] PE 작업 실적 저장 — " & srcLbSerial.Text)
+            PlayOkSound()
+        Catch ex As Exception
+            WriteTxtMessage("[DB] PE 작업 저장 실패 — " & ex.Message)
+            NG()
+        Finally
+            ConnectionCloseSQL()
+        End Try
+    End Sub
+
+    Private Sub ApplyMonitorbracketTqResult(ByVal slot As Integer, ByVal torqueNm As Double, ByVal controllerOk As Boolean)
+        If InvokeRequired Then
+            BeginInvoke(New Action(Of Integer, Double, Boolean)(AddressOf ApplyMonitorbracketTqResult), slot, torqueNm, controllerOk)
+            Return
+        End If
+
+        EnsureMonitorbracketTqLabels()
+        Dim tqText As String = torqueNm.ToString("0.00")
+        Dim isOk As Boolean = controllerOk AndAlso torqueNm >= BasicToolMin AndAlso torqueNm <= BasicToolMax
+        _dataMonitorbracketTq(slot).Text = tqText
+        If isOk Then
+            _decMonitorbracketTq(slot).Text = "OK"
+            _decMonitorbracketTq(slot).BackColor = Color.Blue
+            SavePeMonitorbracketTqToMain(slot, tqText)
+            PlayOkSound()
+            WriteTxtMessage("[T/Q] 모니터브라켓 T/Q " & CStr(slot + 1) & " = " & tqText & " OK")
+        Else
+            _decMonitorbracketTq(slot).Text = "NG"
+            _decMonitorbracketTq(slot).BackColor = Color.Red
+            SavePeMonitorbracketTqToMain(slot, tqText)
+            PlayNgSound()
+            WriteTxtMessage("[T/Q] 모니터브라켓 T/Q " & CStr(slot + 1) & " = " & tqText & " NG")
+        End If
+    End Sub
+
     Private Sub InitControl()
 
-        srclbSpecMotorTq.Text = BasicToolMin & " ~ " & BasicToolMax & " " & BAsicUnit
+        EnsureMonitorbracketTqLabels()
 
         LoadPicture(srcPictureBox, "NON")
         srcLbPartNo.Text = ""
@@ -156,26 +405,36 @@ Public Class FrmMain
         srcLbPartOption.Text = ""
         srcLbSerial.Text = ""
 
-        srclbTargetMotorBarcode.Text = ""
-        srclbDataMotorBarcode.Text = ""
-        srclbDecMotorBarcode.Text = ""
-        srclbDecMotorBarcode.BackColor = Color.Black
-
-        srclbTargetFrameBarcode.Text = ""
-        srclbDataFrameBarcode.Text = ""
-        srclbDecFrameBarcode.Text = ""
-        srclbDecFrameBarcode.BackColor = Color.Black
-
-        srclbDataMotorTq.Text = ""
-        srclbDecMotorTq.Text = ""
-        srclbDecMotorTq.BackColor = Color.Black
+        _usePeMonitorbracketTq = False
+        ResetAllMonitorbracketTq()
 
         srclbDataTool.Text = ""
         srclbDecTool.Text = ""
         srclbDecTool.BackColor = Color.Black
 
-        _readyForDown = False
-        _readyForUp = False
+        _peStartWait = PeStartWait.None
+        _partScannedReady = False
+
+    End Sub
+
+    ''' <summary>공정 Start 시 판정값만 초기화 (스캔으로 표시한 품번 정보 유지)</summary>
+    Private Sub InitJudgmentOnly()
+
+        _peStartWait = PeStartWait.None
+
+        For i As Integer = 0 To MonitorbracketTqCount - 1
+            ResetMonitorbracketTqRow(i, IsPeMonitorbracketTqNa())
+        Next
+
+        If PeNeedsAirTool() Then
+            srclbDataTool.Text = ""
+            srclbDecTool.Text = ""
+            srclbDecTool.BackColor = Color.Black
+        Else
+            srclbDataTool.Text = "NA"
+            srclbDecTool.Text = "NA"
+            srclbDecTool.BackColor = Color.Green
+        End If
 
     End Sub
 
@@ -194,27 +453,8 @@ Public Class FrmMain
             WriteTxtMessage("Serial Printer Open Fail")
         End Try
 
-        ' 시리얼 툴(COM3) — 코드 유지, Atlas LAN 사용 시 비활성화만 (포트 미오픈·스레드 미시작)
-        If AtlasToolEnabled Then
-            WriteTxtMessage("시리얼 툴 비활성 — Atlas LAN 토크툴 사용")
-        Else
-            Try
-                If Serial_Tool.IsOpen() = True Then
-                    Serial_Tool.Close()
-                End If
-                Serial_Tool.PortName = PortNumber_Tool
-                Serial_Tool.BaudRate = 9600
-                Serial_Tool.DataBits = 8
-                Serial_Tool.Open()
-                WriteTxtMessage("Serial Tool Open Success " & PortNumber_Tool)
-                Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200001            " & Chr("0") & Chr("3"))
-                Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200060            " & Chr("0") & Chr("3"))
-                tmr_Tool.Interval = 5000
-                tmr_Tool.Start()
-            Catch ex As Exception
-                WriteTxtMessage("Serial Tool Open Fail")
-            End Try
-        End If
+        ' 시리얼 툴(COM) — Atlas LAN과 병행, 비상 폴백 항상 활성
+        EnsureSerialToolOpen()
 
         Try
             If Serial_Scanner.IsOpen() = True Then
@@ -246,40 +486,9 @@ Public Class FrmMain
 
     End Sub
 
-    Private Function LoadWorkPart() As String
+    Private Function LoadPArt(ByVal str As String, Optional ByRef faultMessage As String = Nothing) As Boolean
 
-        Dim Rs As New ADODB.Recordset
-        Dim Tmp As String = ""
-
-        ConnectionOpenSQL()
-
-        Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
-        Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
-        Rs.LockType = ADODB.LockTypeEnum.adLockOptimistic
-
-        Rs.Open("SELECT * FROM Table_Etc", SqlConnect)
-
-        If Rs.RecordCount = 1 Then
-
-            Tmp = Rs.Fields("SELECT_PART").Value
-            TmpSeq = ""
-            Try
-                TmpSeq = Trim(Rs.Fields("PlanSeq").Value)
-            Catch ex As Exception
-            End Try
-
-        End If
-
-        Rs.ActiveConnection = Nothing
-        Rs.Close()
-
-        ConnectionCloseSQL()
-
-        Return Tmp
-
-    End Function
-
-    Private Sub LoadPArt(ByVal str As String)
+        faultMessage = ""
 
         ConnectionOpenSQL()
 
@@ -291,30 +500,334 @@ Public Class FrmMain
 
         Rs.Open("SELECT * FROM Table_Part WHERE PartNo = '" & Mid(str, 1, 11) & "'", SqlConnect)
 
-        If Rs.RecordCount = 1 Then
-
-            srcLbPartName.Text = Trim(Rs.Fields("PartName").Value)
-            LoadPicture(srcPictureBox, Mid(str, 1, 11))
-
-            OptionLHRH = Trim(Rs.Fields("OptionLHRH").Value)
-            OptionType = Trim(Rs.Fields("OptionType").Value)
-            OptionBack = Trim(Rs.Fields("OptionBack").Value)
-            OptionFootRest = Rs.Fields("OptionFootRest").Value
-            OptionMonitor = Rs.Fields("OptionMon").Value
-
-            srcLbPartOption.Text = OptionType & " " & OptionLHRH
-            TargetMotorBarcode = Trim(Rs.Fields("Target_Op01_MotorBarcode").Value)
-            TargetFrameBarcode = Trim(Rs.Fields("Target_Op01_FrameBarcode").Value)
-            TargetToolNum = CInt(Trim(Rs.Fields("Target_Op01_ToolNum").Value))
-            TargetMotorTQ = Rs.Fields("Use_Op01_MotorTq").Value
-
+        If Rs.RecordCount <> 1 Then
+            faultMessage = "DB에 없는 품번 — " & str
+            Rs.ActiveConnection = Nothing
+            Rs.Close()
+            ConnectionCloseSQL()
+            Return False
         End If
+
+        Dim partOptionType As String = Trim(CStr(Rs.Fields("OptionType").Value))
+
+        srcLbPartName.Text = Trim(Rs.Fields("PartName").Value)
+        LoadPicture(srcPictureBox, Mid(str, 1, 11))
+
+        OptionLHRH = Trim(Rs.Fields("OptionLHRH").Value)
+        OptionType = partOptionType
+        OptionBack = Trim(Rs.Fields("OptionBack").Value)
+        OptionFootRest = Rs.Fields("OptionFootRest").Value
+        OptionMonitor = Rs.Fields("OptionMon").Value
+
+        srcLbPartOption.Text = OptionType & " " & OptionLHRH
+        srcLbPartNo.Text = Trim(CStr(Rs.Fields("PartNo").Value))
+        TargetToolNum = CInt(Val(Trim(CStr(Rs.Fields("Target_PE_ToolNum").Value))))
+        _usePeMonitorbracketTq = ReadDbUseFlag(Rs.Fields("Use_PE_MonitorbracketTq").Value)
+        UpdateMonitorbracketTqHeader()
 
         Rs.ActiveConnection = Nothing
         Rs.Close()
 
         ConnectionCloseSQL()
+        Return True
 
+    End Function
+
+    Private Function NormalizePartNo(ByVal partNo As String) As String
+        Return Trim(If(partNo, ""))
+    End Function
+
+    ''' <summary>서버 Table_Main SerialNo 길이 (없으면 26)</summary>
+    Private Function GetMainSerialNoLength() As Integer
+        If _cachedMainSerialLength > 0 Then Return _cachedMainSerialLength
+
+        Dim Rs As New ADODB.Recordset
+        _cachedMainSerialLength = 26
+        Try
+            ConnectionOpenSQL()
+            Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
+            Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
+            Rs.LockType = ADODB.LockTypeEnum.adLockReadOnly
+            Rs.Open("SELECT TOP 1 LEN(SerialNo) AS SerialLen FROM Table_Main WHERE SerialNo IS NOT NULL AND SerialNo <> '' ORDER BY Op01_Date DESC", SqlConnect)
+            If Not Rs.EOF AndAlso Not IsDBNull(Rs.Fields("SerialLen").Value) Then
+                Dim len As Integer = CInt(Rs.Fields("SerialLen").Value)
+                If len > 0 Then _cachedMainSerialLength = len
+            End If
+        Catch ex As Exception
+            WriteTxtMessage("[DB] SerialNo 길이 조회 실패 — 기본 26 (" & ex.Message & ")")
+        Finally
+            If Rs.State = ADODB.ObjectStateEnum.adStateOpen Then
+                Rs.ActiveConnection = Nothing
+                Rs.Close()
+            End If
+            ConnectionCloseSQL()
+        End Try
+        Return _cachedMainSerialLength
+    End Function
+
+    ''' <summary>당일 yyyyMMdd 접두 SerialNo 최대 순번 (없으면 0)</summary>
+    Private Function GetTodaySerialMaxSeq() As Integer
+        Dim dateToken As String = Format(Now, "yyyyMMdd")
+        Dim Rs As New ADODB.Recordset
+        Try
+            ConnectionOpenSQL()
+            Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
+            Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
+            Rs.LockType = ADODB.LockTypeEnum.adLockReadOnly
+            Rs.Open(
+                "SELECT MAX(CAST(SUBSTRING(SerialNo, 9, " & PeSerialSeqDigits & ") AS INT)) AS MaxSeq " &
+                "FROM Table_Main WHERE LEN(SerialNo) = " & GetMainSerialNoLength() &
+                " AND SerialNo LIKE '" & SqlEscape(dateToken) & "%'", SqlConnect)
+            If Not Rs.EOF AndAlso Not IsDBNull(Rs.Fields("MaxSeq").Value) Then
+                Return CInt(Rs.Fields("MaxSeq").Value)
+            End If
+            Return 0
+        Catch ex As Exception
+            WriteTxtMessage("[DB] 당일 시리얼 순번 조회 실패 — " & ex.Message)
+            Return 0
+        Finally
+            If Rs.State = ADODB.ObjectStateEnum.adStateOpen Then
+                Rs.ActiveConnection = Nothing
+                Rs.Close()
+            End If
+            ConnectionCloseSQL()
+        End Try
+    End Function
+
+    ''' <summary>임시 PE 시리얼 — yyyyMMdd + 일일순번(0001~) + 품번, 길이=Table_Main.SerialNo</summary>
+    Private Function CreatePeSerial(ByVal partNo As String) As String
+        partNo = NormalizePartNo(partNo)
+        Dim totalLen As Integer = GetMainSerialNoLength()
+        Dim dateToken As String = Format(Now, "yyyyMMdd")
+        Dim seq As Integer = GetTodaySerialMaxSeq() + 1
+        Dim partLen As Integer = totalLen - dateToken.Length - PeSerialSeqDigits
+        If partLen < 1 Then partLen = 14
+
+        Dim partToken As String = partNo
+        If partToken.Length > partLen Then
+            partToken = partToken.Substring(0, partLen)
+        ElseIf partToken.Length < partLen Then
+            partToken = partToken.PadRight(partLen, " "c)
+        End If
+
+        Return dateToken & Format(seq, New String("0"c, PeSerialSeqDigits)) & partToken
+    End Function
+
+    ''' <summary>임시 모드 — 자동생성 SerialNo가 Table_Main에 없으면 최소 행 INSERT</summary>
+    Private Sub EnsurePeMainRow()
+        If srcLbSerial.Text = "" OrElse srcLbPartNo.Text = "" Then Return
+        Dim Rs As New ADODB.Recordset
+        Try
+            ConnectionOpenSQL()
+            Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
+            Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
+            Rs.LockType = ADODB.LockTypeEnum.adLockReadOnly
+            Rs.Open("SELECT SerialNo FROM Table_Main WHERE SerialNo = '" & SqlEscape(srcLbSerial.Text) & "'", SqlConnect)
+            If Rs.RecordCount > 0 Then Return
+
+            Dim sql As String = "INSERT INTO Table_Main (PartNo, SerialNo, PE_Date) VALUES (" &
+                "'" & SqlEscape(srcLbPartNo.Text) & "'," &
+                "'" & SqlEscape(srcLbSerial.Text) & "'," &
+                "'" & Format(Now, "yyyy-MM-dd") & "')"
+            SqlConnect.Execute(sql)
+            WriteTxtMessage("[DB] Table_Main 임시 행 생성 — " & srcLbSerial.Text)
+        Catch ex As Exception
+            WriteTxtMessage("[DB] Table_Main 임시 행 생성 실패 — " & ex.Message)
+        Finally
+            If Rs.State = ADODB.ObjectStateEnum.adStateOpen Then
+                Rs.ActiveConnection = Nothing
+                Rs.Close()
+            End If
+            ConnectionCloseSQL()
+        End Try
+    End Sub
+
+    ''' <summary>라벨/시리얼 스캔에서 품번 추출 (26자 라벨 또는 품번만 스캔)</summary>
+    Private Function ExtractPartNoFromScan(ByVal scanData As String) As String
+        Dim s As String = Trim(scanData)
+        If s = "" Then Return ""
+        If s.Length >= 26 Then
+            Return NormalizePartNo(Mid(s, 13, 14))
+        End If
+        If s.Length >= 11 Then
+            Return NormalizePartNo(s)
+        End If
+        Return ""
+    End Function
+
+    ' ========================================================================
+    ' ★ TEMP_SCAN_BYPASS — 205 벤치·테스트 전용 (임의 구현). 정식 라벨 투입 시 제거.
+    '   현재: GS1 P/T 역파싱 + Table_Main 없어도 바코드 품번으로 LoadPArt
+    '   정식: 스캐너가 26자 SerialNo만 읽음 → Table_Main 조회 필수 → Main.PartNo로 LoadPArt
+    '   제거 대상: IsGs1LabelScan, TryParseGs1LabelScan, TryParseLabelScan,
+    '              TryLookupMainPartNo, TryResolveLabelScan → TryResolveMainLabelScan 복원
+    ' ========================================================================
+
+    Private Function IsGs1LabelScan(ByVal scanData As String) As Boolean
+        Dim s As String = Trim(If(scanData, ""))
+        Return s.Contains(Chr(29)) OrElse s.StartsWith("[)>")
+    End Function
+
+    ''' <summary>[TEMP] GS1 DataMatrix — OP05 BarcodePrint 역변환. 정식 라벨 적용 시 제거.</summary>
+    Private Function TryParseGs1LabelScan(ByVal scanData As String, ByRef serial As String, ByRef partNo As String, ByRef faultMessage As String) As Boolean
+        faultMessage = ""
+        serial = ""
+        partNo = ""
+
+        Dim pField As String = ""
+        Dim tField As String = ""
+        For Each seg As String In Split(Trim(scanData), Chr(29))
+            Dim t As String = Trim(seg)
+            If t.Length = 0 Then Continue For
+            t = t.Trim(ChrW(30)).Trim(ChrW(4))
+            If t.StartsWith("P", StringComparison.OrdinalIgnoreCase) AndAlso t.Length > 1 Then pField = t
+            If t.StartsWith("T", StringComparison.OrdinalIgnoreCase) AndAlso t.Length > 1 Then tField = t
+        Next
+
+        If pField = "" OrElse tField = "" Then
+            faultMessage = "GS1 라벨 P/T 필드 없음"
+            Return False
+        End If
+
+        Dim pBody As String = pField.Substring(1).Trim()
+        If pBody.Length < 6 Then
+            faultMessage = "GS1 P 필드 품번 길이 부족"
+            Return False
+        End If
+
+        Dim part14 As String = (pBody.Substring(0, 5) & "-" & pBody.Substring(5)).PadRight(14)
+        If part14.Length > 14 Then part14 = part14.Substring(0, 14)
+        partNo = NormalizePartNo(part14.TrimEnd())
+
+        If tField.Length < 16 Then
+            faultMessage = "GS1 T 필드 길이 부족"
+            Return False
+        End If
+
+        Dim date6 As String = tField.Substring(1, 6)
+        Dim seq4 As String = ""
+        Dim a000Idx As Integer = tField.IndexOf("A000", StringComparison.Ordinal)
+        If a000Idx >= 0 AndAlso tField.Length >= a000Idx + 8 Then
+            seq4 = tField.Substring(a000Idx + 4, 4)
+        Else
+            seq4 = tField.Substring(15, 4)
+        End If
+
+        serial = ("20" & date6 & seq4 & part14).Substring(0, 26)
+        Return True
+    End Function
+
+    ''' <summary>[TEMP] 라벨 스캔 — GS1 또는 26자 평문. 정식 라벨 적용 시 제거.</summary>
+    Private Function TryParseLabelScan(ByVal scanData As String, ByRef serial As String, ByRef partNo As String, ByRef faultMessage As String) As Boolean
+        faultMessage = ""
+        serial = ""
+        partNo = ""
+
+        If IsGs1LabelScan(scanData) Then
+            Return TryParseGs1LabelScan(scanData, serial, partNo, faultMessage)
+        End If
+
+        Dim raw As String = Trim(If(scanData, ""))
+        If raw.Length < 26 Then
+            faultMessage = "라벨 형식 오류 — GS1 또는 26자 시리얼 필요"
+            Return False
+        End If
+
+        serial = raw.Substring(0, 26)
+        partNo = NormalizePartNo(Mid(raw, 13, 14))
+        If partNo = "" Then
+            faultMessage = "라벨 품번 추출 실패"
+            Return False
+        End If
+        Return True
+    End Function
+
+    ''' <summary>[TEMP] Table_Main 있으면 PartNo 참고. 정식 라벨 적용 시 Main 필수 조회로 복원.</summary>
+    Private Function TryLookupMainPartNo(ByVal serial As String, ByRef mainPartNo As String) As Boolean
+        mainPartNo = ""
+        If Trim(serial) = "" Then Return False
+
+        Dim Rs As New ADODB.Recordset
+        ConnectionOpenSQL()
+        Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
+        Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
+        Rs.LockType = ADODB.LockTypeEnum.adLockReadOnly
+
+        Try
+            Rs.Open("SELECT PartNo FROM Table_Main WHERE SerialNo = '" & SqlEscape(serial) & "'", SqlConnect)
+            If Rs.RecordCount <> 1 Then Return False
+            mainPartNo = NormalizePartNo(CStr(Rs.Fields("PartNo").Value))
+            Return mainPartNo <> ""
+        Finally
+            If Rs.State = ADODB.ObjectStateEnum.adStateOpen Then
+                Rs.ActiveConnection = Nothing
+                Rs.Close()
+            End If
+            ConnectionCloseSQL()
+        End Try
+    End Function
+
+    ''' <summary>[TEMP] 테스트용 스캔 해석. 정식 라벨 적용 시 TryResolveMainLabelScan으로 교체.</summary>
+    Private Function TryResolveLabelScan(ByVal scanData As String, ByRef serial As String, ByRef partNo As String, ByRef faultMessage As String) As Boolean
+        If Not TryParseLabelScan(scanData, serial, partNo, faultMessage) Then Return False
+
+        Dim mainPart As String = ""
+        If TryLookupMainPartNo(serial, mainPart) Then
+            partNo = mainPart
+            WriteTxtMessage("[SCAN] Table_Main 실적 확인 — SerialNo: " & serial & " PartNo: " & partNo)
+        Else
+            WriteTxtMessage("[SCAN] Table_Main 실적 없음 — 바코드 품번 사용: " & partNo & " SerialNo: " & serial)
+        End If
+        Return True
+    End Function
+
+    ''' <summary>스캔 품번 → DB 로드·화면 표시 (wStep 0, Start 전 확인용)</summary>
+    Private Sub ApplyPartPreviewTargets()
+        If PeNeedsAirTool() Then
+            srclbTargetTool.Text = CStr(TargetToolNum)
+            srclbDataTool.Text = ""
+            srclbDecTool.Text = ""
+            srclbDecTool.BackColor = Color.Black
+        Else
+            srclbTargetTool.Text = "NA"
+            srclbDataTool.Text = "NA"
+            srclbDecTool.Text = "NA"
+            srclbDecTool.BackColor = Color.Green
+        End If
+
+        ResetAllMonitorbracketTq()
+        UpdateMonitorbracketTqHeader()
+    End Sub
+
+    Private Sub HandleIdlePartScan(ByVal scanData As String)
+        If wStep <> 0 OrElse _eStopLatched OrElse IoInEStop Then Exit Sub
+
+        Dim serial As String = ""
+        Dim partNo As String = ""
+        Dim scanFault As String = ""
+        If Not TryResolveLabelScan(scanData, serial, partNo, scanFault) Then
+            WriteTxtMessage("[SCAN] " & scanFault)
+            NG()
+            _partScannedReady = False
+            Return
+        End If
+
+        Dim loadFault As String = ""
+        If Not LoadPArt(partNo, loadFault) Then
+            WriteTxtMessage("[SCAN] " & loadFault)
+            NG()
+            _partScannedReady = False
+            Return
+        End If
+
+        srcLbSerial.Text = serial
+
+        FrmWorkStandard.LoadPicture(FrmWorkStandard.srcPictureBox, Mid(partNo, 1, 11))
+        ApplyPartPreviewTargets()
+
+        _partScannedReady = True
+        WriteTxtMessage("[SCAN] Op01 라벨 OK — " & serial & " / " & partNo & " (Start 대기)")
+        PlayOkSound()
     End Sub
 
     Private Function OptionConvert(str As String) As String
@@ -350,25 +863,7 @@ Public Class FrmMain
     End Function
 
     Private Sub SaveDB()
-
-        Dim strSQL As String = ""
-
-        ConnectionOpenSQL()
-
-        strSQL = "INSERT INTO TABLE_MAIN (Op01_Date,Op01_StartTime,Op01_EndTime,Op01_MotorBarcode,Op01_FrameBarcode,Op01_MotorTq,PartNo,SerialNo,OP01_Decision) VALUES (" &
-                       "'" & Format(Now, "yyyy-MM-dd") & "','" &
-                               StartTIme & "','" &
-                               Format(Now, "HH:mm:ss") & "','" &
-                               srclbDataMotorBarcode.Text & "','" &
-                               srclbDataFrameBarcode.Text & "','" &
-                               srclbDataMotorTq.Text & "','" &
-                               srcLbPartNo.Text & "','" &
-                               srcLbSerial.Text & "','" &
-                               "OK" & "')"
-
-        SqlConnect.Execute(strSQL)
-        ConnectionCloseSQL()
-
+        SavePeWorkToMain()
     End Sub
 
     Private Function STR2ASC(ByVal str As String) As String
@@ -445,30 +940,6 @@ Public Class FrmMain
 
     End Function
 
-    Private Function Create_Serial() As String
-
-        Dim Rs As New ADODB.Recordset
-        Dim tmp As String = ""
-
-        ConnectionOpenSQL()
-
-        Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
-        Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
-        Rs.LockType = ADODB.LockTypeEnum.adLockOptimistic
-
-        Rs.Open("SELECT * FROM Table_Main WHERE Op01_DATE = '" & Format(Now, "yyyy-MM-dd") & "'", SqlConnect)
-
-        tmp = Format(Now, "yyyyMMdd") & Format(Rs.RecordCount + 1, "0000") & srcLbPartNo.Text
-
-        Rs.ActiveConnection = Nothing
-        Rs.Close()
-
-        ConnectionCloseSQL()
-
-        Return tmp
-
-    End Function
-
     
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -479,11 +950,15 @@ Public Class FrmMain
             LoadPortData()
             LoadBarcodeData()
             LoadBasicData()
+            WriteTxtMessage("[CFG] 토크 " & BasicToolMin & "~" & BasicToolMax & " " & BAsicUnit &
+                " | Atlas T1=" & AtlasTool1Ip & " T2=" & AtlasTool2Ip)
+            EnsureMonitorbracketTqLabels()
+            UpdateMonitorbracketTqHeader()
             LoadALarmMessage()
             InitControl()
             WriteTxtMessage("Init Complete")
-            InitializeAtlasTools()   ' SerialOpen 전 — Atlas 활성 시 시리얼 툴 비활성 판단
-            SerialOpen()
+            SerialOpen()              ' COM3 비상 폴백 — Atlas보다 먼저 오픈
+            InitializeAtlasTools()
             InitGrid()
             LoadGrid()
         Catch ex As Exception
@@ -495,22 +970,19 @@ Public Class FrmMain
 
         WriteTxtMessage("System Ready..")
 
-        ' 멜섹 PLC 삭제 → IO보드(FBEI EtherNet/IP, 입력1+출력1) 사용.
-        HideDeadPlcDisplay()      ' 죽은 D번지 표시 숨김
-        InitializeIoDevices()     ' IO보드 연결
+        HideDeadPlcDisplay()
+        InitializeIoDevices()     ' FBEI I/O 연결
         AddHandler JigClampSequence.JigLog, AddressOf OnJigClampLog
-        JigClampSequence.EnableAllMotionSensors()   ' IN 센서 필수 — OUT 후 IN 확인까지 다음 단계 진행
-        AddIoMenu()               ' 상단 'IO 제어' 메뉴 추가
-        AddressOfPLc = IoInputIp
-        Label11.Text = AddressOfPLc
-        FlagPlcConnection = False
+        JigClampSequence.EnableAllMotionSensors()
+        ' 1번 지그 클램프·언클램프 센서 미동작 — IN:05/06 위치확인 우회(정비 후 SetSensorRequired(5/6, True))
+        JigClampSequence.SetSensorRequired(5, False)
+        JigClampSequence.SetSensorRequired(6, False)
+        WriteTxtMessage("[JIG] IN:05/06 센서 우회 — 1번 클램프·언클램프 위치확인 생략(3초 타이머)")
+        AddIoMenu()
+        Label11.Text = IoInputIp
 
-        ' Atlas 활성 시 시리얼 툴 스레드 생략 (이중 토크 경로 방지)
-        If Serial_Tool.IsOpen = True AndAlso Not AtlasToolEnabled Then
-            Trd1 = New Thread(AddressOf ThreadTask1)
-            Trd1.IsBackground = True
-            Trd1.Start()
-        End If
+        ' EnsureSerialToolOpen에서 스레드 기동 — 중복 생성 방지
+        EnsureSerialToolThread()
 
         Tmr_Connect.Interval = 100
         Tmr_Connect.Start()
@@ -540,9 +1012,37 @@ Public Class FrmMain
         StopAtlasTools()
     End Sub
 
-    Private Sub ConnectPLc()
-        ' 멜섹 삭제: 연결은 IO보드(Ios)가 담당. 와꾸 — 연결상태만 반영.
-        FlagPlcConnection = (Ios IsNot Nothing AndAlso IoConnected)
+    Private Sub SyncIoInputs()
+        If Ios Is Nothing OrElse Not IoConnected Then
+            PlcConnectionError = "DISCONNECTED"
+            Exit Sub
+        End If
+        Try
+            IoSignalMap.SyncInputsToPlc(Ios)
+            IoInStart = IoMap.GetIn(Ios, IoMap.PinStart)
+            IoInReset = IoMap.GetIn(Ios, IoMap.PinReset)
+            IoInEStop = IoMap.GetIn(Ios, IoMap.PinEStop)
+            PlcConnectionError = "OK"
+        Catch ex As Exception
+            PlcConnectionError = ex.Message
+        End Try
+    End Sub
+
+    Private Sub UpdateIoConnectionDisplay()
+        SyncIoInputs()
+        If PlcConnectionError = "OK" Then
+            srcLbPlcConnectionState.Text = "IO OK"
+            srcLbPlcConnectionState.BackColor = Color.Blue
+            srcLbPlcConnectionState.ForeColor = Color.White
+        ElseIf PlcConnectionError = "DISCONNECTED" Then
+            srcLbPlcConnectionState.Text = "IO NG"
+            srcLbPlcConnectionState.BackColor = Color.Red
+            srcLbPlcConnectionState.ForeColor = Color.White
+        Else
+            srcLbPlcConnectionState.Text = "IO ERR"
+            srcLbPlcConnectionState.BackColor = Color.Red
+            srcLbPlcConnectionState.ForeColor = Color.White
+        End If
     End Sub
 
     ''' <summary>IO보드(FBEI EtherNet/IP, 입력2+출력1) 초기화 + 연결. 와꾸 — 연결/로그만.</summary>
@@ -586,16 +1086,17 @@ Public Class FrmMain
                 If value AndAlso Not IoResetPrev Then HandleResetPress()
                 IoResetPrev = value
             Case IoMap.PinEStop
-                ' NC 접점: 정상=ON, 누름(회로 단선)=OFF → 비상정지
-                IoInEStop = Not value
+                ' NO 접점(현장): 평상시=OFF, 누름=ON → 비상정지 (NC Not value 사용 금지 — 기동 시 오검출)
+                IoInEStop = value
                 If IoInEStop AndAlso Not IoEStopPrev Then HandleEmergencyStop()
                 IoEStopPrev = IoInEStop
             Case IoMap.PinAirTool
-                If value AndAlso wStep = 3.4 AndAlso Not AtlasToolEnabled Then HandleAirToolPulse()
+                ' 에어툴 IN:31 — Atlas 사용 여부와 무관 (현장 에어 스위치)
+                If value AndAlso wStep = 3.4 AndAlso PeNeedsAirTool() Then HandleAirToolPulse()
         End Select
     End Sub
 
-    ''' <summary>Start — wStep 0 공정시작 / wStep 3 지그다운 / wStep 3.4 지그업</summary>
+    ''' <summary>Start — wStep 0 공정시작 / 중간 대기 시 지그·언클램프</summary>
     Private Sub HandleStartPress()
         If _eStopLatched OrElse IoInEStop Then
             WriteTxtMessage("[IO] Start 무시 — 비상정지 상태")
@@ -603,85 +1104,90 @@ Public Class FrmMain
         End If
 
         If Ios Is Nothing OrElse Not IoConnected Then
-            srclbAlarm.Visible = True
-            srclbAlarm.Text = "IO 보드 미연결 — Start 불가"
-            WriteTxtMessage("[IO] Start 거부 — IO 미연결")
+            WriteTxtMessage("[IO] Start 거부 — IO 보드 미연결")
             Return
         End If
 
-        If wStep = 3 AndAlso _readyForDown Then
+        ' 지그 다운 (T/Q 완료 또는 클램프만+에어툴)
+        If (wStep = 3 OrElse wStep = 3.1) AndAlso _peStartWait = PeStartWait.JigDown Then
+            If wStep = 3 AndAlso Not AllMonitorbracketTqDone() Then
+                WriteTxtMessage("[IO] Start 무시 — 모니터브라켓 T/Q 미완료")
+                Return
+            End If
             If Not JigClampSequence.IsJigAtUp(Ios) Then
-                srclbAlarm.Visible = True
-                srclbAlarm.Text = "지그 업 위치(IN:14) 미확인 — 다운 불가"
-                WriteTxtMessage("[IO] Start 거부 — 지그 업 센서(IN:14 ON, IN:13 OFF) 필요")
+                WriteTxtMessage("[IO] Start 거부 — 지그 업(IN:14) 미확인, 다운 불가")
                 NG()
                 Return
             End If
-            _readyForDown = False
-            srclbAlarm.Visible = False
+            _peStartWait = PeStartWait.None
             JigClampSequence.BeginJigDown()
             wStep = 3.2
-            WriteTxtMessage("[IO] Start(2회) → 지그 다운 (wStep 3.2)")
+            WriteTxtMessage("[IO] Start → 지그 다운 OUT:10 (wStep 3.2)")
             Return
         End If
 
-        If wStep = 3.4 AndAlso _readyForUp Then
+        ' 지그 업 (에어툴 체결 후)
+        If wStep = 3.4 AndAlso _peStartWait = PeStartWait.JigUp Then
+            If srclbDecTool.Text <> "OK" Then
+                WriteTxtMessage("[IO] Start 무시 — 에어툴 체결 미완료")
+                Return
+            End If
             If Not JigClampSequence.IsJigAtDown(Ios) Then
-                srclbAlarm.Visible = True
-                srclbAlarm.Text = "지그 다운 위치(IN:13) 미확인 — 업 불가"
-                WriteTxtMessage("[IO] Start 거부 — 지그 다운 센서(IN:13 ON, IN:14 OFF) 필요")
+                WriteTxtMessage("[IO] Start 거부 — 지그 다운(IN:13) 미확인, 업 불가")
                 NG()
                 Return
             End If
-            _readyForUp = False
-            srclbAlarm.Visible = False
+            _peStartWait = PeStartWait.None
             JigClampSequence.BeginJigUp()
             wStep = 3.6
-            WriteTxtMessage("[IO] Start(3회) → 지그 업 (wStep 3.6)")
+            WriteTxtMessage("[IO] Start → 지그 업 OUT:11 (wStep 3.6)")
             Return
         End If
 
-        If wStep = 3 AndAlso Not _readyForDown Then
-            WriteTxtMessage("[IO] Start 무시 — 다운前 판정(바코드·토크) 미완료")
+        ' 언클램프 (T/Q만 또는 클램프만)
+        If (wStep = 3 OrElse wStep = 3.7) AndAlso _peStartWait = PeStartWait.Unclamp Then
+            If wStep = 3 AndAlso Not AllMonitorbracketTqDone() Then
+                WriteTxtMessage("[IO] Start 무시 — 모니터브라켓 T/Q 미완료")
+                Return
+            End If
+            BeginPeUnclamp()
             Return
         End If
 
-        If wStep = 3.4 AndAlso Not _readyForUp Then
-            WriteTxtMessage("[IO] Start 무시 — 다운後 공구 판정 미완료")
+        If wStep <> 0 Then
+            WriteTxtMessage("[IO] Start 무시 — wStep " & wStep & " 대기 조건 미충족")
             Return
         End If
 
-        If wStep <> 0 Then Return
+        If Not _partScannedReady Then
+            WriteTxtMessage("[IO] Start 거부 — 품번 스캔·확인 필요")
+            Return
+        End If
 
         Dim homeFault As String = JigClampSequence.GetHomePositionFault(Ios)
         If homeFault <> "" Then
-            srclbAlarm.Visible = True
-            srclbAlarm.Text = homeFault
             WriteTxtMessage("[IO] Start 거부 — " & homeFault)
             NG()
             Return
         End If
 
-        WritePlc("D", "4051", "0000000")
-        InitControl()
-        srclbAlarm.Visible = False
+        InitJudgmentOnly()
+        HideEStopAlarm()
         StartTime = Format(Now, "HH:mm:ss")
-        WriteTxtMessage("[IO] Start(1회) → wStep 2 (원위치 확인 OK)")
-        wStep = 2
+        WriteTxtMessage("[IO] Start → 제품 고정 OUT:00,02,06,08 (1·2번 핀+클램프 동시, wStep 2.3) — " & srcLbPartNo.Text)
+        wStep = 2.3
     End Sub
 
     ''' <summary>Reset — 시퀀스 초기화 + 원위치 복귀</summary>
     Private Sub HandleResetPress()
         _eStopLatched = False
-        _readyForDown = False
-        _readyForUp = False
+        _peStartWait = PeStartWait.None
         JigClampSequence.Abort()
         InitControl()
-        WritePlc("D", "4051", "0000000")
 
         If Ios Is Nothing OrElse Not IoConnected Then
             wStep = 0
-            srclbAlarm.Visible = False
+            HideEStopAlarm()
             WriteTxtMessage("[IO] Reset → wStep 0 (IO 미연결)")
             Return
         End If
@@ -690,27 +1196,23 @@ Public Class FrmMain
 
         If JigClampSequence.IsHomePosition(Ios) Then
             wStep = 0
-            srclbAlarm.Visible = False
+            HideEStopAlarm()
             WriteTxtMessage("[IO] Reset → wStep 0 (이미 원위치)")
             Return
         End If
 
         JigClampSequence.BeginHoming()
         wStep = 0.1
-        srclbAlarm.Visible = True
-        srclbAlarm.Text = "원위치 복귀 중… (Reset)"
         WriteTxtMessage("[IO] Reset → 원위치 복귀 시작 (wStep 0.1)")
     End Sub
 
-    ''' <summary>비상정지 — 공정 정지·알람</summary>
+    ''' <summary>비상정지 — 공정 정지·알람 (IN:02 NO, 누름 시)</summary>
     Private Sub HandleEmergencyStop()
         _eStopLatched = True
-        _readyForDown = False
-        _readyForUp = False
+        _peStartWait = PeStartWait.None
         JigClampSequence.Abort()
         If Ios IsNot Nothing Then JigClampSequence.AllMotionOutputsOff(Ios)
-        srclbAlarm.Visible = True
-        srclbAlarm.Text = "비상정지 — 리셋 후 재시작"
+        ShowEStopAlarm()
         WriteTxtMessage("[IO] 비상정지")
     End Sub
 
@@ -721,14 +1223,25 @@ Public Class FrmMain
     Private Sub HandleJigIoResult(result As String, okStep As Double, faultMessage As String)
         If result = "COMPLETE" Then
             If okStep = 3.4 AndAlso Not JigClampSequence.IsJigAtDown(Ios) Then
-                WriteTxtMessage("[IO] 지그 다운 도착 신호 미확인 — IN:13/14 대기 (wStep 유지)")
+                WriteTxtMessage("[IO] 지그 다운 미확인 — IN:13 대기 (wStep 유지)")
                 Return
             End If
             If okStep = 3.8 AndAlso Not JigClampSequence.IsJigAtUp(Ios) Then
-                WriteTxtMessage("[IO] 지그 업 도착 신호 미확인 — IN:13/14 대기 (wStep 유지)")
+                WriteTxtMessage("[IO] 지그 업 미확인 — IN:14 대기 (wStep 유지)")
+                Return
+            End If
+            If okStep = 3 Then
+                RouteAfterClampComplete()
                 Return
             End If
             wStep = okStep
+            If okStep = 3.8 Then
+                BeginPeUnclamp()
+            End If
+        ElseIf result = "FAULT" Then
+            Dim faultText As String = If(faultMessage <> "", faultMessage, "센서 및 지그 이상")
+            WriteTxtMessage("[IO] " & faultText)
+            NG()
         End If
     End Sub
 
@@ -736,28 +1249,151 @@ Public Class FrmMain
         Dim result As String = JigClampSequence.Tick(Ios)
         If result = "COMPLETE" Then
             wStep = 0
-            srclbAlarm.Visible = False
+            HideEStopAlarm()
             WriteTxtMessage("[HOME] 원위치 복귀 완료 → wStep 0")
         End If
     End Sub
 
-    ''' <summary>에어 툴 입력 펄스 (Atlas 미사용 시 공구 OK 보조)</summary>
-    Private Sub HandleAirToolPulse()
+    Private Function IsAtMonitorbracketTqWorkStep() As Boolean
+        Return wStep >= 2.99 AndAlso wStep <= 3.01
+    End Function
+
+    Private Function IsAtAirToolWorkStep() As Boolean
+        Return wStep >= 3.39 AndAlso wStep <= 3.41
+    End Function
+
+    Private Function TryApplyMonitorbracketTq(ByVal torqueNm As Double, ByVal controllerOk As Boolean, ByVal source As String) As Boolean
+        If Not IsAtMonitorbracketTqWorkStep() Then
+            WriteTxtMessage("[" & source & "] T/Q 무시 — wStep " & wStep & " (모니터브라켓 T/Q는 wStep 3)")
+            Return False
+        End If
+        If IsPeMonitorbracketTqNa() Then
+            WriteTxtMessage("[" & source & "] T/Q 무시 — Use_PE_MonitorbracketTq N/A 품번")
+            Return False
+        End If
+        Dim slot As Integer = GetNextMonitorbracketTqSlot()
+        If slot < 0 Then
+            WriteTxtMessage("[" & source & "] T/Q 무시 — 4회 체결 완료")
+            Return False
+        End If
+        ApplyMonitorbracketTqResult(slot, torqueNm, controllerOk)
+        Return True
+    End Function
+
+    Private Sub TryApplyAirTool(ByVal toolNo As Integer, ByVal source As String)
+        If Not IsAtAirToolWorkStep() Then
+            WriteTxtMessage("[" & source & "] 에어툴 무시 — wStep " & wStep & " (에어툴은 wStep 3.4)")
+            Return
+        End If
+        If Not PeNeedsAirTool() Then
+            WriteTxtMessage("[" & source & "] 에어툴 무시 — Target_PE_ToolNum N/A")
+            Return
+        End If
+        If Not IsAirToolTargetMatch(toolNo) Then
+            WriteTxtMessage("[" & source & "] 에어툴 툴번 불일치 — 수신:" & toolNo & " 목표:" & TargetToolNum)
+            Return
+        End If
+        ApplyAirToolOk(CStr(toolNo))
+    End Sub
+
+    Private Sub ProcessSerialTool0061(ByVal toolString As String)
+        Dim toolData As Double = CDbl(Format(Val(Mid(toolString, 143, 3) & "." & Mid(toolString, 146, 2))))
+        WriteTxtMessage("ToolData : " & toolData)
+
+        If IsAtAirToolWorkStep() Then
+            WriteTxtMessage("[SERIAL] wStep 3.4 — 에어툴은 IN:31 펄스 사용 (토크 0061 무시)")
+            Return
+        End If
+
+        If IsAtMonitorbracketTqWorkStep() Then
+            Dim controllerOk As Boolean = (Mid(toolString, 109, 1) = "1")
+            TryApplyMonitorbracketTq(toolData, controllerOk, "SERIAL")
+        Else
+            WriteTxtMessage("[SERIAL] 0061 무시 — wStep " & wStep)
+        End If
+    End Sub
+
+    ''' <summary>에어툴 체결 OK — 1회만 인정 (wStep 3.4)</summary>
+    Private Sub ApplyAirToolOk(Optional ByVal toolDisplay As String = "")
         If srclbDecTool.Text = "OK" Then Exit Sub
-        srclbDataTool.Text = CStr(TargetToolNum)
+
+        Dim display As String = Trim(If(toolDisplay, ""))
+        If display = "" Then
+            display = If(TargetToolNum > 0, CStr(TargetToolNum), "1")
+        End If
+
+        srclbDataTool.Text = display
         srclbDecTool.Text = "OK"
         srclbDecTool.BackColor = Color.Blue
-        DingDOng()
+        PlayOkSound()
+        WriteTxtMessage("[IO] 에어툴 체결 OK — " & display)
+    End Sub
+
+    Private Function IsAirToolTargetMatch(ByVal toolNo As Integer) As Boolean
+        If TargetToolNum <= 0 Then Return True
+        Return toolNo = TargetToolNum
+    End Function
+
+    ''' <summary>에어 툴 입력 펄스 (Atlas 미사용 시 공구 OK 보조)</summary>
+    Private Sub HandleAirToolPulse()
+        ApplyAirToolOk()
     End Sub
 
     Private Sub Ios_PowerError(moduleName As String, hasError As Boolean) Handles Ios.PowerError
         If hasError Then WriteTxtMessage($"[FBEI-{moduleName}] 전원 에러", "FBEI_POWER_ERR")
     End Sub
 
+    Private Function IsAnyAtlasConnected() As Boolean
+        Return _atlasConnected(0) OrElse _atlasConnected(1)
+    End Function
+
+    Private Sub SyncAtlasToolMode()
+        AtlasToolEnabled = IsAnyAtlasConnected()
+    End Sub
+
+    Private Sub EnsureSerialToolThread()
+        If Not Serial_Tool.IsOpen Then Return
+        If Trd1 IsNot Nothing AndAlso Trd1.IsAlive Then Return
+        Trd1 = New Thread(AddressOf ThreadTask1)
+        Trd1.IsBackground = True
+        Trd1.Start()
+    End Sub
+
+    Private Sub EnsureSerialToolOpen()
+        Try
+            If Serial_Tool.IsOpen() Then
+                EnsureSerialToolThread()
+                Return
+            End If
+            Serial_Tool.PortName = PortNumber_Tool
+            Serial_Tool.BaudRate = 9600
+            Serial_Tool.DataBits = 8
+            Serial_Tool.Open()
+            WriteTxtMessage("Serial Tool Open Success " & PortNumber_Tool)
+            Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200001            " & Chr("0") & Chr("3"))
+            Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200060            " & Chr("0") & Chr("3"))
+            tmr_Tool.Interval = 5000
+            If Not tmr_Tool.Enabled Then tmr_Tool.Start()
+            EnsureSerialToolThread()
+        Catch ex As Exception
+            WriteTxtMessage("Serial Tool Open Fail — " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub StopSerialToolIo()
+        tmr_Tool.Stop()
+        Try
+            If Serial_Tool.IsOpen Then Serial_Tool.Close()
+        Catch
+        End Try
+    End Sub
+
     Private Sub InitializeAtlasTools()
         StopAtlasTools()
 
         AtlasToolEnabled = False
+        _atlasConnected(0) = False
+        _atlasConnected(1) = False
         Dim ips() As String = {AtlasTool1Ip, AtlasTool2Ip}
 
         For i As Integer = 0 To ips.Length - 1
@@ -771,8 +1407,7 @@ Public Class FrmMain
                 AddHandler client.ConnectionChanged, AddressOf Atlas_ConnectionChanged
                 AtlasTools(i) = client
                 client.Start()
-                AtlasToolEnabled = True
-                WriteTxtMessage($"[ATLAS T{i + 1}] 시작 IP={ip}")
+                WriteTxtMessage($"[ATLAS T{i + 1}] 시작 IP={ip} (TCP 4545 대기)")
             Catch ex As Exception
                 WriteTxtMessage($"[ATLAS T{i + 1}] 시작 실패: {ex.Message}")
             End Try
@@ -781,14 +1416,7 @@ Public Class FrmMain
 
     Public Sub ReinitializeAtlasTools()
         InitializeAtlasTools()
-        If AtlasToolEnabled Then
-            tmr_Tool.Stop()
-            Try
-                If Serial_Tool.IsOpen Then Serial_Tool.Close()
-            Catch
-            End Try
-            WriteTxtMessage("시리얼 툴 비활성 — Atlas LAN 전환")
-        End If
+        EnsureSerialToolOpen()
     End Sub
 
     Private Sub StopAtlasTools()
@@ -807,6 +1435,8 @@ Public Class FrmMain
             End Try
         Next
         AtlasToolEnabled = False
+        _atlasConnected(0) = False
+        _atlasConnected(1) = False
     End Sub
 
     Private Sub Atlas_LogMessage(message As String)
@@ -822,13 +1452,22 @@ Public Class FrmMain
     End Function
 
     Private Sub Atlas_ConnectionChanged(toolIndex As Integer, connected As Boolean)
+        If InvokeRequired Then
+            BeginInvoke(New Action(Of Integer, Boolean)(AddressOf Atlas_ConnectionChanged), toolIndex, connected)
+            Return
+        End If
+        If toolIndex < 0 OrElse toolIndex > 1 Then Return
+        _atlasConnected(toolIndex) = connected
+        SyncAtlasToolMode()
+
         Dim stateKey As String = $"ATLAS_T{toolIndex + 1}_STATE"
         If connected Then
             ClearLogDedup($"ATLAS_T{toolIndex + 1}_ERR")
-            WriteTxtMessage($"[ATLAS T{toolIndex + 1}] 연결됨", stateKey)
+            WriteTxtMessage($"[ATLAS T{toolIndex + 1}] 연결됨 — {If(toolIndex = 0, AtlasTool1Ip, AtlasTool2Ip)}:4545", stateKey)
         Else
             WriteTxtMessage($"[ATLAS T{toolIndex + 1}] 연결 끊김", stateKey)
         End If
+        EnsureSerialToolOpen()
     End Sub
 
     Private Sub Atlas_ResultReceived(result As AtlasToolResult)
@@ -838,33 +1477,20 @@ Public Class FrmMain
         End If
 
         Dim toolNo As Integer = result.ToolIndex + 1
+        Dim source As String = "ATLAS T" & CStr(toolNo)
 
-        If wStep = 3.4 Then
-            srclbDataTool.Text = CStr(toolNo)
-            If TargetToolNum = toolNo AndAlso srclbDecTool.Text <> "OK" Then
-                srclbDecTool.Text = "OK"
-                srclbDecTool.BackColor = Color.Blue
-                DingDOng()
-            End If
-            Exit Sub
+        If IsAtAirToolWorkStep() AndAlso PeNeedsAirTool() Then
+            TryApplyAirTool(toolNo, source)
+            Return
         End If
 
-        If wStep <> 3 Then Exit Sub
-
-        srclbDataMotorTq.Text = result.TorqueNm.ToString("0.00")
-
-        If result.ControllerOk AndAlso result.TorqueNm >= BasicToolMin AndAlso result.TorqueNm <= BasicToolMax Then
-            srclbDecMotorTq.Text = "OK"
-            srclbDecMotorTq.BackColor = Color.Blue
-            DingDOng()
-        Else
-            srclbDecMotorTq.Text = "NG"
-            srclbDecMotorTq.BackColor = Color.Red
-            NG()
+        If Not TryApplyMonitorbracketTq(result.TorqueNm, result.ControllerOk, source) Then
+            WriteTxtMessage("[" & source & "] 수신 TQ=" & result.TorqueNm.ToString("0.00") &
+                " OK=" & result.ControllerOk.ToString() & " — 화면 미반영")
         End If
     End Sub
 
-    ''' <summary>옛 PLC D레지스터 표시 숨김 (멜섹 제거). IO 표시는 메뉴의 FrmIo로 분리.</summary>
+    ''' <summary>옛 PLC D레지스터 패널 숨김 — Op01_PE는 FBEI I/O만 사용</summary>
     Private Sub HideDeadPlcDisplay()
         Try
             For Each c As Control In Panel11.Controls
@@ -891,57 +1517,6 @@ Public Class FrmMain
         Catch
         End Try
     End Sub
-
-    Private Sub WritePlc(ByVal strChr As String, ByVal StartArry As String, ByVal ArryMessage As String)
-        If Ios Is Nothing OrElse Not IoConnected Then Exit Sub
-        If srcLbPlcConnectionState.Text <> "OK" Then Exit Sub
-        Try
-            IoSignalMap.ApplyPlcWrite(Ios, CInt(StartArry), ArryMessage)
-        Catch ex As Exception
-            WriteTxtMessage("[FBEI-OUT] WritePlc 예외: " & ex.Message)
-        End Try
-    End Sub
-
-    Private Sub ReadPLc()
-        If Ios Is Nothing OrElse Not IoConnected Then
-            PlcConnectionError = "DISCONNECTED"
-            Exit Sub
-        End If
-        Try
-            IoSignalMap.SyncInputsToPlc(Ios)
-            IoInStart = IoMap.GetIn(Ios, IoMap.PinStart)
-            IoInReset = IoMap.GetIn(Ios, IoMap.PinReset)
-            IoInEStop = Not IoMap.GetIn(Ios, IoMap.PinEStop)
-            UpdatePlcDisplayLabels()
-            PlcConnectionError = "OK"
-        Catch ex As Exception
-            PlcConnectionError = ex.Message
-        End Try
-    End Sub
-
-    Private Sub UpdatePlcDisplayLabels()
-        lbD4000.Text = CStr(PlcValue(4000))
-        lbD4001.Text = CStr(PlcValue(4001))
-        lbD4002.Text = CStr(PlcValue(4002))
-        lbD4003.Text = CStr(PlcValue(4003))
-        lbD4004.Text = CStr(PlcValue(4004))
-        lbD4005.Text = CStr(PlcValue(4005))
-        lbD4006.Text = CStr(PlcValue(4006))
-        lbD4007.Text = CStr(PlcValue(4007))
-        lbD4008.Text = CStr(PlcValue(4008))
-        lbD4009.Text = CStr(PlcValue(4009))
-        lbD4050.Text = CStr(PlcValue(4050))
-        lbD4051.Text = CStr(PlcValue(4051))
-        lbD4052.Text = CStr(PlcValue(4052))
-        lbD4053.Text = CStr(PlcValue(4053))
-        lbD4054.Text = CStr(PlcValue(4054))
-        lbD4055.Text = CStr(PlcValue(4055))
-        lbD4056.Text = CStr(PlcValue(4056))
-        lbD4057.Text = CStr(PlcValue(4057))
-        lbD4058.Text = CStr(PlcValue(4058))
-        lbD4059.Text = CStr(PlcValue(4059))
-    End Sub
-
 
     Private Function ReturnPrintString(strData As String) As String
 
@@ -1190,229 +1765,82 @@ Public Class FrmMain
     End Sub
 
     Private Sub Tmr_Connect_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Tmr_Connect.Tick
-
-        If PlcConnectionError = "OK" Then
-            srcLbPlcConnectionState.Text = PlcConnectionError
-            srcLbPlcConnectionState.BackColor = Color.Blue
-            srcLbPlcConnectionState.ForeColor = Color.White
-        Else
-            srcLbPlcConnectionState.Text = PlcConnectionError
-            srcLbPlcConnectionState.BackColor = Color.Red
-            srcLbPlcConnectionState.ForeColor = Color.White
-        End If
-
-        If PlcConnectionStep = 0 Then
-            ConnectPLc()
-            PlcConnectionStep = 2
-        ElseIf PlcConnectionStep = 2 Then
-            If FlagPlcConnection = True Then
-                PlcConnectionStep = 3
-            Else
-                PlcConnectionStep = 0
-            End If
-        ElseIf PlcConnectionStep = 3 Then
-            PlcConnectionError = ""
-            ReadPLc()
-            PlcConnectionStep = 4
-        ElseIf PlcConnectionStep = 4 Then
-            If PlcConnectionError <> "" Then
-                If PlcConnectionError = "OK" Then
-                    PlcConnectionStep = 2
-                Else
-                    ' 멜섹 삭제: ActPlc.Close() 제거 (IO보드는 Ios.Disconnect로 별도 관리)
-                    PlcConnectionStep = 0
-                End If
-            End If
-        End If
+        UpdateIoConnectionDisplay()
     End Sub
 
     Private Sub Tmr_Work_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Tmr_Work.Tick
 
         srclbStep.Text = wStep
 
-        If PlcValue(4009) <> 0 And srclbAlarm.Visible = False Then
-            srclbAlarm.Visible = True
-            srclbAlarm.Text = AlarmMessage(CInt(PlcValue(4009)))
-        ElseIf PlcValue(4009) = 0 And srclbAlarm.Visible = True AndAlso Not _eStopLatched Then
-            srclbAlarm.Visible = False
-        End If
-
-        PCAliveCount = PCAliveCount + 1
-        If PcAliveCount = 10 Then
-            WritePlc("D", "4050", "1")
-        ElseIf PcAliveCount = 20 Then
-            WritePlc("D", "4050", "0")
-            PcAliveCount = 0
-        End If
-
-        ' Reset 원위치 복귀 (비상정지 중에도 Reset으로 복귀 가능)
+        ' Reset 원위치 복귀 (비상정지 중에도 Reset 가능)
         If wStep = 0.1 Then
             HandleHomingTick()
             Return
         End If
 
-        ' 비상정지 래치 시 공정 진행 차단
         If _eStopLatched OrElse IoInEStop Then Exit Sub
 
         If wStep = 0 Then
-            ' Start는 Ios_InputChanged 엣지에서 처리
+            ' 품번 스캔 → HandleIdlePartScan / Start → HandleStartPress
 
-        ElseIf wStep = 2 Then
-
-            srcLbPartNo.Text = LoadWorkPart()
-            If TmpSeq <> "" Then
-                wStep = 2.1
-            Else
-                srclbAlarm.Visible = True
-                srclbAlarm.Text = "계획을 입력해주세요"
+        ElseIf wStep = 2.3 Then
+            If Ios Is Nothing OrElse Not IoConnected Then
+                WriteTxtMessage("[IO] 제품 고정 대기 — FBEI 미연결")
+                Exit Sub
             End If
-            
-        ElseIf wStep = 2.1 Then
-
-            LoadPArt(srcLbPartNo.Text)
-            FrmWorkStandard.LoadPicture(FrmWorkStandard.srcPictureBox, Mid(srcLbPartNo.Text, 1, 11))
-            wStep = 2.2
-
-        ElseIf wStep = 2.2 Then
-
-            srclbTargetMotorBarcode.Text = TargetMotorBarcode
-            srclbTargetFrameBarcode.Text = TargetFrameBarcode
-            srclbTargetTool.Text = CStr(TargetToolNum)
-
-            If TargetMotorTQ = False Then
-                srclbDataMotorTq.Text = "NA"
-                srclbDecMotorTq.Text = "NA"
-                srclbDecMotorTq.BackColor = Color.Green
-            End If
-            If TargetMotorBarcode = "0" Then
-                srclbDataMotorBarcode.Text = "NA"
-                srclbDecMotorBarcode.Text = "NA"
-                srclbDecMotorBarcode.BackColor = Color.Green
-            End If
-            If TargetFrameBarcode = "0" Then
-                srclbDataFrameBarcode.Text = "NA"
-                srclbDecFrameBarcode.Text = "NA"
-                srclbDecFrameBarcode.BackColor = Color.Green
-            End If
-            srcLbSerial.Text = Create_Serial()
-            wStep = 2.3
-
-        ElseIf wStep = 2.3 Then 'Send PLC Option
-
-            If OptionLHRH = "LH" Then
-                WritePlc("D", "4051", "1")
-            ElseIf OptionLHRH = "RH" Then
-                WritePlc("D", "4051", "2")
-            End If
-
-            If OptionType = "STD" Then
-                WritePlc("D", "4052", "1")
-            ElseIf OptionType = "FOLD" Then
-                WritePlc("D", "4052", "2")
-            ElseIf OptionType = "VIP" Then
-                WritePlc("D", "4052", "3")
-            End If
-
-            If OptionBack = "PULLMA" Then
-                WritePlc("D", "4053", "1")
-            Else
-                WritePlc("D", "4053", "2")
-            End If
-
-            If OptionFootRest = True Then
-                WritePlc("D", "4054", "1")
-            Else
-                WritePlc("D", "4054", "0")
-            End If
-
-            If OptionMonitor = True Then
-                WritePlc("D", "4055", "1")
-            Else
-                WritePlc("D", "4055", "0")
-            End If
-            WritePlc("D", "4056", "1")
             JigClampSequence.BeginClamp()
             wStep = 2.4
 
         ElseIf wStep = 2.4 Then
-            ' 제품 고정: 핀전진 → 클램프 (1번 지그)
+            ' 제품 고정: 1·2번 핀전진+클램프 동시 → IN:03,05,09,11
             HandleJigIoResult(JigClampSequence.Tick(Ios), 3, "제품 고정")
 
         ElseIf wStep = 3 Then
-            ' 다운前 판정: 모터바코드 + 프레임바코드 + 토크
-            If (srclbDecMotorBarcode.Text = "OK" Or srclbDecMotorBarcode.Text = "PASS" Or srclbDecMotorBarcode.Text = "NA") And _
-                (srclbDecFrameBarcode.Text = "OK" Or srclbDecFrameBarcode.Text = "PASS" Or srclbDecFrameBarcode.Text = "NA") And _
-                (srclbDecMotorTq.Text = "OK" Or srclbDecMotorTq.Text = "PASS" Or srclbDecMotorTq.Text = "NA") Then
-                If Not _readyForDown Then
-                    _readyForDown = True
-                    srclbAlarm.Visible = True
-                    srclbAlarm.Text = "다운前 판정 OK — Start로 지그 다운"
-                    WriteTxtMessage("[IO] 다운前 판정 OK — Start(2회) 대기")
-                End If
+            ' 모니터브라켓 T/Q 4회 — 완료 후 RouteAfterTqComplete
+            If AllMonitorbracketTqDone() AndAlso _peStartWait = PeStartWait.None Then
+                RouteAfterTqComplete()
             End If
 
+        ElseIf wStep = 3.1 OrElse wStep = 3.7 Then
+            ' Start 대기 (지그 다운 / 언클램프)
+
         ElseIf wStep = 3.2 Then
+            ' 지그 다운: OUT:10 → IN:13
             HandleJigIoResult(JigClampSequence.Tick(Ios), 3.4, "지그 다운")
 
         ElseIf wStep = 3.4 Then
-            ' 다운後 판정: 지그 다운 위치(IN:13) 유지 중에만 공구 작업
+            ' 지그 다운 유지 + 에어툴 IN:31 / Atlas
             If Not JigClampSequence.IsJigAtDown(Ios) Then
-                srclbAlarm.Visible = True
-                srclbAlarm.Text = "지그 다운 위치 이탈 — IN:13/14 확인 후 Reset"
-                _readyForUp = False
+                WriteTxtMessage("[IO] 지그 다운 이탈 — IN:13/14 확인 후 Reset")
+                _peStartWait = PeStartWait.None
                 Exit Sub
             End If
-            If srclbDecTool.Text <> "OK" AndAlso Not AtlasToolEnabled Then srclbDataTool.Text = PlcValue(4002)
 
-            If (CInt(srclbDataTool.Text) = TargetToolNum) And srclbDecTool.Text <> "OK" Then
-                srclbDecTool.Text = "OK"
-                srclbDecTool.BackColor = Color.Blue
-                DingDOng()
-            End If
-
-            If srclbDecTool.Text = "OK" Then
-                If Not _readyForUp Then
-                    _readyForUp = True
-                    srclbAlarm.Visible = True
-                    srclbAlarm.Text = "공구 판정 OK — Start로 지그 업"
-                    WriteTxtMessage("[IO] 다운後 공구 판정 OK — Start(3회) 대기")
-                End If
+            If srclbDecTool.Text = "OK" AndAlso _peStartWait = PeStartWait.None Then
+                _peStartWait = PeStartWait.JigUp
+                WriteTxtMessage("[IO] 에어툴 OK — Start 대기 (지그 업)")
             End If
 
         ElseIf wStep = 3.6 Then
+            ' 지그 업: OUT:11 → IN:14
             HandleJigIoResult(JigClampSequence.Tick(Ios), 3.8, "지그 업")
 
         ElseIf wStep = 3.8 Then
-            If Not JigClampSequence.IsJigAtUp(Ios) Then
-                WriteTxtMessage("[IO] 지그 업 도착 신호 미확인 — IN:14 대기 (해제 대기)", "WSTEP38_WAIT_UP")
-                Exit Sub
-            End If
-            JigClampSequence.BeginRelease()
-            wStep = 3.9
-            WriteTxtMessage("[IO] 제품 해제 시작 (wStep 3.9)")
+            ' 지그 업 확인 후 해제 (HandleJigIoResult에서 BeginPeUnclamp)
 
         ElseIf wStep = 3.9 Then
-            ' 제품 해제: 언클램프 → 핀후진 (1번 지그)
+            ' 제품 해제: 1·2번 언클램프→핀후진
             HandleJigIoResult(JigClampSequence.Tick(Ios), 4, "제품 해제")
 
         ElseIf wStep = 4 Then
-
             SaveDB()
-            SavePlan(srcLbPartNo.Text, TmpSeq)
-            wStep = 5
-
-        ElseIf wStep = 5 Then
-
-            ' 지그 업은 wStep 3.6에서 IN:14 확인 완료 — 센서 재확인 후 라벨 인쇄
-            If JigClampSequence.IsJigAtUp(Ios) OrElse PlcValue(4001) = 1 Then
-                WritePlc("D", "4051", "0000000")
-                BarcodePrint(srcLbSerial.Text, srcLbPartNo.Text)
-                AddGrid(srcLbPartNo.Text)
-                InitGrid()
-                LoadGrid()
-                InitControl()
-                wStep = 0
-            End If
+            AddGrid(srcLbPartNo.Text)
+            InitGrid()
+            LoadGrid()
+            InitControl()
+            wStep = 0
+            HideEStopAlarm()
+            WriteTxtMessage("[IO] PE 작업 완료 — wStep 0")
 
         End If
 
@@ -1422,36 +1850,17 @@ Public Class FrmMain
 
         Dim Incoming As String
         Dim ScanData As String
-        Dim Flag As Boolean = False
 
         Incoming = Serial_Scanner.ReadLine()
-        ScanData = Mid$(Incoming, 1, Len(Incoming) - 1)
+        ScanData = Trim(Mid$(Incoming, 1, Len(Incoming) - 1))
         Serial_Scanner.DiscardInBuffer()
 
         WriteTxtMessage("ScanData : " & ScanData)
 
-        If wStep = 3 Then
-
-            If InStr(1, ScanData, TargetMotorBarcode) <> 0 And (srclbDecMotorBarcode.Text <> "NA") Then
-                srclbDataMotorBarcode.Text = ScanData
-                srclbDecMotorBarcode.Text = "OK"
-                srclbDecMotorBarcode.BackColor = Color.Blue
-                DingDOng()
-                Flag = True
-            End If
-
-            If InStr(1, ScanData, TargetFrameBarcode) <> 0 And (srclbDecFrameBarcode.Text <> "NA") Then
-                srclbDataFrameBarcode.Text = ScanData
-                srclbDecFrameBarcode.Text = "OK"
-                srclbDecFrameBarcode.BackColor = Color.Blue
-                DingDOng()
-                Flag = True
-            End If
-
-            If Flag = False Then NG()
-
-        Else
-
+        If wStep = 0 Then
+            HandleIdlePartScan(ScanData)
+        ElseIf Trim(ScanData) <> "" Then
+            WriteTxtMessage("[SCAN] 무시 — wStep " & wStep)
         End If
 
     End Sub
@@ -1575,7 +1984,7 @@ Public Class FrmMain
 
     Private Sub tmr_Tool_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tmr_Tool.Tick
 
-        If AtlasToolEnabled OrElse Not Serial_Tool.IsOpen Then Exit Sub
+        If Not Serial_Tool.IsOpen Then Exit Sub
 
         If Tool_Connection1 = False Then
             Tool_Connection1 = True
@@ -1590,7 +1999,6 @@ Public Class FrmMain
     Private Sub ThreadTask1()
 
         Dim Incoming1 As String
-        Dim ToolData As Double
 
         Do While Serial_Tool.IsOpen = True
 
@@ -1609,25 +2017,11 @@ Public Class FrmMain
                             Tool_Connection1 = True
                         ElseIf Len(Tool_String1) > 200 And Mid(Tool_String1, 6, 4) = "0061" Then
                             Serial_Tool.Write(Chr("7") & Chr("9") & Chr("7") & Chr("9") & Chr("2") & "00200062            " & Chr("0") & Chr("3"))
-                            ToolData = CDbl(Format(Val(Mid(Tool_String1, 143, 3) & "." & Mid(Tool_String1, 146, 2))))
-                            WriteTxtMessage("ToolData : " & ToolData)
-
-                            If wStep = 3 Then
-
-                                If ToolData >= BasicToolMin And ToolData <= BasicToolMax And Mid(Tool_String1, 109, 1) = "1" Then
-                                    srclbDataMotorTq.Text = ToolData
-                                    srclbDecMotorTq.Text = "OK"
-                                    srclbDecMotorTq.BackColor = Color.Blue
-                                    DingDOng()
-                                Else
-                                    srclbDataMotorTq.Text = ToolData
-                                    srclbDecMotorTq.Text = "NG"
-                                    srclbDecMotorTq.BackColor = Color.Red
-                                    NG()
-                                End If
-
+                            Dim captured As String = Tool_String1
+                            If IsHandleCreated Then
+                                BeginInvoke(New Action(Of String)(AddressOf ProcessSerialTool0061), captured)
                             Else
-                                NG()
+                                ProcessSerialTool0061(captured)
                             End If
 
                         End If
@@ -1673,7 +2067,6 @@ Public Class FrmMain
 
     Private Sub LoadALarmMessage()
 
-        'Private AlarmMessage(100) As String
         Dim Rs As New ADODB.Recordset
         Dim i As Integer
 
@@ -1704,31 +2097,6 @@ Public Class FrmMain
         Rs.Close()
 
         ConnectionCloseMDB()
-
-    End Sub
-
-    Private Sub SavePlan(ByVal strPartNo As String, ByVal strSeq As String)
-
-        Dim Rs As New ADODB.Recordset
-        Dim tmp As Integer
-
-        ConnectionOpenSQL()
-        Rs.CursorLocation = ADODB.CursorLocationEnum.adUseClient
-        Rs.CursorType = ADODB.CursorTypeEnum.adOpenStatic
-        Rs.LockType = ADODB.LockTypeEnum.adLockOptimistic
-
-        Rs.Open("SELECT * FROM Table_Plan Where PartNo = '" & Mid(strPartNo, 1, 11) & "' AND PartColor = '" & Mid(strPartNo, 12, 3) & "' AND Seq = '" & TmpSeq & "'", SqlConnect)
-
-        If Rs.RecordCount = 1 Then
-            tmp = CInt(Rs.Fields("PartCount").Value)
-            tmp = tmp + 1
-            Rs.Fields("partCount").Value = CStr(tmp)
-            Rs.Update()
-        End If
-        Rs.ActiveConnection = Nothing
-        Rs.Close()
-
-        ConnectionCloseSQL()
 
     End Sub
 

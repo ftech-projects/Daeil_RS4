@@ -8,7 +8,7 @@ Module IoMap
     ' --- 운전 스위치 핀 (0-base) ---
     Public Const PinStart As Integer = 0     ' IN:00 Start
     Public Const PinReset As Integer = 1     ' IN:01 Reset
-    Public Const PinEStop As Integer = 2     ' IN:02 비상정지
+    Public Const PinEStop As Integer = 2     ' IN:02 비상정지 (현장 NO: 누름=ON)
     Public Const PinAirTool As Integer = 31  ' IN:31 에어 툴
 
     ' --- 입력 (인덱스 = 핀번호 00~31) ---
@@ -33,7 +33,7 @@ Module IoMap
     }
 
     ' --- 출력 (인덱스 = 핀번호 00~11) ---
-    ' OUT:00~05 = 1번 지그(회전 위치1), OUT:06~11 = 2번 지그(회전 위치2) — 현재 1번만 사용
+    ' OUT:00~05 = 1번 지그(회전 위치1), OUT:06~11 = 2번 지그(회전 위치2) — 1·2번 동시 고정/해제 (지그 선택 신호 추후)
     Public ReadOnly OutputNames() As String = {
         "1번 핀전진",                   ' OUT:00  제품 잡기
         "1번 핀후진",                   ' OUT:01

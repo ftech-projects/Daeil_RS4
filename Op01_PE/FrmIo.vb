@@ -121,7 +121,7 @@ Public Class FrmIo
         End Try
     End Sub
 
-    ''' <summary>IN 표시 — 전 핀 동일: OFF=회색, ON=녹색 (NC 비상정지 반전은 FrmMain 공정만 적용)</summary>
+    ''' <summary>IN 표시 — OFF=회색, ON=녹색</summary>
     Private Sub SetInLed(pin As Integer, value As Boolean)
         If _inLabels(pin) Is Nothing Then Return
         _inLabels(pin).BackColor = If(value, LedInOn, LedOff)

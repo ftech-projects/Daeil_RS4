@@ -1,0 +1,1418 @@
+FB20 series IP20 wide form I/O
+quick guide manual
+                     Version 1.2, 2025-01-14
+
+
+
+
+ Tianjin Elco Automation Co.,Ltd
+FB20 series IP20 wide form I/O modules concise operation manual
+
+                                      CONTENT
+1. Product Introduction .................................................................. 2
+2. Version change records ............................................................ 2
+3. Regarding manual acquisition................................................... 2
+4. Warranty Statement .................................................................. 2
+5. FB20 series introduction ........................................................... 4
+    5.1. Introduction to Appearance and Function ...................... 4
+    5.2. Technical specifications ................................................. 5
+    5.3. Dimension drawing ........................................................ 6
+6. Mechanical installation and disassembly .................................. 7
+    6.1. Module installation......................................................... 7
+    6.2. Module disassembly ...................................................... 7
+    6.3. Installation position and minimum distances ................. 8
+7. Electrical installation and wiring .............................................. 10
+    7.1. Cable specification ...................................................... 10
+        7.1.1. Communication cable ........................................... 10
+        7.1.2. Power and signal cables ........................................11
+    7.2. FB20 terminal definition and I/O address .................... 12
+        7.2.1.FB**-3200P(N)-TS ................................................. 12
+        7.2.2.FB**-1616P(N)-TS ................................................. 12
+        7.2.3.FB**-0032P(N)-TS ................................................. 13
+        7.2.4.FB**-1616UP(N)-TS ............................................... 13
+8. Configuration and testing ........................................................ 15
+    8.1. Configuration and test in Siemens PORTAL ............... 15
+        8.1.1. GSD file ................................................................ 15
+        8.1.2. Configuration Example in Siemens Portal ............ 16
+    8.2. Configuration and test in Omron Sysmac Studio ........ 22
+        8.2.1. IP Address Settings .............................................. 22
+        8.2.2. Configuration Example in Omron Sysmac studio . 23
+9. Fault diagnosis LEDs .............................................................. 32
+Appendix ..................................................................................... 33
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                                         1 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+1. Product Introduction
+    The FB20 series IP20 wide form I/O modules adopt an integrated design
+    of bus interface, I/O signal and power supply, and is installed on a
+    standard 35mm DIN rail. Currently, it mainly offers 32-bit digital modules,
+    compatible with bus protocols such as Profinet, EtherCAT, Ethernet/IP,
+    and CC-LINK IE Field BASIC.
+    The FB20 series I/O terminals adopt a detachable and tool free design,
+    equipped with 24VDC and 0V equipotential terminals equal to the
+    number of I/Os, which facilitates sensor power supply wiring and
+    maintenance.
+    The FB20 series modules are suitable for application scenarios such as
+    position sensor signal acquisition, alarm light output, and valve island
+    control, providing cost-effective I/O product solutions for industries such
+    as semiconductors, photovoltaics, and logistics.
+2. Version change records
+     Revision date     Release version        Change content
+     2024-10               V1.0           First edition manual release
+     2024-12               V1.1           Add Omron configuration examples
+     2025-01               V1.2           Add Profinet data structure
+3. Regarding manual acquisition
+    This manual is not shipped with the product. If you need to obtain an
+    electronic PDF file, you can obtain it through the following methods:
+    Log in to the official website of ELCO (www.elco holding. com. cn), search
+    for keywords, and download.
+    Use WeChat to search and follow the official account of " ELCO
+    Automation" to obtain the product manual.
+    Contact the sales engineer of ELCO Automation in your region to obtain
+    the latest manual materials.
+4. Warranty Statement
+Under normal use, if the product malfunctions or is damaged, ELCO
+Automation is responsible for an 18 months warranty (from the date of
+manufacture, the delivery date shall prevail, and any contractual agreements
+shall be executed in accordance with the agreement). If it exceeds 18
+months, maintenance fees will be charged.
+Within 18 months, repair fees will be charged for product damage caused by
+the following circumstances.
+ Failure to operate this product according to the instructions in the
+     manual, resulting in product damage.
+ Damage to products caused by fires, floods, and abnormal voltage.
+ Using this product for abnormal functions may cause product damage.
+
+Tianjin Elco Automation Co.,Ltd                                          2 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+  Damage to the product caused by exceeding the specified usage range.
+  Secondary damage to products caused by force majeure factors such as
+   natural disasters, earthquakes, and lightning strikes.
+The service fees shall be calculated according to the unified standards of
+ELCO. If there is a contract, the principle of contract priority shall be applied.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                             3 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+5. FB20 series introduction
+   5.1. Introduction to Appearance and Function
+
+
+                                                                    ①
+
+
+
+
+○
+2
+
+
+
+○
+3                                                                                  ⑦       ⑧   ⑨
+
+
+
+○
+4
+
+
+
+
+                             ⑤ ⑥
+
+
+ No.         Name                     Function                      Status
+ 1     Module fixed buckles
+                                                         Pull up: installation position;
+                             Used to fix the module on
+                -                                        Press down: locking
+                             the installation rail
+                                                         position
+ 2     Bus input interface
+                                                         Blinking: There is network
+                             RJ45,Female,with            data exchange
+               X1
+                             indicators                  Extinguished: No network
+                                                         connection
+ 3     Bus output interface
+                                                         Blinking: There is network
+                             RJ45,Female,with            data exchange
+               X2
+                             indicators                  Extinguished: No network
+                                                         connection
+ 4     Power supply terminal block
+               L             24VDC+                      -
+               M             0V                          -
+               PE            Protective Ground           -
+ 5     Diagnostic indicators
+
+Tianjin Elco Automation Co.,Ltd                                                  4 / 41
+         FB20 series IP20 wide form I/O modules concise operation manual
+                        PW           Power status indication
+                              BF          Bus status indication
+                              SF          Module error indication
+              6      I/O status indicators
+                                                                          Green：I/O signal on；
+                     1-32                 I/O indicators
+                                                                          Off ：No I/O signal；
+              7      I/O    terminal blocks
+              8      External power supply terminal 24 V
+              9      External power supply terminal 0V
+                  5.2.      Technical specifications
+Order Data
+Product model            FBEC-3200P-TS        FBEC-1616P-TS            FBEC-0032P-TS      FBEC-1616UP-TS
+                            EtherCAT，           EtherCAT，                 EtherCAT，             EtherCAT，
+Description
+                            32DI，PNP          16DI/16DO，PNP              32DO，PNP         16DI/16DIO，PNP
+Product model            FBEC-3200N-TS        FBEC-1616N-TS            FBEC-0032N-TS      FBEC-1616UN-TS
+                            EtherCAT，           EtherCAT，                 EtherCAT，             EtherCAT，
+Description
+                            32DI，NPN          16DI/16DO，NPN              32DO，NPN         16DI/16DIO，NPN
+Product model            FBPN-3200P-TS        FBPN-1616P-TS            FBPN-0032P-TS      FBPN-1616UP-TS
+                            Profinet，            Profinet，                Profinet，             Profinet，
+Description
+                            32DI，PNP          16DI/16DO，PNP              32DO，PNP         16DI/16DIO，PNP
+Product model            FBPN-3200N-TS        FBPN-1616N-TS            FBPN-0032N-TS      FBPN-1616UN-TS
+                            Profinet，            Profinet，                Profinet，             Profinet，
+Description
+                            32DI，NPN          16DI/16DO，NPN              32DO，NPN         16DI/16DIO，NPN
+Product model            FBEI-3200P-TS        FBEI-1616P-TS            FBEI-0032P-TS      FBEI-1616UP-TS
+                           Ethernet/IP，        Ethernet/IP，              Ethernet/IP，       Ethernet/IP，
+Description
+                            32DI，PNP          16DI/16DO，PNP              32DO，PNP         16DI/16DIO，PNP
+Product model            FBEI-3200N-TS        FBEI-1616N-TS            FBEI-0032N-TS      FBEI-1616UN-TS
+                           Ethernet/IP，        Ethernet/IP，              Ethernet/IP，       Ethernet/IP，
+Description
+                            32DI，NPN          16DI/16DO，NPN              32DO，NPN         16DI/16DIO，NPN
+Product model            FBCB-3200P-TS        FBCB-1616P-TS            FBCB-0032P-TS      FBCB-1616UP-TS
+                         CC-LINK IE FB，       CC-LINK IE FB，           CC-LINK IE FB，      CC-LINK IE FB，
+Description
+                            32DI，PNP          16DI/16DO，PNP              32DO，PNP         16DI/16DIO，PNP
+Product model            FBCB-3200N-TS        FBCB-1616N-TS            FBCB-0032N-TS      FBCB-1616UN-TS
+                         CC-LINK IE FB，       CC-LINK IE FB，           CC-LINK IE FB，      CC-LINK IE FB，
+Description
+                            32DI，NPN          16DI/16DO，NPN              32DO，NPN         16DI/16DIO，NPN
+Interface type
+Bus                                                        2×RJ45,100 BASE-TX
+Power                                                      3-pos spring terminal
+I/O                                             4 × 8-pos pluggable spring terminal
+Aux terminals                                    8×8-pos pluggable spring terminal
+
+
+         Tianjin Elco Automation Co.,Ltd                                                        5 / 41
+           FB20 series IP20 wide form I/O modules concise operation manual
+Electrical data
+Input channels                   32                          16                      -                     Max.32
+Input power              Max.125 mA/CH，          Max.125 mA/CH，                                     Max.125 mA/CH，
+                                                                                     -
+supply current            less 4 A in total           less 2 A in total                               less 2 A in total
+Input filtering
+                                              1.6ms                                  -                     1.6ms
+delay
+Output channels                  -                           16                      32                    Max.16
+Output current                   -                                   Max.500 mA/CH，less 4 A in total
+Load type                        -                            Indicator lights, miniature solenoid valves, etc.
+Output frequency                 -                         Resistive load up to 100Hz, inductive load up to 5Hz
+Diagnosis
+Bus status                                        LED indicators，communication message
+Power status                                                        LED indicators
+Short circuit and
+                                                                    LED indicators
+overload
+General data
+IP grade                                                                  IP20
+Temperature                  Working temperature：-5 ℃ … 60 ℃，Storage temperature：-25 ℃ … 70 ℃
+Humidity                                                    15 %-95 %，no condensation
+Working altitude                                                      0-2000 m
+Pollution degree                                                           II
+Module size
+                                                          70 mm × 120 mm × 37.9 mm
+H×W×D
+                  5.3.       Dimension drawing
+
+
+
+
+             Tianjin Elco Automation Co.,Ltd                                                            6 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+6. Mechanical installation and disassembly
+    6.1. Module installation
+
+The installation of FB20 product can be carried out according to the
+
+steps shown in the following figure：
+
+
+
+
+STEP1：Pull out the two guide rail buckles of the module with force upwards,
+
+or use a straight screwdriver to remove them;
+
+STEP2：After the module is inserted into the guide rail, press down on the
+
+buckle and lock it in place to complete the fixed installation.
+
+    6.2. Module disassembly
+
+
+Tianjin Elco Automation Co.,Ltd                                        7 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+Use a flathead screwdriver or similar tool to pry up the rail lock, and then pull
+out the module in a direction away from the DIN rail.
+The I/O terminals of the module can be removed separately for easy module
+replacement.
+
+
+        ATTENTION
+
+  During installation, align the module with the DIN rail and press the fixing device in
+  the direction indicated by the arrow. After installation, there will be a noticeable
+  clicking sound; change the position of the locking device slightly; after installing
+  the module properly, make the locking device clamp the upper edge of the rail;
+  to avoid damaging the product, do not apply excessive force.
+
+
+        ATTENTION
+      The mechanical installation and disassembly of modules require qualified
+professional mechanical personnel to operate and pay attention to the correct
+wearing and use of labor protection equipment.
+
+
+    6.3. Installation position and minimum distances
+
+
+
+
+Mount the mounting rail horizontally for the specified installation position. The
+connection surfaces of the coupler and the I/O modules must face forwards.
+This can be seen from the illustration.
+The components are ventilated from bottom to top, which enables optimum
+cooling of the electronics by convection ventilation. The direction specification
+"down" corresponds to the direction of the positive acceleration due to
+gravity.
+
+Tianjin Elco Automation Co.,Ltd                                                 8 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+                                           NOTE
+
+        ATTENTION
+
+Observe minimum distances
+Maintain the distances to neighboring devices and control cabinet walls
+specified in the figure. This is the only way to ensure optimum convection
+cooling.
+If sufficient convection cooling is not ensured, the devices may overheat and
+be damaged.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                        9 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+7. Electrical installation and wiring
+    7.1. Cable specification
+    7.1.1.     Communication cable
+
+Bus communication uses shielded network cables for data transmission,
+
+without short circuits, misalignment, and poor contact; The length of the cable
+
+between devices cannot exceed 100m, as exceeding this length will cause
+
+signal attenuation and affect normal communication. The following
+
+specifications of communication cables are recommended:
+             Item                                  Specification
+
+ Cable type               Elastic crossover cable, S-FTP, category 5
+
+                          EIA/TIA568A，EN50173，ISO/IEC11801
+ Standards met
+                          EIA/TIA bulletin TSB，EIA/TIA SB40‑A&TSB36
+
+ Conductor section        AWG26
+
+ Wire type                Twisted pair
+
+ Wire pair                4
+
+Pre-wired connectors are better for communication and construction. Elco
+
+pre-wired connectors can provide customized cable material and cable length
+
+in accordance with communication technology requirements. The following
+
+Elco Ethernet connectors are available:
+     Model                    Description
+                       RJ45-M12 double-ended pre-wired Ethernet connector, male
+ E16DA4002M020
+                       straight, D-CODE, 4-pin, Cat5e, PVC, 2 M, fixed installation
+
+                       RJ45-RJ45 double-ended pre-wired Ethernet connector，male
+ E66D04002M020         straight-male straight， 4-pin，Cat5e，PVC，2 M, fixed
+                       installation
+
+                       RJ45-M12 double-ended pre-wired Ethernet connector, male
+ E16DA4004M020         straight, D-CODE，4-pin，Cat5e，PVC，2 M，suitable for drag
+                       chain
+
+                       RJ45-RJ45 double-ended pre-wired Ethernet connector，male
+ E66D04004M020         straight-male straight，4-pin，Cat5e，PUR，2 M，suitable for
+                       drag chain
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                                       10 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+       For more selection of Ethernet connectors, please refer to Elco's
+       "Connectivity System Catalog".
+
+     7.1.2. Power and signal cables
+The FX20 series adopts tool-free spring wiring terminals, and the wiring
+needs to be equipped with tube type cold pressing cable lugs. Please refer to
+the following figure for the stripping length and cable lug specifications:
+
+
+
+
+Standard cable crimper can be used for pressing the wire ear, as shown in
+the following figure:
+
+
+
+
+The wire connection does not need tools, and the wiring method is as follows:
+    1) Install the wire ear on the wire;
+    2) Insert the wire installed with the wire ear into the plug-in terminal to its
+        most;
+    3) Pull the cable to ensure its fixed securely.
+    To release the wire:
+    1) Press the terminal spring button with your hand or a flat screwdriver
+    2) Pull out the wire and release the button.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                             11 / 41
+          FB20 series IP20 wide form I/O modules concise operation manual
+                        7.2. FB20 terminal definition and I/O address
+
+                              7.2.1. FB**-3200P(N)-TS
+
+           Definition                              0V
+           Definition                              24V
+           Definition                              I/O   i1    i2         i3   i4    i5    i6    i7    i8          i9    i10    i11   i12   i13   i14   i15   i16
+           No.                X1                         1     2          3    4     5     6     7     8           9     10     11    12    13    14    15    16
+
+
+
+                                                                                                             FB**-3200P(N)-TS
+                              X2
+
+
+           No.                                           17    18         19   20    21    22    23    24          25    26     27    28    29    30    31    32
+           Definition              24V+ GND PE     I/O   i17   i18    i19      i20   i21   i22   i23   i24         i25   i26    i27   i28   i29   i30   i31   i32
+           Definition               L   M   PE     24V
+           Definition                              0V
+
+
+
+Input 4 Bytes
+BYTE n                   Bit 7               Bit 6                   Bit 5                  Bit 4                  Bit 3                    Bit 2                   Bit 1            Bit 0
+Address                  I n.7               I n.6                   I n.5                  I n.4                  I n.3                    I n.2                   I n.1            I n.0
+Terminal No.             i8                  i7                      i6                     i5                     i4                       i3                      i2               i1
+BYTE n+1                 Bit 7               Bit 6                   Bit 5                  Bit 4                  Bit 3                    Bit 2                   Bit 1            Bit 0
+Address                  I (n+1).7           I (n+1).6               I (n+1).5              I (n+1).4              I (n+1).3                I (n+1).2               I (n+1).1        I (n+1).0
+Terminal No.             i16                 i15                     i14                    i13                    i12                      i11                     i10              i9
+BYTE n+2                 Bit 7               Bit 6                   Bit 5                  Bit 4                  Bit 3                    Bit 2                   Bit 1            Bit 0
+Address                  i (n+2).7           i (n+2).6               i (n+2).5              i (n+2).4              i (n+2).3                i (n+2).2               i (n+2).1        i (n+2).0
+Terminal No.             i24                 i23                     i22                    i21                    i20                      i19                     i18              i17
+BYTE n+3                 Bit 7               Bit 6                   Bit 5                  Bit 4                  Bit 3                    Bit 2                   Bit 1            Bit 0
+Address                  I (n+3).7           I (n+3).6               I (n+3).5              I (n+3).4              I (n+3).3                I (n+3).2               I (n+3).1        I (n+3).0
+Terminal No.             i32                 i31                     i30                    i29                    i28                      i27                     i26              i25
+n：Starting byte of configuration
+                              7.2.2. FB**-1616P(N)-TS
+
+
+           Definition                              0V
+           Definition                              24V
+           Definition                              I/O   i1    i2         i3   i4    i5    i6    i7    i8          i9    i10    i11   i12   i13   i14   i15   i16
+           No.                X1                         1     2          3    4     5     6     7     8           9     10     11    12    13    14    15    16
+
+
+
+                                                                                                             FB**-1616P(N)-TS
+                              X2
+
+
+           No.                                           17    18         19   20    21    22    23    24          25    26     27    28    29    30    31    32
+           Definition              24V+ GND PE     I/O   Q1    Q2     Q3       Q4    Q5    Q6    Q7    Q8          Q9    Q10 Q11 Q12 Q13 Q14 Q15 Q16
+           Definition               L   M   PE     24V
+           Definition                              0V
+
+
+
+Input 2 Bytes
+BYTE n                   Bit 7              Bit 6               Bit 5                      Bit 4                 Bit 3                 Bit 2                  Bit 1             Bit 0
+Address                  I n.7              In.6                I n.5                      I n.4                 I n.3                 I n.2                  I n.1             I n.0
+Terminal No.             i8                 i7                  i6                         i5                    i4                    i3                     i2                i1
+BYTE n+1                 Bit 7              Bit 6               Bit 5                      Bit 4                 Bit 3                 Bit 2                  Bit 1             Bit 0
+
+          Tianjin Elco Automation Co.,Ltd                                                                                                                                 12 / 41
+           FB20 series IP20 wide form I/O modules concise operation manual
+   Address      I (n+1).7   I (n+1).6 I (n+1).5 I (n+1).4 I (n+1).3 I (n+1).2                                                                          I n+1).1      I (n+1).0
+   Terminal No.             i16                i15               i14                i13                  i12                   i11                     i10           i9
+   Output 2 Bytes
+   BYTE n                   Bit 7              Bit 6             Bit 5              Bit 4                Bit 3                 Bit 2                   Bit 1         Bit 0
+   Address                  Q n.7              Q n.6             Q n.5              Q n.4                Q n.3                 Q n.2                   Q n.1         Q n.0
+   Terminal No.             Q8                 Q7                Q6                 Q5                   Q4                    Q3                      Q2            Q1
+   BYTE n+1                 Bit 7              Bit 6             Bit 5              Bit 4                Bit 3                 Bit 2                   Bit 1         Bit 0
+   Address                  Q(n+1).7           Q(n+1).6          Q(n+1).5           Q(n+1).4             Q(n+1).1              Q(n+1).2                Q(n+1).1      Q(n+1).0
+   Terminal No.             Q16                Q15               Q14                Q13                  Q12                   Q11                     Q10           Q9
+   n：Starting byte of configuration
+                              7.2.3. FB**-0032P(N)-TS
+
+
+               Definition                            0V
+               Definition                            24V
+               Definition                            I/O   Q1   Q2   Q3   Q4   Q5    Q6   Q7    Q8         Q9    Q10 Q11 Q12 Q13 Q14 Q15 Q16
+               No.             X1                          1    2    3    4    5     6      7   8          9     10     11    12    13     14    15    16
+
+
+
+                                                                                                     FB**-0032P(N)-TS
+                               X2
+
+
+               No.                                         17   18   19   20   21    22   23    24          25    26     27    28    29     30    31    32
+               Definition           24V+ GND PE      I/O   Q17 Q18 Q19 Q20 Q21 Q22 Q23 Q24                Q25 Q26 Q27 Q28 Q29 Q30 Q31 Q32
+               Definition            L   M    PE     24V
+               Definition                            0V
+
+
+
+Output 4 Bytes
+BYTE n                Bit 7                  Bit 6              Bit 5               Bit 4                Bit 3                     Bit 2                Bit 1             Bit 0
+Address               Q n.7                  Q n.6              Q n.5               Q n.4                Q n.3                     Q n.2                Q n.1             Q n.0
+Terminal No.          Q8                     Q7                 Q6                  Q5                   Q4                        Q3                   Q2                Q1
+BYTE n+1              Bit 7                  Bit 6              Bit 5               Bit 4                Bit 3                     Bit 2                Bit 1             Bit 0
+Address               Q (n+1).7              Q (n+1).6          Q (n+1).5           Q (n+1).4            Q (n+1).3                 Q (n+1).2            Q (n+1).1         Q (n+1).0
+Terminal No.          Q16                    Q15                Q14                 Q13                  Q12                       Q11                  Q10               Q9
+BYTE n+2              Bit 7                  Bit 6              Bit 5               Bit 4                Bit 3                     Bit 2                Bit 1             Bit 0
+Address               Q (n+2).7              Q (n+2).6          Q (n+2).5           Q (n+2).4            Q (n+2).3                 Q (n+2).2            Q (n+2).1         Q (n+2).0
+Terminal No.          Q24                    Q23                Q22                 Q21                  Q20                       Q19                  Q18               Q17
+BYTE n+3              Bit 7                  Bit 6              Bit 5               Bit 4                Bit 3                     Bit 2                Bit 1             Bit 0
+Address               Q (n+3).7              Q (n+3).6          Q (n+3).5           Q (n+3).4            Q (n+3).3                 Q (n+3).2            Q (n+3).1         Q (n+3).0
+Terminal No.          Q32                    Q31                Q30                 Q29                  Q28                       Q27                  Q26               Q25
+n：Starting byte of configuration
+                              7.2.4.          FB**-1616UP(N)-TS
+
+
+
+
+             Tianjin Elco Automation Co.,Ltd                                                                                                                   13 / 41
+            FB20 series IP20 wide form I/O modules concise operation manual
+
+            Definition                            0V
+            Definition                            24V
+            Definition                            I/O    i1     i2     i3     i4     i5     i6     i7     i8           i9    i10    i11   i12    i13   i14   i15   i16
+            No.             X1                           1      2      3      4      5      6      7      8            9     10     11    12     13    14    15    16
+
+
+
+                                                                                                                FB**-1616UP(N)-TS
+                            X2
+
+
+            No.                                          17     18     19     20     21     22     23     24           25     26   27   28   29   30   31   32
+                                                        i17/   i18/   i19/   i20/   i21/   i22/   i23/   i24/         i25/   i26/ i27/ i28/ i29/ i30/ i31/ i32/
+            Definition           24V+ GND PE      I/O
+                                                         Q1     Q2     Q3     Q4     Q5     Q6     Q7     Q8           Q9    Q10 Q11 Q12 Q13 Q14 Q15 Q16
+            Definition            L   M    PE     24V
+            Definition                            0V
+
+
+
+
+Input 4 Bytes
+BYTE n              Bit 7                 Bit 6                Bit 5                       Bit 4                     Bit 3                      Bit 2                    Bit 1           Bit 0
+Address             I n.7                 I n.6                I n.5                       I n.4                     I n.3                      I n.2                    I n.1           I n.0
+Terminal No.        i8                    i7                   i6                          i5                        i4                         i3                       i2              i1
+BYTE n+1            Bit 7                 Bit 6                Bit 5                       Bit 4                     Bit 3                      Bit 2                    Bit 1           Bit 0
+Address             I (n1).7              I (n+1).6            I (n+1).5                   I (n+1).4                 I (n+1).3                  I (n+1).2                I (n+1).1       I (n+1).0
+Terminal No.        i16                   i15                  i14                         i13                       i12                        i11                      i10             i9
+BYTE n+2            Bit 7                 Bit 6                Bit 5                       Bit 4                     Bit 3                      Bit 2                    Bit 1           Bit 0
+Address             I (n+2).7             I (n+2).6            I (n+2).5                   I (n+2).4                 I (n+2).3                  I (n+2).2                I (n+2).1       I (n+2).0
+Terminal No.        i24                   i23                  i22                         i21                       i20                        i19                      i18             i17
+BYTE n+3            Bit 7                 Bit 6                Bit 5                       Bit 4                     Bit 3                      Bit 2                    Bit 1           Bit 0
+Address             I (n+3).7             I (n+3).6            I n+3).5                    I (n+3).4                 I (n+3).3                  I (n+3).2                I (n+3).1       I (n+3).0
+Terminal No.        i32                   i31                  i30                         i29                       i28                        i27                      i26             i25
+Output 2 Bytes
+BYTE n              Bit 7                 Bit 6                Bit 5                       Bit 4                     Bit 3                      Bit 2                    Bit 1           Bit 0
+Address             Q n.7                 Q n.6                Q n.5                       Q n.4                     Q n.3                      Q n.2                    Q n.1           Q n.0
+Terminal No.        Q8                    Q7                   Q6                          Q5                        Q4                         Q3                       Q2              Q1
+BYTE n+1            Bit 7                 Bit 6                Bit 5                       Bit 4                     Bit 3                      Bit 2                    Bit 1           Bit 0
+Address             Q (n+1).7             Q (n+1).6            Q (n+1).5                   Q (n+1).4                 Q (n+1).1                  Q (n+1).2                Q (n+1).1       Q (n+1).0
+Terminal No.        Q16                   Q15                  Q14                         Q13                       Q12                        Q11                      Q10             Q9
+n：Starting byte of configuration
+
+
+
+
+            Tianjin Elco Automation Co.,Ltd                                                                                                                                    14 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+8. Configuration and testing
+  8.1. Configuration and test in Siemens PORTAL
+    8.1.1. GSD file
+Use a GSD file (in XML format) to configure the FB20 series I/O modules.
+The GSD file is used to integrate the FB20 module as a standard Profinet I/O
+into your system.
+The Siemens Portal programming software commonly used in Profinet
+systems integrates GSD files according to the following steps:
+    8.1.1.1. Run the Portal software and select "Options>Manage General
+        Station Description Files_GSD" from the menu bar.
+
+
+
+
+    8.1.1.2. In the next dialog box, select the GSD file to install, and then click
+        "Install" to proceed with the installation operation.
+
+
+
+
+    8.1.1.3. The newly installed FB20 modules can be found in the "Other
+        Field Devices>PROFINET-IO>I/O>ELCO>FBPN" hardware directory.
+Tianjin Elco Automation Co.,Ltd                                             15 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+    8.1.1.4. Users configure FBPN series I/O modules in Portal based on the
+        actual model used.
+    8.1.2. Configuration Example in Siemens Portal
+This example uses FB20 as the Profinet slave station, model: FBPN-1616P-
+TS. By connecting Siemens PLC - CPU1211C through Profinet bus, all power
+supply and bus connections have been completed by default.
+The configuration steps are as follows:
+    8.1.2.1. Create a new Portal project.
+Open Siemens Portal software, click "Create New Project", modify the
+"Project Name" to "FB20 test", select the save path, and click "Create"
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                     16 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+    8.1.2.2. Install the GSD file for ELCO FB20 series I/O products, refer to
+        the relevant content in "9.1.1 GSD File" for specific methods.
+    8.1.2.3. Double click on "Add New Device" on the left and select the PLC
+        model used in the "Controller" window.
+
+
+
+
+    8.1.2.4. Double click on the "Device Configuration" window on the left,
+        select "Properties" -->"PROFINET Interface [X2]" -->"Ethernet
+        Address" in the "Device View" window, and set the IP address of the
+        PLC.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                        17 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+    8.1.2.5. Add FB20 module and establish communication connection with
+        PLC.
+    a) Double click on "Devices and Networks" on the left to enter the
+        "Network View" interface. Select "Other Field Devices ->PROFINET
+        IO ->I/O ->ELCO ->FB20" from the "Hardware Catalog" and add
+        FBPN-1616P-TS to the network by double clicking or dragging.
+
+
+
+
+    b) Click on 'Not assigned' with the mouse and select 'PLC_1. PROFINET
+       Interface _1'.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                   18 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+    c) The FB20 module is connected to the PLC for communication.
+
+
+
+
+    8.1.2.6. Modify the FB20 module device name and IP address settings.
+    1) Click on the FB20 module in the "Network View", select "Properties -
+        ->PROFINET Interface -->Ethernet Address", set the FB20 module
+        device name FBPN and IP address in the window. (It should be in the
+        same network segment as the IP address of the PLC).
+
+
+
+
+    2) Select FBPN-1616P-TS, right-click on the menu and choose "Assign
+       Device Name". In the Profinet Device Name Assignment interface,
+       click "Update List". The name and MAC address of the connected
+       FB20 module will be scanned. Select the device with the matching
+       MAC address and click "Assign Name"
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                     19 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+    8.1.2.7. In the "Device Overview", you can view the I/O address
+        occupancy of the configured modules. In this example, the module
+        input addresses IB1-IB2 and output addresses QB1-QB2 can be
+        modified as needed.
+
+
+
+
+    8.1.2.8. Selecting module "1616_1" -->"Properties" -->"Module
+        Parameters" allows for corresponding parameter settings, with slight
+        differences in configurable parameters for different models.
+
+
+
+
+    1) Filter time setting:
+
+Tianjin Elco Automation Co.,Ltd                                       20 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+         The filtering time can be classified into five levels from short to long:
+         extremely weak, week, medium, strong, extremely strong, and the
+         default is medium.
+         The stronger the filtering, the higher the probability of filtering out the
+         input interference signal, but the corresponding input response time
+         will also be longer. You can choose from the drop-down menu
+         according to your actual needs.
+     2) Module failure:
+         This option is the default setting, and when the module experiences a
+         network failure or other faults, the input maintains the state of the last
+         network cycle.
+     8.1.2.9. Diagnostic bytes configuration
+In the second and third slots of the module, you can choose to add the
+module's channel diagnostic byte and power diagnostic byte. Please refer to
+the previous "Process Data Diagnostic Bit Description" for the definition of
+diagnostic bytes.
+
+
+
+
+    8.1.2.10. Parameter settings are complete, save and compile, and
+        download the configured configuration to the PLC to complete the
+        configuration.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                             21 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+If all configurations are correct, the indicator lights of the FB20 coupler will
+display green, and the communication MD indicator light will display green
+and remain on.
+
+  8.2. Configuration and test in Omron Sysmac Studio
+    8.2.1. IP Address Settings
+
+The FB20 Ethernet/IP series defaults to no IP address at the factory, and
+users can set the correct IP address themselves through a third-party IP
+configuration tool. In this manual, the "IP Setting Tool" software is used to set
+the module IP address.
+The IP setting steps are as follows:
+    8.2.1.1. Connect the FBEI module to the power supply and Ethernet cable
+        according to the wiring instructions;
+    8.2.1.2. After correctly installing " IP Setting Tool " on the PC according to
+        the installation wizard, open the software and set the computer IP
+        address to the same network segment address as the IP to be set by
+        FBEI; In this example, the PC IP is set to 192.168.250.100;
+    8.2.1.3. Open the " IP Setting Tool " software interface, click the "Scan
+        Ethernet/IP device" button, or wait for a few seconds, if the
+        connection is normal, the software will display all scan results of the
+        computer connection based on the module's MAC on the interface:
+
+
+
+
+    8.2.1.4. Click on the module you want to set, click on "Setup IP asddr…"
+        button, enter the IP address you want to set in the pop-up dialog box
+        and click OK to confirm.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                             22 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+    8.2.1.5. Pop up successful IP setting dialog box.
+
+
+
+
+Click again to select the FBEI module with the IP address already set, click
+on "Setup IP addr…" ， Select 'start fixed IP' from the “IP addr. setting at
+next power on” dialog box and click OK.
+
+
+
+
+At this point, the IP address of the FBEI module has been successfully fixed
+in the module.
+
+    8.2.2. Configuration Example in Omron Sysmac studio
+
+
+
+Tianjin Elco Automation Co.,Ltd                                         23 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+In this example, ELCO's FBEI-1616UP-TS is used as the Ethernet/IP slave
+station to connect to the Omron Ethernet/IP controller NJ301-1100. By
+default, all power supply and bus connections have been correctly completed.
+     8.2.2.1. Open the Sysmac Studio software, click on "New Project", fill in the
+         corresponding information according to the PLC model, and click on
+         "Create".
+
+
+
+
+    8.2.2.2. Set the IP address for the built-in EtherNet/IP port of the PLC. In
+        this example, the default IP address for the PLC is 192.168.250.1, and
+        the corresponding IP address for the FBEI module is 192.168.250.10.
+        Note that the PLC and module should be set to the same network
+        segment. The IP setting method for the module can refer to 9.2.1. IP
+        Address Settings.
+
+
+
+
+    8.2.2.3. Set up the Ethernet/IP network by selecting "Tools>Ethernet/IP
+        Connection Settings" from the menu bar.
+Tianjin Elco Automation Co.,Ltd                                            24 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+    8.2.2.4. Double click or right-click to edit the built-in Ethernet/IP port
+
+
+
+
+        settings of the PLC in the newly opened interface to open the
+        connection settings interface.
+    8.2.2.5. Install the EDS file for FBEI, which is in. eds format and is used to
+        integrate FBEI as a standard Ethernet/IP slave into your system.
+        Right click on the toolbox on the right side of the connection settings
+        and select 'Show EDS Library'
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                                  25 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+    8.2.2.6. Click "Install", find the path where the EDS file of the FBEI
+        module is stored, click the "Open" button, and the configuration file
+        will be successfully imported.
+
+
+
+
+    8.2.2.7. Click to close EDS library, click the "+" button in the toolbox, fill in
+        the IP address of the module to be configured in the pop-up window
+        (in this example, 192.168.250.10), select the FBEI model FBEI-
+        1616UP-TS in the model’s name, and choose the latest revision
+        version. After completion, click the "Add" button.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                               26 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+    8.2.2.8. Right click on the newly created target device 192.168.250.10
+        FBEI-1616UP-TS version 1 to edit.
+
+
+
+
+    8.2.2.9. In this parameter setting interface, you can select the filtering
+        time and input/output properties of 16 configurable channels. It is
+        recommended to use the default setting of I/O Universal, but you can
+        also customize the input or output properties of each channel as
+        needed.
+
+
+
+
+        Click OK to exit channel parameter configuration.
+8.2.2.10. Create data type: Double click on the left navigation bar
+    "Programming ->Data ->Data type", double-click on the “Empty .Click
+    here to add item”.
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                         27 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+8.2.2.11. For the sake of intuition, two data types are established here:
+    input and output, and members "FBEI-DI" (used for input mapping), and
+    "FBEI-DO" (used for output mapping) are added by right clicking on the
+    newly established two data types.
+
+
+
+
+        Based on the length of input-output mapping data occupied by FBEI-
+        1616UP-TS, establish corresponding basic types. Short, overload,
+        and power are diagnostic data for module short circuit, overload, and
+        power supply faults, respectively, as shown in the figure:
+        (The appendix of the manual lists the I/O mapping for all models for
+        reference.)
+
+
+
+
+Note that the delimiter is an underscore "_" instead of a dash "-".
+8.2.2.12. Create global variables: Double click the "Global Variables" menu
+    on the left to create two global variables, input1 and output1. Fill in the
+    data type names "INPUT" and "OUTPUT", and associate them with the
+
+Tianjin Elco Automation Co.,Ltd                                         28 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+    structure "Input" and "Output" through the drop-down menu of the
+    "Network Publish" option.
+
+
+
+
+8.2.2.13.     Variable registration: In the "Built in Ethernet/IP Port Settings"
+    tab, click the " Registration All" button in the "Tag sets", confirm in the
+    pop-up dialog box, and click "Register".
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                             29 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+8.2.2.14. In the "Connection" settings, click the "+" and select to fill in the
+    relevant parameters such as "Target Device", "Input/Output", "Target
+    Variable", "Starting Variable", "Connection Type", etc., which should be
+    consistent with the previously established global variables.
+
+
+
+
+Note: If you want to change the above parameter configuration, you need to
+delete the connection and then add the connection configuration again for it
+to take effect.
+8.2.2.15. At this point, the FBEI module has been configured through
+     Ethernet/IP bus connection in Omron Sysmac Studio, and the parameter
+     configuration is transmitted to the PLC. If the configuration is correct, the
+     relevant indicator light BF of the FBEI module will remain green and can
+     be used for input and output signal testing.
+8.2.2.16. Input/Output Test
+  1)Open menu: view->watch tab page, enter variable names input1 and
+  output1:
+
+Tianjin Elco Automation Co.,Ltd                                             30 / 41
+FB20 series IP20 wide form I/O modules concise operation manual
+
+
+
+
+2）By sequentially forcing the output channels to "Ture", 16 output channel
+indicator lights can be lit. Similarly, by inputting a high-level signal, the input
+channel can be monitored to become "Ture".
+
+
+
+
+Tianjin Elco Automation Co.,Ltd                                               31 / 41
+    FB20 series IP20 wide form I/O modules concise operation manual
+    9. Fault diagnosis LEDs
+   Name            Status          Meaning                       Handling suggestions
+FB20 LED indicators
+             Green          Normal               None
+    PW                                           Check the power supply voltage and polarity;
+             Off            Power Failure
+                                                 Module damaged, replace.
+             Green          Normal               None
+                                                 Configuration error, check parameters
+    BF                                           configuration
+             Red            Bus Failure
+                                                 Bus connection error, check the bus cable
+                                                 connection
+             Green          Normal               None
+                                                 Check if there is a short circuit or overload in any
+    SF                                           I/O channel;
+             Red            Module Failure
+                                                 Check if the power supply voltage is within the
+                                                 range of 24 VDC ± 20%;
+             Off            Channel low level    None
+1-32 I/O
+LEDs
+             On             Channel high level   None
+             Green LED                           Check the network cable connection of the
+                            No network
+             off                                 network port X1
+             Green LED      network connected
+                                                 None
+             on
+    X1                      Network Port 1 is
+             Yellow LED
+                            sending/receiving    None
+             Blinking
+                            Data
+             Yellow LED     Network Port 1 has
+                                                 None
+             off            no data exchange
+             Green LED                           Check the network cable connection of the
+                            No network
+             off                                 network port X2
+             Green LED      network connected
+                                                 None
+             on
+    X2                      Network Port 2 is
+             Yellow LED
+                            sending/receiving    None
+             Blinking
+                            Data
+             Yellow LED     Network Port 2 has
+                                                 None
+             off            no data exchange
+
+
+
+
+    Tianjin Elco Automation Co.,Ltd                                                     32 / 41
+           FB20 series IP20 wide form I/O modules concise operation manual
+
+           Appendix
+
+                   1. FB20 series Profinet data structure
+
+                    FBPN-3200P(N)-TS
+
+           1) Process Data Input
+                       Bit 7      Bit 6       Bit 5             Bit 4          Bit 3       Bit 2     Bit 1     Bit 0      Description
+          Byte 0         i8        i7              i6            i5             i4          i3        i2        i1
+          Byte 1        i16        i15         i14              i13             i12        i11        i10       i9
+Slot 1                                                                                                                    Input data
+          Byte 2        i24        i23         i22              i21             i20        i19        i18       i17
+          Byte 3        i32        i31         i30              i29             i28        i27        i26       i25
+          Byte 4      Diag.8     Diag.7      Diag.6        Diag.5             Diag.4     Diag.3    Diag.2     Diag.1
+          Byte 5      Diag.16    Diag.15     Diag.14       Diag.13            Diag.12    Diag.11   Diag.10    Diag.9      Channel
+Slot 2
+          Byte 6      Diag.24    Diag.23     Diag.22       Diag.21            Diag.20    Diag.19   Diag.18    Diag.17     Diagnosis
+          Byte 7      Diag.32    Diag.31     Diag.30       Diag.29            Diag.28    Diag.27   Diag.26    Diag.25
+Slot 3    Byte 8                                                                                               Error      Power status
+           2) Config
+             Bit 7     Bit 6    Bit 5      Bit 4        Bit 3         Bit 2      Bit 1    Bit 0    Default           Description
+                                                                                                             0：extremely weak
+                                                                                                             1：weak
+ Byte 0                                    Filter Setting                                            2       2：medium
+                                                                                                             3：strong
+                                                                                                             4：extremely strong
+
+
+                    FBPN-1616P(N)-TS
+
+           1) Process Data Input
+                      Bit 7      Bit 6       Bit 5          Bit 4             Bit 3       Bit 2     Bit 1      Bit 0       Description
+          Byte 0       i8         i7           i6               i5              i4         i3         i2        i1
+Slot 1                                                                                                                   Input data
+          Byte 1       i16        i15         i14               i13            i12         i11       i10        i9
+          Byte 2     Diag.8     Diag.7      Diag.6         Diag.5             Diag.4     Diag.3    Diag.2     Diag.1
+          Byte 3     Diag.16    Diag.15    Diag.14        Diag.13         Diag.12        Diag.11   Diag.10    Diag.9     Channel
+Slot 2
+          Byte 4     Diag.24    Diag.23    Diag.22        Diag.21         Diag.20        Diag.19   Diag.18   Diag.17     Diagnosis
+          Byte 5     Diag.32    Diag.31    Diag.30        Diag.29         Diag.28        Diag.27   Diag.26   Diag.25
+slot3     Byte 6                                                                                               Error     Power status
+
+
+
+
+           Tianjin Elco Automation Co.,Ltd                                                                           33 / 41
+            FB20 series IP20 wide form I/O modules concise operation manual
+            2) Process Data Output
+                              Bit 7       Bit 6      Bit 5       Bit 4            Bit 3          Bit 2     Bit 1      Bit 0      Description
+               Byte 0         Q24         Q23        Q22         Q21              Q20            Q19       Q18        Q17
+   Slot 1                                                                                                                       Output data
+               Byte 1         Q32         Q31        Q30         Q29              Q28            Q27       Q26        Q25
+            3) Config
+               Bit 7      Bit 6         Bit 5     Bit 4      Bit 3        Bit 2         Bit 1      Bit 0    Default            Description
+                                                                                                                       0：extremely weak
+                                                                                                                       1：weak
+   Byte 0                                         Filter Setting                                               2       2：medium
+                                                                                                                       3：strong
+                                                                                                                       4：extremely strong
+
+
+                  FBPN-0032P(N)-TS
+
+            1) Process Data Input
+                        Bit 7          Bit 6       Bit 5        Bit 4             Bit 3          Bit 2      Bit 1       Bit 0        Description
+            Byte 0     Diag.8         Diag.7      Diag.6       Diag.5         Diag.4            Diag.3     Diag.2      Diag.1
+            Byte 1     Diag.16        Diag.15     Diag.14     Diag.13        Diag.12            Diag.11    Diag.10     Diag.9      Channel
+Slot 2
+            Byte 2     Diag.24        Diag.23     Diag.22     Diag.21        Diag.20            Diag.19    Diag.18    Diag.17      Diagnosis
+            Byte 3     Diag.32        Diag.31     Diag.30     Diag.29        Diag.28            Diag.27    Diag.26    Diag.25
+Slot 3      Byte 4                                                                                                      Error      Power status
+            2) Process Data Output
+                              Bit 7       Bit 6      Bit 5         Bit 4          Bit 3           Bit 2     Bit 1      Bit 0       Description
+              Byte 0          Q8             Q7       Q6             Q5            Q4             Q3         Q2         Q1
+              Byte 1          Q16         Q15        Q14             Q13           Q12            Q11       Q10         Q9
+  Slot 1                                                                                                                          Output data
+              Byte 2          Q24         Q23        Q22             Q21           Q20            Q19       Q18        Q17
+              Byte 3          Q32         Q31        Q30             Q29           Q28            Q27       Q26        Q25
+
+
+                  FBPN-1616UP(N)-TS
+
+            1) Process Data Input
+                        Bit 7          Bit 6       Bit 5        Bit 4         Bit 3              Bit 2      Bit 1       Bit 0       Description
+           Byte 0        I8             I7          I6           I5                I4             I3         I2          I1
+           Byte 1       I16             I15         I14         I13               I12             I11        I10         I9
+Slot 1                                                                                                                             Input data
+           Byte 2       I24             I23         I22         I21               I20             I19        I18        I17
+           Byte 3       I32             I31         I30         I29               I28             I27        I26        I25
+           Byte 4      Diag.8         Diag.7      Diag.6      Diag.5         Diag.4             Diag.3     Diag.2     Diag.1
+           Byte 5    Diag.16          Diag.15     Diag.14     Diag.13        Diag.12            Diag.11    Diag.10    Diag.9       Channel
+Slot 2
+           Byte 6    Diag.24          Diag.23     Diag.22     Diag.21        Diag.20            Diag.19    Diag.18    Diag.17      Diagnosis
+           Byte 7    Diag.32          Diag.31     Diag.30     Diag.29        Diag.28            Diag.27    Diag.26    Diag.25
+Slot 3     Byte 8                                                                                                      Error       Power status
+
+            Tianjin Elco Automation Co.,Ltd                                                                                    34 / 41
+    FB20 series IP20 wide form I/O modules concise operation manual
+    2) Process Data Output
+           Bit 7       Bit 6       Bit 5     Bit 4     Bit 3      Bit 2           Bit 1       Bit 0    Description
+ Byte 0    Q24         Q23         Q22       Q21       Q20        Q19             Q18         Q17
+                                                                                                      Output data
+ Byte 1    Q32         Q31         Q30       Q29       Q28        Q27             Q26         Q25
+    4) Config
+          Bit 7    Bit 6   Bit 5     Bit 4   Bit 3    Bit 2    Bit 1      Bit 0      Default          Description
+                                                                                                 0: extremely weak
+                                                                                                 1: weak
+Byte 0                               Filter Setting                                       2      2: medium
+                                                                                                 3: strong
+                                                                                                 4: extremely strong
+Byte 1                         Port Type Channel 17
+Byte 2                         Port Type Channel 18
+Byte 3                         Port Type Channel 19
+Byte 4                         Port Type Channel 20
+Byte 5                         Port Type Channel 21
+Byte 6                         Port Type Channel 22
+Byte 7                         Port Type Channel 23
+                                                                                                 0: Digital Input
+Byte 8                         Port Type Channel 24
+                                                                                          3      1: Digital Output
+Byte 9                         Port Type Channel 25
+                                                                                                 3: I/O Universal
+Byte 10                        Port Type Channel 26
+Byte 11                        Port Type Channel 27
+Byte 12                        Port Type Channel 28
+Byte 13                        Port Type Channel 29
+Byte 14                        Port Type Channel 30
+Byte 15                        Port Type Channel 31
+Byte 16                        Port Type Channel 32
+
+
+
+
+    Tianjin Elco Automation Co.,Ltd                                                                     35 / 41
+    FB20 series IP20 wide form I/O modules concise operation manual
+
+          2. FB20 series Ethernet/IP data structure
+
+         FBEI-3200P(N)-TS
+
+
+    1) Configuration Data
+                             Instance ID                 Data length
+         INPUT                     101                       10
+     OUTPUT                        100                       0
+
+    2) Input Process Data
+             Bit 7           Bit 6       Bit 5    Bit 4       Bit 3            Bit 2     Bit 1      Bit 0       Description
+Byte 0        i8              i7          i6        i5            i4            i3        i2         i1
+Byte 1        i16            i15         i14       i13           i12           i11       i10         i9
+                                                                                                            Input data
+Byte 2        i24            i23         i22       i21           i20           i19       i18        i17
+Byte 3        i32            i31         i30       i29           i28           i27       i26        i25
+Byte 4                                                    S1…8
+Byte 5                                                   S9…16                                              Short circuit
+Byte 6                                                S17…24                                                status
+Byte 7                                                S25…32
+Byte 8                                                                                              Error   Power status
+Byte 9                                                                                                      Reserved
+
+    3) Parameters configuration
+          Bit 7      Bit 6      Bit 5    Bit 4   Bit 3     Bit 2       Bit 1     Bit 0    Default    Description
+                                                                                                     0-extremely weak
+                                                                                                     3-weak
+Byte 0                                   Filter Setting                                        6     6-medium
+                                                                                                     9-strong
+                                                                                                     12-extremely strong
+Byte 1                                                                                         0     Reserved
+
+
+         FBEI-1616P-TS
+
+
+    1) Configuration Data
+                             Instance ID                 Data length
+         INPUT                     101                       10
+     OUTPUT                        100                       2
+
+
+
+
+    Tianjin Elco Automation Co.,Ltd                                                                             36 / 41
+   FB20 series IP20 wide form I/O modules concise operation manual
+   2) Input Process Data
+                   Bit 7       Bit 6        Bit 5      Bit 4       Bit 3             Bit 2     Bit 1      Bit 0         Description
+  Byte 0            i8             i7            i6      i5             i4            i3        i2         i1
+                                                                                                                    Input data
+  Byte 1           i16             i15       i14        i13           i12            i11       i10         i9
+  Byte 2                                                      S1…8
+  Byte 3                                                      S9…16                                                 Short circuit
+  Byte 4                                                     S17…24                                                 status
+  Byte 5                                                     S25…32
+  Byte 6           O24         O23           O22       O21         O20               O19       O18        O17       Overload
+  Byte 7           O32         O31           O30       O29         O28               O27       O26        O25       status
+  Byte 8                                                                                                  Error     Power status
+  Byte 9                                                                                                            Reserved
+
+   3) Output Process Data
+             Bit 7         Bit 6            Bit 5       Bit 4         Bit 3            Bit 2      Bit 1         Bit 0      Description
+Byte 0       Q24            Q23             Q22         Q21           Q20              Q19        Q18           Q17
+                                                                                                                          Output data
+Byte 1       Q32            Q31             Q30         Q29           Q28              Q27        Q26           Q25
+
+   4) Parameters configuration
+           Bit 7      Bit 6        Bit 5    Bit 4     Bit 3     Bit 2        Bit 1     Bit 0    Default     Description
+                                                                                                            0-extremely weak
+                                                                                                            3-weak
+Byte 0                                      Filter Setting                                            6     6-medium
+                                                                                                            9-strong
+                                                                                                            12-extremely strong
+Byte 1                                                                                                0     Reserved
+
+
+         FBEI-1616N-TS
+
+
+   1) Configuration Data
+                              Instance ID                    Data length
+         INPUT                      101                          10
+    OUTPUT                          100                           2
+
+   2) Input Process Data
+            Bit 7          Bit 6           Bit 5      Bit 4        Bit 3             Bit 2      Bit 1      Bit 0          Description
+Byte 0        i8              i7            i6          i5            i4              i3         i2          i1
+                                                                                                                        Input data
+Byte 1       i16           i15             i14         i13            i12             i11       i10          i9
+Byte 2                                                       S1…8
+                                                                                                                        Short circuit
+Byte 3                                                       S9…16
+                                                                                                                        status
+Byte 4                                                   S17…24
+
+   Tianjin Elco Automation Co.,Ltd                                                                                         37 / 41
+   FB20 series IP20 wide form I/O modules concise operation manual
+Byte 5                                                S25…32
+Byte 6                       O21…24                                                O17…20                      Overload
+Byte 7                       O29…32                                                O25…28                      status
+Byte 8                                                                                               Error     Power status
+Byte 9                                                                                                         Reserved
+
+   3) Output Process Data
+            Bit 7       Bit 6            Bit 5      Bit 4           Bit 3          Bit 2     Bit 1     Bit 0      Description
+Byte 0      Q24         Q23               Q22       Q21             Q20            Q19       Q18        Q17
+                                                                                                                  Output data
+Byte 1      Q32         Q31               Q30       Q29             Q28            Q27       Q26        Q25
+
+   4) Parameters configuration
+          Bit 7     Bit 6        Bit 5    Bit 4   Bit 3      Bit 2       Bit 1     Bit 0   Default    Description
+                                                                                                      0-extremely weak
+                                                                                                      3-weak
+Byte 0                                    Filter Setting                                         6    6-medium
+                                                                                                      9-strong
+                                                                                                      12-extremely strong
+Byte 1                                                                                           0    Reserved
+
+
+         FBEI-1616UP(N)-TS
+
+
+   1) Configuration Data
+                            Instance ID                  Data length
+         INPUT                    101                         12
+     OUTPUT                       100                          2
+
+   2) Input Process Data
+            Bit 7       Bit 6            Bit 5     Bit 4        Bit 3            Bit 2     Bit 1     Bit 0       Description
+ Byte 0       I8            I7            I6        I5             I4             I3        I2        I1
+ Byte 1      I16            I15          I14        I13            I12           I11       I10        I9
+                                                                                                               Input data
+ Byte 2      I24            I23          I22        I21            I20           I19       I18       I17
+ Byte 3      I32            I31          I30        I29            I28           I27       I26       I25
+ Byte 4                                                    S1...8
+ Byte 5                                                    S9...16                                             Short circuit
+ Byte 6                                                  S17...24                                              status
+ Byte 7                                                  S25...32
+ Byte 8      O24        O23              O22       O21          O20              O19       O18       O17       Overload
+ Byte 9      O32        O31              O30       O29          O28              O27       O26       O25       status
+Byte 10                                                                                              Error     Power status
+Byte 11                                                                                                        Reserved
+
+
+   Tianjin Elco Automation Co.,Ltd                                                                                38 / 41
+     FB20 series IP20 wide form I/O modules concise operation manual
+     3) Output Process Data
+              Bit 7       Bit 6          Bit 5      Bit 4         Bit 3       Bit 2       Bit 1       Bit 0     Description
+  Byte 0      Q24             Q23        Q22        Q21           Q20         Q19         Q18         Q17
+                                                                                                               Output data
+  Byte 1      Q32             Q31        Q30        Q29           Q28         Q27         Q26         Q25
+
+     4) Parameters configuration
+            Bit 7     Bit 6      Bit 5    Bit 4     Bit 3    Bit 2        Bit 1   Bit 0     Default           Description
+                                                                                                        0: extremely weak
+                                                                                                        1: weak
+ Byte 0                                     Filter Setting                                        1     3: medium
+                                                                                                        5: strong
+                                                                                                        10: extremely strong
+ Byte 1                              Port Type Channel 17
+ Byte 2                              Port Type Channel 18
+ Byte 3                              Port Type Channel 19
+ Byte 4                              Port Type Channel 20
+ Byte 5                              Port Type Channel 21
+ Byte 6                              Port Type Channel 22
+ Byte 7                              Port Type Channel 23
+                                                                                                        0: Digital Input
+ Byte 8                              Port Type Channel 24
+                                                                                                  3     1: Digital Output
+ Byte 9                              Port Type Channel 25
+                                                                                                        3: I/O Universal
+Byte 10                              Port Type Channel 26
+Byte 11                              Port Type Channel 27
+Byte 12                              Port Type Channel 28
+Byte 13                              Port Type Channel 29
+Byte 14                              Port Type Channel 30
+Byte 15                              Port Type Channel 31
+Byte 16                              Port Type Channel 32
+
+
+          FBEI-0032P-TS
+
+
+     1) Configuration Data
+                              Instance ID              Data length
+          INPUT                  101                         10
+      OUTPUT                     100                         4
+
+
+
+
+     Tianjin Elco Automation Co.,Ltd                                                                            39 / 41
+   FB20 series IP20 wide form I/O modules concise operation manual
+   2) Input Process Data
+            Bit 7   Bit 6      Bit 5       Bit 4      Bit 3       Bit 2    Bit 1       Bit 0        Description
+ Byte 0                                        S1…8
+ Byte 1                                       S9…16
+                                                                                                 Short circuit status
+ Byte 2                                       S17…24
+ Byte 3                                       S25…32
+ Byte 4     O8       O7            O6       O5         O4         O3       O2          O1
+ Byte 5     O16      O15       O14         O13         O12        O11      O10         O9
+                                                                                                 Overload status
+ Byte 6     O24      O23       O22         O21         O20        O19      O18         O17
+ Byte 7     O32      O31       O30         O29         O28        O27      O26         O25
+ Byte 8                                                                                Error     Power status
+ Byte 9                                                                                          Reserved
+
+   3) Output Process Data
+            Bit 7    Bit 6         Bit 5    Bit 4       Bit 3      Bit 2       Bit 1     Bit 0        Description
+ Byte 0      Q8       Q7           Q6        Q5         Q4          Q3         Q2        Q1
+ Byte 1     Q16      Q15           Q14      Q13         Q12        Q11         Q10       Q9
+                                                                                                   Output data
+ Byte 2     Q24      Q23           Q22      Q21         Q20        Q19         Q18       Q17
+ Byte 3     Q32      Q31           Q30      Q29         Q28        Q27         Q26       Q25
+
+
+         FBEI-0032N-TS
+
+
+   1) Configuration Data
+                       Instance ID                  Data length
+         INPUT               101                        10
+     OUTPUT                  100                        4
+
+   2) Input Process Data
+           Bit 7    Bit 6     Bit 5        Bit 4      Bit 3       Bit 2    Bit 1       Bit 0         Description
+Byte 0                                         S1…8
+Byte 1                                        S9…16
+                                                                                                 Short circuit status
+Byte 2                                       S17…24
+Byte 3                                       S25…32
+Byte 4                  O5...8                                        O1...4
+Byte 5                O13...16                                       O9…12
+                                                                                                 Overload status
+Byte 6                O21...24                                      O17...20
+Byte 7                O29…32                                        O25...28
+Byte 8                                                                                 Error     Power status
+Byte 9                                                                                           Reserved
+
+
+
+   Tianjin Elco Automation Co.,Ltd                                                                       40 / 41
+  FB20 series IP20 wide form I/O modules concise operation manual
+  3) Output Process Data
+         Bit 7   Bit 6   Bit 5    Bit 4   Bit 3   Bit 2   Bit 1     Bit 0   Description
+Byte 0   Q8       Q7      Q6      Q5       Q4      Q3      Q2       Q1
+Byte 1   Q16     Q15     Q14      Q13     Q12     Q11      Q10      Q9      Output
+Byte 2   Q24     Q23     Q22      Q21     Q20     Q19      Q18      Q17     data
+Byte 3   Q32     Q31     Q30      Q29     Q28     Q27      Q26      Q25
+
+
+
+
+  Tianjin Elco Automation Co.,Ltd                                           41 / 41
+

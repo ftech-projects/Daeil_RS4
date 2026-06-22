@@ -1,0 +1,47 @@
+{
+  "keyenceIl": {
+    "pollIntervalMs": 300,
+    "geometryCorrection": {
+      "upperTiltDeg": 8.0,
+      "lowerScale": 1.0,
+      "lowerOffsetMm": 0.0,
+      "upperScaleAfterCos": 1.0,
+      "upperOffsetMm": 0.0
+    },
+    "amplifiers": [
+      {
+        "comPort": "COM3",
+        "baudRate": 9600,
+        "model": "IL-300",
+        "channelMapping": {
+          "1": "LsrLeftUpper",
+          "2": "LsrRightUpper",
+          "3": "LsrLeftLower",
+          "4": "LsrRightLower"
+        }
+      }
+    ]
+  },
+  "multiMonitor": {
+    "enabled": true,
+    "comPort": "COM4",
+    "baudRate": 115200,
+    "inputs": {
+      "start": 0,
+      "reset": 1,
+      "eStop": 2,
+      "airTool": 3
+    }
+  },
+  "fbei": {
+    "enabled": true,
+    "inputModuleIp": "192.168.250.10",
+    "outputModuleIp": "192.168.250.11",
+    "rpiMs": 20
+  },
+  "logging": {
+    "path": "./logs",
+    "retentionDays": 30,
+    "maxFileSizeMb": 10
+  }
+}

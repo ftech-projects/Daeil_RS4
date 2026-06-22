@@ -1,0 +1,862 @@
+   OSM41 HIGH PRECISION LASER DISTANCE SENSOR                                                                                                                        OSM41 HIGH PRECISION LASER DISTANCE SENSOR
+   Product Description
+      Laser displacement sensor ,FULL Metal JACKET,durable,                                                                                                          VOLTAGE WITHSTAND                                      650V/AC/50/60Hz 60S                  PROTECTION DEGREE                                       IP67
+      better protective performance,small size ,small spot,
+      high precision,LED display and teachnical key setting,
+                                                                                                                                                                                                                           50MQ(500VDC)                                                                                  Die-cast zinc
+                                                                                                                                      5
+
+                                                                                                              OSM41
+                                                                                                                       -K2500
+                                                                                                                                CB6/48
+                                                                                                                                                                     INSULATION IMPEDANCE                                                                        HOUSING MATERIAL
+      940nm infrared laser,2.5 m and 4 m TOF ranging.                                                                       NP
+                                                                                                                     :NPN/P
+                                                                                                               Output 485
+      Suitable for dispensing machine,Applications in phar-                                                    Modbu
+                                                                                                                     s-
+                                                                                                                         ax.=1W
+                                                                                                                                                                                                                                                                                                                         Glass
+                                                                                                               Power
+                                                                                                                       cons.m
+                                                                                                                                                                                                                                                                 WINDOWS MATERIAL
+      -maceuticalpacking,automobile AGV and other industries.                                                                                                        CONNECTIONS                                            Cable/Pigtail Cable
+                                                                                                                                                                                                                                                                 LASER LABEL                                             pasting on packing bag
+                                                                                                                                                                                                                                                                                                                         disassemble;
+                                                                                                                                                                                                  CAUTION                                                        MAINTAIN                                                please return to ELCO
+                                                                                                                                                                                           LASER RADIATION
+
+   Product features:                                                                                                                                                                       DO NOT STARE INTO BEAM.
+                                                                                                                                                                                                                                                                 MAXIMUM HUMIDITY                                        Max.85%Rh
+                                                                                                         C UL US
+                                                                                                                                                                              CLASS 1 LASER PRODUCT(IEC 60825-1:2014)
+      Support switch output,NPN/PNP can be set.                                                                                                                                                                                                                  ALTITUDE                                                Up to 2000m
+                                                                                                                                                                        Complies with 21 CFR 1040.10 and 1040.11 except for conformance with
+      Support RS485 output.                                                                                 LISTED                                                      IEC 60825-1 Ed. 3., as described in Laser Notice No.56,dated May 8,2019
+
+
+      Four white digital tubes,clear and bright                                                      PROXIMITY SWITCH                                                                                                                                            POLLUTION DEGREE                                        3
+                                                                                                        E326357
+      Support multiple detection modes,multi-scene applications.
+                                                                                                                                                                                                                                                  26.5
+                                                                                                                                                                     DIMENSIONS
+                                                                                                                                                                                                                                                   18
+             Type                      Measurement Indicating spot Detecting spot size Repeatability
+                                                                                                     Contron output Resolution
+                                         range
+                                                                                                                                                                                                                                                          φ3.2
+                                                   diameter                                                                                                                                                                                                                                                     B
+                                                                                                                                                                                                                                                                                                                C
+OSM41-K2500CB6/485*M                                                                                                                                                                     A                                                                                                                      D
+                                       50...2500mm             4mm@2.5m                 9cm*5.5cm@2.5m                             5mm           NPN/PNP       3mm
+OSM41-K2500CB6/485-*-
+
+
+
+
+                                                                                                                                                                                                                    45.7
+                                                                                                                                                                                                                            37
+
+
+
+
+                                                                                                                                                                                                                                                                33.1
+                                                                                                                                                                                                                                                                       30.1
+Q12.1
+
+
+
+
+                                                                                                                                                                                                                                                                              22.7
+OSM41-K4000CB6/485*M
+                                                               4mm@2.5m                 9cm*5.5cm@2.5m
+                                       50...4000mm                                                                                  5mm          NPN/PNP       3mm
+                                                               5mm@4m                   13cm*8.5cm@4m
+OSM41-K4000CB6/485-*-
+Q12.1
+                                                                                                                                                                                                                                                                                     φ 11.5                         A:Teach button & indicator
+Note 1: This product is a laser product, which can be used after 10 minutes of preheating after power-on.
+                                                                                                                                                                                                                                                                                                                    B:Receiver
+Note 2: For breakout products, *M represents the cable length; if not speciﬁed, the default is 2 meters.
+        For pigtail products, * represents the cable length in meters. If there is no Wei connector product                                                                                                                                                                                                         C:Transmitter
+                                                                                                                                                                                                                                                                                     φ12.5
+
+
+
+
+                                                                                                                                                                                                                                                                                                         44.1
+                                                                                                                                                                                                                                                                                                                    D:Indicator
+TECHNICAL SPECIFICATION
+                                                                                                                                                                                                                                                                                M12x1
+OPERATING VOLTAGE                             10...30 V DC , Class 2                      WORKING TEMPERATURE                                -10°C … +50°C
+                                                                                                                                                                                                                                                                                              Ø 15
+
+
+
+
+POWER SUPPLY                                   <1W                                         AMBIENT TEMPERATURE                               -20°C … +60°C           INTERFACE DEFINITION AND WIRING DIAGRAM
+
+                                                                                                                                                                                                                                  Cabel product                                  Connector wiring diagram
+INDICATING LIGHT                              Red semiconductor                            DETECTION LIGHT SOURCE                             940nm infrared laser                                Function
+                                                                                                                                                                                                                                  core color
+                                              laser level 2                                                                                   (class 1)
+                                                                                                                                                                          1              Positive power supply                          Brown                                    2                                   1
+
+CONTROL OUTPUT                                NPN/PNP can be set                          MEASUREMENT ACCURACY                                30mm                        2              485B                                           Gray
+
+                                                                                                                                                                          3              Power negative                                 Blue
+                                                                                                                                                                          4              NPN/PNP                                        Black
+COMMUNICATION METHOD                          Modbus-485                                  RESPONSE FREQUENCY                                  30Hz                                                                                                                                   3                              4
+                                                                                                                                                                          5             485A                                             Pink                                                        5
+
+
+         We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                                   We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                                                 Page 1                                                                                                                                                                          Page 2
+  OSM41高精度位移传感器                                                                                                          OSM41高精度位移传感器
+
+ 产品说明:
+                                                                                                                         连接形式                                          线缆式/pigtail线缆                         窗口                                      玻璃
+   激光位移传感器，全金属外壳，坚固耐用，防护性能
+   更好，体积小，光斑小，精度高，LED显示和按键设置，
+                                                                                                                                                                                                                                                     包装袋粘贴
+                                                                                        5
+
+                                                                                                                                                                                                             激光标签
+                                                                                  CB6/48
+                                                                        -K2500
+
+   940nm红外激光，2.5米、4米TOF型测距。适用点胶机、
+                                                                   OSM41
+                                                                                NP
+                                                                         :NPN/P
+                                                                   Output -485
+   制药、包装、汽车、AGV等行业应用。                                              Modbus .max.=1W
+                                                                                                                                                    CAUTION
+                                                                                                                                                                                                             维护信息                                    异常返厂宜科处理
+                                                                           cons
+                                                                   Power
+
+
+                                                                                                                                             LASER RADIATION
+
+
+  产品特点:
+                                                                                                                                             DO NOT STARE INTO BEAM.
+
+                                                                                                                              CLASS 1 LASER PRODUCT(IEC 60825-1:2014)                                        最高湿度                                    最高85%相对湿度
+   支持开关量输出，NPN/PNP可设定
+                                                                                                                                                                                                             海拔                                      高达2000米
+                                                                                                                          Complies with 21 CFR 1040.10 and 1040.11 except for conformance with
+                                                                                                                          IEC 60825-1 Ed. 3., as described in Laser Notice No.56,dated May 8,2019
+
+
+   支持RS485输出
+   四位白色数码管，明亮清晰                                                     C UL US                                                                                                                                  污染程度                                    三级
+   支持多种检测模式，多场景应用
+                                                                       LISTED
+                                                                 PROXIMITY SWITCH                                                                                                                   26.5
+
+                                                                                                                         外型尺寸
+                                                                     E326357
+                                                                                                                                                                                                     18
+
+        型号                检测距离         指示光斑直径             检测光斑尺寸                       重复精度        控制输出          分辨率                                                                                       φ3.2                                  B
+                                                                                                                                                                                                                                                 C
+                                                                                                                                                                                                                                                 D
+                                                                                                                                             A
+OSM41-K2500CB6/485*M
+                         50...2500mm   4mm@2.5m          9cm*5.5cm@2.5m                     5mm    NPN/PNP        3mm
+
+
+
+
+                                                                                                                                                                        45.7
+OSM41-K2500CB6/485-*-
+
+
+
+
+                                                                                                                                                                                37
+
+
+
+
+                                                                                                                                                                                                            33.1
+                                                                                                                                                                                                                  30.1
+Q12.1
+
+
+
+
+                                                                                                                                                                                                                       22.7
+OSM41-K2500CB6/485*M
+                                       4mm@2.5m          9cm*5.5cm@2.5m
+                         50...4000mm                                                        5mm    NPN/PNP        3mm
+                                       5mm@4m            13cm*8.5cm@4m
+OSM41-K2500CB6/485-*-
+Q12.1
+                                                                                                                                                                                                                          φ 11.5
+                                                                                                                                                                                                                                                          A ：按键膜端&指示灯
+注1：本产品为激光类产品，上电预热十分钟后使用。                                                                                                                                                                                                                                  B：接收器
+                                                                                                                                                                                                                                                          C：发射器
+注2：出线产品*M代表线长，如无为默认2M长度。pigtail产品*代表线长，单位为米，若无为接插件产品。
+                                                                                                                                                                                                                                                          D：指示器
+                                                                                                                                                                                                                          φ12.5
+
+
+
+
+                                                                                                                                                                                                                                            44.1
+技术参数
+                                                                                                                                                                                                                         M12x1
+工作电压                    10...30VDC                        工作温度                                    -10°C �+50°C
+                                                                                                                                                                                                                                     Ø 15
+
+
+
+
+功率                       <1W                              环境温度                                    -20°C �+60°C           接口定义和接线图
+
+指示光源                    红色半导体激光2级                         检测光源                                    940nm infrared laser
+                                                                                                                                          功能                                          出线式                          Pigtail式接线图
+                                                                                                  （class1）
+                                                                                                                                                                                      线芯颜色
+控制输出                    NPN/PNP可选                         测量精度                                    30mm                        1          电源正                                                 棕                     2                         1
+                                                                                                                              2          485B                                                灰
+通讯方式                     Modbus-485                       响应频率                                    30Hz                        3          电源负                                                 蓝
+
+                                                          防护等级                                    IP67                        4          NPN/PNP                                             黑
+耐电压                     650V/AC/50/60HZ 60S                                                                                                                                                                        3                         4
+                                                                                                                              5          485A                                                粉                                   5
+绝缘阻抗                    ≥50MΩ（500VDC）                     外壳                                      压铸锌
+
+
+                   我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                                                                                                                               我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                   第1页                                                                                                                                第2页
+OSM41 HIGH PRECISION LASER DISTANCE SENSOR                                                                                                                            OSM41 HIGH PRECISION LASER DISTANCE SENSOR
+
+ Wiring diagram（NPN）                                                                                                                                                  INSTRUCTION                                 Long press TEACH ，Enter the menu interface
+                                                                                                                                                                      1.Menu operation process                   Teaching        usually        2-point                                   midpoint
+                                                                                                                                                                                                                 output          detected       teaching                                  teaching
+                                                              +V                                                                                                        STEP                                                  TEACH                  (TEACH)                    (TEACH)
+
+                                                                                       Load
+                                                                                                               +                                                                                          Set response speed              66ms                     33ms
+       主                                                   control output                                      -     10VDC-30VDC
+                                                                                                                                                                                                                              TEACH                  (TEACH)
+       电                                                                    150mA MAX
+       路                                                      0V
+                                                                      485A                                    485
+                                                                                                                                                                                                     digital output ditection           luminous                   dark pass
+                                                                                                              communication
+                                                                      485B                                                                                                                                                     TEACH                 (TEACH)
+                                                                                                              device
+
+
+                                                                                                                                                                                                        Set digital output type              NPN                          PNP                 push-pull output mode
+                                                                                                                                                                                                                                TEACH                   (TEACH)                     (TEACH)
+ Wiring diagram（PNP）
+                                                                                                                                                                                                                                         Conventional             ModBus
+                                                             +V                                                                                                                                               485 protocol setting       protocol                 protocol
+                                                                                                                                                                                                                                TEACH                (TEACH)
+
+
+
+                                                             control output                                    +
+       主                                                                                                       -     10VDC-30VDC
+                                                                                                                                                                                                     485 communication address setting
+       电                                                              150mA MAX        Load                                                                                                                                    TEACH
+       路                                                      0V                                                                                                                                                                                            short press UP/DOWN，plus 1；long press,plus 10
+                                                                      485A                                    485
+                                                                                                              communication                                                                       485 communication baut rate setting
+                                                                      485B
+                                                                                                              device                                                                                                            TEACH
+
+
+
+                                                                                                                                                                                                                                                               even parity
+                                                                                                                                                                                                            Check bit setting         No parity                check                 odd parity
+                                                                                                                                                                                                                             TEACH                (TEACH)                 (TEACH)
+
+
+
+TEACHING MODE DESCRIPTION                                                                                                                                                                                                      continuous
+                                                                                                                                                                                                                               sending
+                                                                                                                                                                                                        485 date transmission                                      polling mode
+                                                                                                                                                                                                            mode setting TEACH mode     (TEACH)
+ Teach
+ Detection mode setting description：                                                                                                                                                                                                       do not
+ It is necessary to set the “Detection Mode Setting”in the menu to the                                                                                                                                                                     perform
+                                                                                                                                                                                                              Reset settings               reset                   perform reset
+ curresponding function mode in advance.                                                                                                                                                                                       TEACH                    (TEACH)
+ 1.Normal detection mode                                                                                                                                              2.Ranging diaplay
+                                                                                                                                                                      Measurement interface：Show actual measurement distance，resolution is 1mm，when the distance is out of detected distance,
+ In the menu，select the “__|￣” mode,automatically enter the detection interface;Select                                                                                it diaplays“----”。
+  the target object(*) within the eﬀective detection distance and press the TEACH key,and                                                 ON
+                                                                                                                                                  Reference value     3.Menu and key operation
+ prompt “GOOD” to complete the setting.The location of the target object is the judgement                                                 OFF
+                                                                                                                                                                      3.1 Enter the menu：Long pressTEACH above 3s when it is in the measurement interface，enter the menu interface；
+ distance.                                                                                                                                                            Exit menu：Long pressTEACH above 3s when it is in the menu interface，or no key operation for 20s，return to measurement interface。
+                                                                                                                                                                      3.2 Menu operation
+ 2.2-point teaching window comparison mode                                                                                                                            Enter the menu interface,diaplay the main menu,switch the menu options by pressing the up/down key.On the main menu interface,enter the
+  In the menu，select the “_N_.2” mode,automatically enter the measurement interface.                                                                                  submenu options by short pressing TEACH key.Unter the submenu,short press up/down to select the parameter.Short press the TEACH key to
+                                                                                                                                            OFF
+  Select the target object 1(*) within the eﬀective detection distance and press the TEACH                                                          p-2
+                                                                                                                                                                      conﬁrm and return to the previous main menu.
+  key,and prompt “LP1” to complete p-1 setting.Select the target object 2 (*)within the eﬀ-                                                 ON                        1)Teaching output
+  -ective detection distance and press TEACH key,prompt ”GOOD” to complete the p-2 sett-                                                            p-1
+                                                                                                                                                                      The main menu shows“SEnS”，press TEACH to enter the submenu;
+  -ing.Use the distance between the location of target object 1 and target object 2 as the                                                  OFF                       Submenu items：“__|￣”usually detected mode（default）；“_N_.2”2-point teaching window comparison mode；“nid”midpoint teaching
+  window to determine the window mode.                                                                                                                                mode.The above teaching modes are detailed in 6.Teaching mode description.
+  3. midpoint teaching mode                                                                                                                                           2)Set response speed:The main menu shows“SPEd”，press TEACH to enter the submenu;
+  In the menu，select the “Nid” mode,automatically enter the measurement interface.                                                                                    Submenu items：“H.rSo”high precision 66ms;“Std”standard 33ms（default）;
+                                                                                                                                                    p-2
+  Select the target object 1(*) within the eﬀective detection distance and press the TEACH                                                 ON                         3)Set digital output ditection
+  key,and prompt “LP1” to complete p-1 setting.Select the target object 2(*) within the eﬀ-                                                         (p -1 + p -2)/2   The main menu shows“ L-d”，press TEACH to enter the submenu;Submenu items：“ L-on”luminous（default）；“d-on”dark pass;
+  -ective detection distance and press TEACH key,prompt ”GOOD” to complete the p-2 sett-                                                   OFF                        4)Set digital output type
+                                                                                                                                                     p-1
+  -ing.Take the middle distance between p-1 and p-2 as the judgement distance.                                                                                        The main menu shows“ P-n”，press TEACH to enter the submenu;
+                                                                                                                                                                      Submenu items：“ nPn”NPN output mode（default）；“ PnP”PNP output mode.“PULL”push-pull output mode.
+                                                                                                                                                                      5)485 protocol setting
+                                                                                                                                                                      The menu shows "tty" and press TEACH to enter the submenu Sub-menu item: "nor" general mode (default):"bus Mod Bus protocol Under the
+                                                                                                                                                                      submenu, press UP/DOWN to make a selection, and press the TEACH key to conﬁrm and return to the superior menu. Note: The default is "nor"
+                                                                                                                                                                      normal mode;
+
+   We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                                       We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                                           Page 3                                                                                                                                                                             Page 4
+OSM41高精度位移传感器                                                                                      OSM41高精度位移传感器
+
+接线图（NPN）                                                                                         操作指南
+                                                                                                                  长按TEACH ，进入菜单界面
+                                                                                                                   教导输出       通常检测                          2点教导                中点教导
+                                                                                                                           TEACH               (TEACH)               (TEACH)
+                                                                                                 1.菜单操作流程
+                            +V
+                                                                                                                  设定响应速度                66ms                33 ms
+                                                                                                                           TEACH
+                                              Load                                                                                             (TEACH)
+
+                                                           +
+ 主                        control output                   -    10VDC-30VDC
+ 电                                    150mA MAX                                                                  数字输出方向设定               亮通                    暗通
+ 路                         0V                                                                                              TEACH               (TEACH)
+
+                                  485A                    485
+                                                          communication
+                                  485B                                                                                                 NPN输出模式
+                                                          device                                                  数字输出类型设定                                  PNP输出模式               推挽输出模式
+                                                                                                                               TEACH              (TEACH)               (TEACH)
+
+
+
+
+接线图（PNP）
+                                                                                                                    485协议设定            常规协议               ModBus协议
+                                                                                                                              TEACH            (TEACH)
+
+
+
+
+                           +V                                                                                    485通讯地址设定
+                                                                                                                              TEACH
+                                                                                                                                                短按UP/DOWN，加1；长按加10
+
+
+                          控制输出                             +
+ 主                                                         -    10VDC-30VDC
+                                                                                                                 485通讯波特率设定
+ 电                                150mA MAX   负载
+                                                                                                                              TEACH
+
+ 路                         0V
+
+                                  485A                    485
+                                                          通信                                                       校验位设定               无校验                偶校验                  奇校验
+                                  485B
+                                                          设备                                                               TEACH               (TEACH)              (TEACH)
+
+
+
+
+                                                                                                                485数据发送模式设定 连续发送模式                          轮询模式
+                                                                                                                              TEACH             (TEACH)
+
+
+教导模式说明
+                                                                                                                    复位设定               不执行复位                执行复位
+                                                                                                                              TEACH             (TEACH)
+ 教导
+ 检测模式设定说明：                                                                                       2.测距显示
+ 需事先在Menu中将“检测模式设定”设为对应功能模式。                                                                     测量界面：显示实际测量距离，分辨率为1mm，未检测到距离信息时显示“----”。
+                                                                                                 3.菜单及按键操作
+ 1.通常检测模式                                                                                        3.1进入菜单：测量界面下长按TEACH键3秒以上，进入菜单界面；
+ 在菜单中，选定“__|￣”模式，自动进入测量界面；在有效测量                                                                  退出菜单：菜单界面下长按TEACH键3秒以上，或20秒无按键操作，返回测量界面。
+                                                                                                 3.2菜单操作
+                                                                        OFF
+
+
+ 距离内，选定目标物体(*)，按TEACH键，提示“GOOD”，完成设                                     ON      基准值
+                                                                                                 进入菜单界面，显示主菜单，通过短按 / 键切换菜单选项；短按TEACH进入相应子菜单选项，短按 / 进行参数选择，
+ 置；目标物体所在位置即为判定距离。                                                                               在对应选项下短按TEACH键确认并返回上级主菜单；
+                                                                                                 1）教导输出
+2. 2点教导模式                                                                                        菜单显示“SEnS”，按TEACH进入子菜单，子菜单项：__|￣”通常检测模式（默认）；“_N_.2”2点教导窗口模式；“Nid
+在菜单中，选定“_N_.2”模式，自动进入测量界面；在有效测量                                           OFF
+                                                                                p-2              中点教导模式”。
+距离内，选定目标物体1(*)，按TEACH键，提示“LP1”，完成p-1                                                             以上教导模式详见教导模式说明；
+设定；在有效测量距离内，选定目标物体2(*)，按TEACH键，提                                                                 2）设定响应速度:菜单显示“SPEd”，按TEACH进入子菜单，子菜单项:“H.rSo” 高精度66ms；“Std”标准33ms（默认）；
+                                                                          ON
+
+
+
+示“GOOD”，完成p-2设定；以目标物体1和目标物体2所在位置之
+                                                                                p-1
+                                                                          OFF                    3）数字输出方向设定：菜单显示“L-d”，按TEACH进入子菜单，子菜单项：“L-on”亮通（默认）；“d-on”暗通；
+间的距离为窗口，进行窗口模式判定；                                                                                4）数字输出类型设定
+                                                                                                 菜单显示“P-n”，按TEACH进入子菜单，子菜单项：“nPn”NPN输出模式（默认）；“PnP”PNP输出模式；“PULL”推挽
+3. 中点教导模式                                                                                        输出模式；
+在菜单中，选定“Nid”模式，自动进入测量界面；在有效测量距                                                  p-2              5）485协议设定
+离内，选定目标物体1(*)，按TEACH键，提示“LP1”，完成p-1设                                                             菜单显示“tty”，按TEACH进入子菜单。
+                                                                        OFF
+                                                                                (p-1 + p -2)/2
+定；在有效测量距离内，选定目标物体2(*)，按TEACH键，提示                                          ON                     子菜单项：“ Nor”常规模式（默认）；“bus”ModBuS协议。
+                                                                                p-1              在子菜单下，按UP/DOWN进行选择，按TEACH键确认并返回上级菜单。
+“GOOD”，完成p-2设定；以p-1和p-2的中间距离为为判定距离；                                                              注：默认为“ Nor”常规模式。
+
+
+
+
+         我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                         我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                第3页                                                                                                                          第4页
+OSM41 HIGH PRECISION LASER DISTANCE SENSOR                                                                                                      OSM41 HIGH PRECISION LASER DISTANCE SENSOR
+
+6)485 communication address setting
+The main menu shows“ Adr”，press TEACH to enter the submenu;Submenu items：“ 1”，short press UP/DOWN，plus 1；long                                   INSTALLATON DIAGRAM
+press for 3s,plus 10.Press TEACH ,return to the previous menu。Setting range:1~254。Initial address is 1，255 is broadcast address。
+7)485 communication baut rate setting
+The main menu shows“bAud”，press TEACH to enter the submenu;Submenu items:“115.2”，press UP/DOWN adjustment                                                                                                                                       1.In the case of color or material
+parameters，the baut rate setting contains the following options，9600、19200、38400、115200bit/s，unit is Kbit/s。
+8)Check bit setting
+                                                                                                                                                                                                                                                diﬀerence
+The menu shows "PAr" and press TEACH to enter the submenu Sub-menu item: "NoNE" without veriﬁcation mode (default): "EuEN"                                                                                                                      When the material or color of moving
+parity check: odd check Under the submenu, press UP/DOWN to make a selection, and press the TEACH key to conﬁrm and return                                                                                                                       object is extremely diﬀetent,install it
+to the superior menu. Note: The default is "NoNE" without veriﬁcation mode;                                                                                                                                                                     in the direction shown on the left to
+9)485 date transmission mode setting                                                                                                                                                                                                            keep the measurement error to a
+The main menu shows“t.Nod”，press TEACH to enter the submenu;Submenu items：“ SEr”continuous sending mode（default）；
+“PoLL”polling mode。Press UP/DOWN to choose，press TEACH to conﬁrm and enter the submenu。
+                                                                                                                                                                                                                                                minimum.
+10)Reset settingsthe
+The main menu shows“rSEt”，press TEACH to enter the submenu;
+Submenu items：“ no”do not perform reset；“ yES” perform reset，restore default settings.
+                                                                                                                                                                                                                                                2.Detect rotating objects
+                                                                                                                                                                                                                                                When detecting a rotating object,
+DIGITAL TUBE DIAPLAY INTERPRETATION                                                                                                                                                                                                             install it in the direction shoen on the
+                                                                                                                                                                                                                                                left,which can suppress the inﬂuence
+                 sens                 teaching output                                                                                                                                                                                           of the object’s vertical vibration and
+                 __m ￣                usually detected                                                                                                                                                                                          position shift.
+                 _m_2                 2-point teaching
+                 _mid                 midpoint teaching
+                 sped                 set response speed
+                 h. rso               high precision 66ms                                                                                                                                                                                        3.When there is a step
+                                                                                                                                                                                                                                                 If there is a step in the moving
+                  std                 standard 33ms
+                                                                                                                                                                                                                                                 detection object,install it according to
+                  l-d                 set switch output ditection                                                                                                                                                                                the method shown on the left,so as to
+                  l-on                luminous                                                                                                                                                                                                   suppress the inﬂuence of the step
+                  d-on                dark pass                                                                                                                                                                                                  edge during measurement.
+                  p-n                 set switch output
+                  npn                 NPN
+                  pnp                 PNP
+                  pull                push-pull output mode                                                                                                                                                                                      4.Measure in narrow places and
+                  adr                 485 communication address setting                                                                                                                                                                          recessed parts
+                                                                                                                                                                                                                                                 In the case of measuring in a
+                  baud                485 communication baut rate setting
+                                                                                                                                                                                                                                                 narrow place or hole,please be
+                  tnod                485 date transmission mode setting                                                                                                                                                                         careful not to block the light psth
+                  ser                 continuous sending mode,always sending distance information                                                                                                                                                from the light emitting part to the
+                  poll                polling mode,information will only be returned when a command is sent to it                                                                                                                                light receiving part when installing.
+                   rest               reset settings
+                    no                do not perform reset
+                    yes               perform reset                                                                                                                                                                                               5.When installed on the wall
+                                                                                                                                                                                                                                                  Please install according to the
+                    par              Check bit setting
+                                                                                                                                                                                                                                                  method shown on the left to avoid
+                   mome              No parity                                                                                                                                                                                                    the multiple reﬂected light from the
+                   evme              even parity check                                                                                                                                                                                            wall entering the light receiving part.
+                   odd               Odd check
+                   tty               485 protocol settings
+                   bus               modbus protocol
+                   nor               Regular protocol
+
+
+  We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN           We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                                            Page 5                                                                                                                                               Page 6
+OSM41高精度位移传感器                                                                                    OSM41高精度位移传感器
+6)485通讯地址设定
+菜单显示“ Adr”，按TEACH进入子菜单。子菜单初始显示“ 1”，按UP/DOWN调整参数，步进1。长按UP/DOWN键3s以上，                              安装示意图
+步进10。按TEACH键确认并返回上级菜单。设置范围1~254。初始地址为1，255为广播地址。
+7)485通讯波特率设定
+菜单显示“bAud”，按TEACH进入子菜单。                                                                                                                            1.材质、有色差的情况下
+子菜单初始显示“115.2”，按UP/DOWN调整参数，波特率设置包含以下选项，9600、19200、38400、115200bit/s，菜单显                                                                           测量时，移动的测量对象物的材质、
+示单位为Kbit/s。                                                                                                                                        颜色极端不同的情况下，按照左图
+8)校验位设定                                                                                                                                            所示方向进行安装，从而可将测量
+菜单显示“PAr”，按TEACH进入子菜单。
+                                                                                                                                                   误差控制在最小限度。
+子菜单项：“ NoNE”无校验模式（默认）；“EuEN”偶校验；“odd”奇校验。
+在子菜单下，按UP/DOWN进行选择，按TEACH键确认并返回上级菜单。
+注：默认为“ NoNE”无校验模式。
+9)485数据发送模式设定
+菜单显示“t.Nod”，按TEACH进入子菜单。子菜单项：“ SEr”连续发送模式（默认）；“PoLL”轮询模式。
+在子菜单下，按UP/DOWN进行选择，按TEACH键确认并返回上级菜单。
+10）复位设定
+菜单显示“rSEt”，按TEACH进入子菜单，子菜单项：“no”不执行复位；“yES”执行复位；                                                                                                   2.对旋转的对象物进行检测
+                                                                                                                                                   对旋转的对象物进行检测时，按照
+数码管显示释义                                                                                                                                            左图所示方向进行安装，从而可抑
+                                                                                                                                                   制对象物的上下振动和位置偏移等
+                                                                                                                                                   的影响。
+        sens           教导输出
+        __m ￣          通常检测
+        _m_2           2点教导
+        _mid           中点教导
+        sped           设定响应速度
+                                                                                                                                                    3.存在段差的情况下
+        h. rso         高精度速度66ms
+                                                                                                                                                    移动的检测对象物存在段差的情况
+         std           标准速度33ms                                                                                                                     下，请按照左图所示方法进行安装，
+         l-d           设定开关量输出方向                                                                                                                    从而可在测量时抑制段差边缘所产
+         l-on                                                                                                                                       生的影响。
+                       亮通
+         d-on          暗通
+         p-n           设定开关量输出类型
+         npn           NPN输出模式
+         pnp           PNP输出模式
+         pull         推挽输出模式                                                                                                                        4.在狭窄场所和凹陷部分进行测量
+         adr                                                                                                                                        在狭窄场所和孔中进行测量的情况
+                       485通讯地址设定
+                                                                                                                                                    下，安装时，请注意避免遮挡投光
+         baud          485通讯波特率设定
+                                                                                                                                                    部至受光部的光路。
+         tnod         485数据发送模式设定
+         ser          连续发送模式，一直对外发送距离信息
+         poll          轮询模式，对其发送指令时，才返回相应信息
+         rest          复位设定
+          no           不执行复位
+          yes          执行复位                                                                                                                         5.安装在墙上时
+                                                                                                                                                    请按照左图所示方法进行安装，以
+          par          校验位设定
+                                                                                                                                                    免墙面产生的多重反射光入光到受
+          mome         无校验                                                                                                                          光部分。另外墙面反射率较高的情
+          evme         偶校验                                                                                                                          况下，如改成无光泽的黑色，则效
+                                                                                                                                                    果更好。
+         odd           奇校验
+          tty          485协议设定
+          bus          ModBus协议
+          nor          常规协议
+
+
+                我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN           我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                       第5页                                                                                     第6页
+  OSM41 HIGH PRECISION LASER DISTANCE SENSOR                                                                                                                          OSM41 HIGH PRECISION LASER DISTANCE SENSOR
+SAFETY PRECAUTIONS
+                                                                                                                                                                      Supplementary description of data format：
+                       This product is for the purpose of object detection only.Do not use this product for the purpose of                                            1.start character：0x68，whitch is the start byte of a frame of data；
+                       protecting human body or human body parts.This product should not be used as an explosion-proof                                                2.The address bit adr can be set through the menu or command，and the settable range is 1~254(0xfe);
+                       product.Do not use this product in dangerous places or in the enviroment of potentially explosive gases.
+                                                                                                                                                                      The default address is 1，and the broadcast address is 0xﬀ；
+                       Failure to use the control or adjustment device or perform the steps in accordance with this regulation                                        3.Byte length refers to the number of bytes from the command code to the check code(including check code);
+                       may result in harmful radiation exposure.
+                       Ce produit est à des ﬁns de détection d’ objets seulement.N’ utilisez pas ce produit dans le but de                                            4.Command code：diﬀerent command codes correspond to diﬀerent function commands,see the table below
+   DANGEROUS
+                       protéger le corps humain ou des parties du corps humain.Ce produit ne doit pas être utilisé comme                                              for details；
+                       produit antidéﬂagrant.Ne pas utiliser ce produit dans des endroits dangereux ou dans I’ environnement                                          5.Data bit：the rerurned data can be 1 byte or multiple bytes,and the data format is little endian.
+                       de gaz potentiellement explosifs.
+                       La non-utilisation du dispositif de commande ou de réglage ou I’ exécution des étapes conformément au                                          little endian format ：low byte ﬁrst，high byte after；
+                        présent règlement peut entrainer une exposition aux rayonnements nocifs.                                                                      for example:for data 0x1234，ﬁrst pass the low byte 0x34，and then pass the high byte 0x12；
+                       This product is a sensor with DC power supply.Please do not apply AC power supply.If AC voltage                                                6.The check is a sum check，the sum from the address bit to the data bit,the data format is little endian format.
+                       applied,the product may explode or catch ﬁre.                                                                                                  For example,the distance reading command：68 ﬀ 03 00 02 01 16，ﬀ is address code，03 is byte length，
+        WARN           Ce produit est un capteur avec alimentation cc.Veuillez ne pas appliquer d’ alimentation en courant                                            including 1 command code and 2 check bytes.
+                       alternatif.En cas de tension,le produit peut exploser ou prendre feu.
+                                                                                                                                                                      0xﬀ+0x03+0x00=0x0102，the low byte is in the front and the high byte is in the back，cs1=0x02，cs2=0x01，
+                       Do not use the same wiring with the power cord and high-voltage line,otherwise the mainmodule may fail
+                       or be damaged due to noise.When using a commercially available switching regulator,be sure to ground
+                                                                                                                                                                      00 is the instruction code。
+                       the housingground terminal and the ground terminal.                                                                                            7.Terminator：0x16，which is the end mark of a frame of data；
+                       Please do not use this product outdoors.                                                                                                       8.Sending data and returning commands meet the above command frame format;
+       NOTICE          N’utilisez pas le même câblage avec le cordon d’alimentation et la ligne à haute tension,sinon le module
+                       principal peut tomber en panne ou être endommagé en raison du bruit.Lorsque vous utilisez un                                                   Example of sending instruction：distance reading instruction：68 ﬀ 03 00 02 01 16
+                       régulateur de commutation disponible dans le commerce,assurez-vous de mettre à la terre le terminal                                            Analysis：68 is the start character，ﬀ is the broadcast address；03 is the byte length，including 1 instruction
+                       d’habitation et le terminal de terre.Veuillez ne pas utiliser ce produit à l’extérieur.
+                                                                                                                                                                      code and 2 check bytes；00 is the command code；02 01 is the check byte；16 is the end code.
+                                                                                                                                                                      Example of receiving instruction：distance return instruction：68 01 05 00 0D 13 26 00 16
+                                                                                                                                                                      Analysis：68 is the start character，01 is the defaut address code；05 is the byte length，including 1 instruction
+                                                                                                                                                                      code ,2 data bytes,and 2 check bytes；0D 13 is the data bytes.
+                                                                                                                                                                      Little endian format is converted to hexadecimal as 0x130D，and the corresponding decimal is 3347mm.
+                                                                                                                                                                      26 00 is the sum check byte,the little endian format is converted to hexadecimal as
+                                                                                                                                                                      0x0026=01+05+00+0D+13,16 is the end code.
+                                                                                                                                                                      2. Read command list
+                                                                                                                                                                      Function       Command                                                                   return instruction                                       Remark
+                                                                                                                                                                                                                  Full instruction
+                                                                                                                                                                      description    code
+                                                                                                                                                                        Reading                         68 adr 03 00 cs1 cs2 16                          68 adr 05 00 d1 d2 cs1 cs2 16                    d1 d2 ：distance data；
+                                                                                                                                                                                      0x00              examle:address is 0xﬀ                                                                             Unit is mm
+                                                                                                                                                                        distance
+                                                                                                                                                                                                        68 ﬀ 03 00 02 01 16
+                                                                                                                                                                                                                                                                                                          d1：equitment address
+OSM41-RS485 COMMUNICATION PROTOCOL                                                                                                                                      set           0x80
+                                                                                                                                                                                                        68 adr 04 80 d1 cs1 cs2 16                       68 adr 04 80 state cs1 cs2 16
+                                                                                                                                                                                                                                                                                                          set range1-254，
+                                                                                                                                                                                                        examle:set address as 1：                         return：state
+1.Conventional protocol                                                                                                                                                 address                         68 ﬀ 04 80 01 84 01 16                           0:success；1:fail                                 0xFF is broadcast address，
+Default：baud rate：115200bps，8 data bits，1 start bit，1 stop bit，no parity。                                                                                                                                                                                                                                 0x00 reserve
+OSM41-K2500CB6/485 Measurement range:0...3000mm,when the distance is exceeded,default 0XFFFF；
+                                                                                                                                                                        set           0x81               68 adr 04 81 d1 cs1 cs2 16                      68 adr 04 81 state cs1 cs2 16                    d1:corresponding baud rate level
+OSM41-K4000CB6/485 Measurement range:0...4500mm,when the distance is exceeded,default 0XFFFF；                                                                                                            examle:                                         return：state                                     0x02: 9600bit/s
+                                                                                                                                                                        baud rate
+Default output method：active upload，upload speed:60Hz。                                                                                                                                                   set baud rate as 9600                                                                            0x03：19200bps
+                                                                                                                                                                                                                                                         0:success；1:fail
+                                                                                                                                                                                                         68 ﬀ 04 81 02 86 01 16                                                                           0x04：38400bps
+1.1Full frame data format description                                                                                                                                                                                                                                                                     0x05：115200bit/s(default)
+                                                                                                                                                                                                         set baud rate as 19200
+start character       address bit                byte length            command code                                             sum check(2byte)        terminator                                      68 ﬀ 04 81 03 87 01 16
+                                                                                                        data bit(nbyte)
+(1byte)               (1byte)                    (1byte)                (1byte)                                                  cs1 cs2                 (1byte)                                         set baud rate as 38400
+                                                                                                 see command                                              0x16                                           68 ﬀ 04 81 04 88 01 16
+0x68                      adr              from the command               see command                                           sum check from                                                           set baud rate as 115200
+                                           code to the checked            list                   details（little endian          data to address                                                          68 ﬀ 04 81 05 89 01 16
+                                            byte                                                  format）                       （little endian format）
+                                                                                                                                                                        Set           0x83              68 adr 04 83 00 cs1 cs2 16                        68 adr 04 83 state cs1 cs2 16                    The default is continuous
+                                                                                                                                                                        sending                         examle:                                           return：state                                     transmission mode,in this
+                                                                                                                                                                        mode                            set continuous sending                            0:success；1:fail                                 mode,only one device can be
+                                                                                                                                                                                                        mode command：                                                                                      mounted on the bus;
+                                                                                                                                                                                                        68 ﬀ 04 83 00 86 01 16
+                                                                                                                                                                                                        set query mode command:
+                                                                                                                                                                                                        68 ﬀ 04 83 01 87 01 16
+
+
+
+         We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                                  We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                                                  Page 7                                                                                                                                                                    Page 8
+OSM41高精度位移传感器                                                                                OSM41高精度位移传感器
+
+                                                                                           OSM41-RS485通讯协议
+安全注意事项                                                                                     1.常规协议
+                                                                                            默认：波特率：115200bps，8位数据位，1位起始位，1位停止位，无奇偶校验。
+                                                                                            OSM41-K2500CB6/485测距范围:0...3000mm,距离超出时默认为0XFFFF；
+                                                                                            OSM41-K4000CB6/485测距范围:0...4500mm,距离超出时默认为0XFFFF；
+                                                                                            默认输出方式：主动上传，上传速度60Hz。
+                                                                                           1.1完整帧数据格式说明
+       本产品仅用于物体检测。请勿将本产品用于保护人体或人体部位。本产品不得用作防爆产品。
+                                               请勿在危险                                        起始符         地址位              字节长度                                               和校验(2byte)          结束符
+ 危险                                                                                                                                      命令码(1byte) 数据位(nbyte)
+       场所或可能存在爆炸性气体的环境中使用本产品。本装置控制或调节装置的未使用或未按本规定执行步骤，                                      (1byte)     (1byte)          (1byte)                                            cs1 cs2             (1byte)
+       可能导致有害辐射暴露。未按照本规定使用控制或调节装置或未执行相应步骤，可能导致有害辐射暴露。
+                                                                                                                       从命令码到                            见命令详解             从地址到数据的
+                                                                                             0x68            adr                             见命令列表                                               0x16
+                                                                                                                       校验的字节数                           （小端格式）            和校验（小端格式）
+                                                                                           数据格式补充说明：
+                                                                                           1.起始符：0x68，为一帧数据的起始字节；
+       该产品为直流电源传感器。
+                  请勿使用交流电源。
+                          如接入交流电压，产品可能会爆炸或起火。                                              2.地址位adr可通过菜单或者指令设定，可设定范围为1~254（0xfe）；
+  警告
+                                                                                           默认地址为1，广播地址为0xﬀ；3.字节长度指的是从命令码到校验码的字节数（含校验码）；
+                                                                                           4.命令码：不同命令码对应不同功能指令，详见下表；
+                                                                                           5.数据位：返回数据可为1个字节，也可为多个字节，数据格式为小端格式
+                                                                                           小端格式：低字节在前，高字节在后；例如数据0x1234，传递时先传递低字节0x34，再传递高字节0x12；
+                                                                                           6.校验为和校验，从地址位到数据位的和，数据格式位小端格式
+       请不要将电源线与高压线路使用同一布线，否则主模块可能会因噪声而故障或损坏。
+                                           在使用市售的开关稳
+ 通知                                                                                        例如，距离读取指令：68 ﬀ 03 00 02 01 16，ﬀ为地址码，03为字节长度，包含1个指令码与2个校验字节，
+       压器时，请确保将外壳接地端子和地线端子接地。
+                            请勿在户外使用本产品。
+                                                                                           0xﬀ+0x03+0x00=0x0102，传递时低字节在前，高字节在后，cs1=0x02，cs2=0x01，00为指令码。
+                                                                                           7.结束符：0x16，为一帧数据的结束标志；8.发送数据和返回指令均满足以上指令帧格式；
+                                                                                           发送指令示例：距离读取指令：68 ﬀ 03 00 02 01 16
+                                                                                           解析：68为起始符，ﬀ为广播地址码；03为字节长度，包含1个指令码与2个校验字节；00为命令码；
+                                                                                           02 01 为校验字节；16为结束码;接收指令示例：距离读取指令：68 01 05 00 0D 13 26 00 16
+                                                                                           解析：68为起始符，01为默认地址码；05为字节长度，包含1个指令码，2个数据字节，2个校验字节；
+                                                                                           0D 13为数据字节，小端格式转化为十六进制为0x130D，对应的十进制为3347mm，
+                                                                                           26 00 为和校验字节，小端格式转化为十六进制为0x0026 = 01+05+00+0D+13；16为结束码；
+                                                                                           2.命令列表
+
+                                                                                           功能描述 命令码                          全指令                             返回指令                                备注
+
+                                                                                             读取                    68 adr 03 00 cs1 cs2 16      68 adr 05 00 d1 d2 cs1 cs2 16     d1 d2：距离数据；
+                                                                                                      0x00
+                                                                                             距离                    以地址0xﬀ为例：                                                      单位为mm
+                                                                                                                   68 ﬀ 03 00 02 01 16
+                                                                                                                   68 adr 04 80 d1 cs1 cs2 16   68 adr 04 80 state cs1 cs2 16     d1：设备地址
+                                                                                             设置       0x80
+                                                                                                                   例，设置地址为1：                    返回：state                          设置范围1-254，
+                                                                                             地址
+                                                                                                                   68 ﬀ 04 80 01 84 01 16       0：成功；1：失败                         0xFF 为广播地址，0x00保留
+                                                                                            设置        0x81         68 adr 04 81 d1 cs1 cs2 16   68 adr 04 81 state cs1 cs2 16     d1：对应波特率等级
+                                                                                            波特率                    例，                           返回：state                          0x02：9600bit/s
+                                                                                                                   设置波特率为9600                   0：成功；1：失败                         0x03：19200bps
+                                                                                                                   68 ﬀ 04 81 02 86 01 16                                         0x04：38400bps
+                                                                                                                   设置波特率为19200                                                    0x05：115200bit/s(默认)
+                                                                                                                   68 ﬀ 04 81 03 87 01 16
+                                                                                                                   设置波特率为38400
+                                                                                                                   68 ﬀ 04 81 04 88 01 16
+                                                                                                                   设置波特率为115200
+                                                                                                                   68 ﬀ 04 81 05 89 01 16
+                                                                                            设置        0x83         68 adr 04 83 00 cs1 cs2 16   68 adr 04 83 state cs1 cs2 16      默认为连续发送模式，
+                                                                                            发送                     例，                           返回：state                           该模式下，总线上只能
+                                                                                            模式                     设置连续发送模式指令：                  0：成功；1：失败                          挂载一台设备；
+                                                                                                                   68 ﬀ 04 83 00 86 01 16
+                                                                                                                   设置查询模式指令：
+                                                                                                                   68 ﬀ 04 83 01 87 01 16
+
+          我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                                我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                               第7页                                                                                                            第8·页
+  OSM41 HIGH PRECISION LASER DISTANCE SENSOR                                                                                                                   OSM41 HIGH PRECISION LASER DISTANCE SENSOR
+ 2.Modbus communication description
+ 2.1 Basic information
+ Baud rate: 9600bps, 8 data bits, 1 start bit, 1 stop bit, no parity                                                                                                        Restore factory       Any numeric value can be written,                              Read and write
+                                                                                                                                                                  00 89                                                                                                                      0~65535
+ Default output mode: passive (Poll)                                                                                                                                        settings              reboot is valid
+ Default address: 0x01
+ 2.2 Modbus communication interactive instruction format                                                                                                       4) Register count:
+ 2.2.1 Take the default address 0x01 as an example to illustrate the instruction format.                                                                       The number of registers pre-read from a register instruction. Values range from 1 to 8.
+ 1) The instruction format for reading registers is as follows:                                                                                                5) Data byte length:
+  address function code        register address                           Number of registers                                                                  Read register instruction reply, the number of bytes in the reply data segment.
+                                                                                                             CRC_L          CRC_H
+                                                                                                                                                               6) Error code:
+     01          03             00           00                               00                 01            xx             xx                               When reading and writing registers, issuing instruction format is wrong, or the data segment in the device response package is
+2)Device response packet format for reading registers:                                                                                                         error code. The meaning of the error code is shown in Table 2 below
+ address function code Date byte length High distance value Low distance value                                            CRC_L               CRC_H                                                              Table 2 error code description
+    01          03                 02                    xx                     xx                                            xx                     xx                                                        Error code                                     Description
+3) Device response format of reading registers instruction error or device internal error:                                                                                                                     0x0001                                Register address error
+ address function code Date byte length Error code high bit              Error code low bit                               CRC_L              CRC_H                                                             0x0002                                 Register write error
+    01          83                02                    00                      xx                                           xx                  xx
+4）The instruction format for writing the registers value is as follows:                                                                                        7) CRC Check:
+                                                                                                                                                               In the protocol, a message carries a two-byte CRC check code, which is CRC16 check, the penultimate second byte of the message
+ address function code        register address       high date bit     low date bit    CRC_L                               CRC_H
+                                                                                                                                                               is the low byte of the check code, and the penultimate ﬁrst byte of the message is the high byte of the check code.
+    01          06             xx            xx               xx             xx           xx                                 xx                                 Parametric model: X16 + X15 + x2 + 1;Polynomial: 0x8005;Initial value: 0xFFFF
+5) Write the correct response format to the device side for register operation:                                                                                3、An example of interactive information
+The response packet is the same as the issued packet.
+6) The response format for handling exceptions on the device side of writing register operations:                                                                Function                  Instructions                              Successful return value                                             Description
+address function code Date byte length          Error code high bit     Error code low bit     CRC_L                                         CRC_H              Gets the                                                        01 03 02 DH DL CL CH                          DH and DL are the high 8 bit and low 8 bit of the
+                                                                                                                                                                                    01 03 00 00 00 01 84 0A
+     01            86                 02                     00                    xx                   xx             xx                                       distance value                                                                                                measured values, while CH and Cl are the low
+2、Field Description:                                                                                                                                                                                                                                                          8 bit and high 8 bit of CRC, respectively
+1) Address: Device address, default to 0x01                                                                                                                     Gets the            01 03 00 06 00 02 24 0A                     01 03 04 00 VM VS VC CL                       VM, VS, and VC are the major, minor, and
+2) Function code:                                                                                                                                               version number                                                  CH                                            minor version numbers of the version
+03- Read Register;06- Write Register;83- Register read exception response;86- Register write exception response                                                                                                                                                               Bh1, BH2, BL1, BL2 are the highest, the second
+3) Register address:                                                                                                                                            Set the             01 06 00 83 BH1 BH2 CL                      01 06 00 83 BH1 BH2 CL                        highest, the second lowest, and the lowest bits
+All registers are 16 bit registers, and after modifying all registers, a "save conﬁguration" instruction must be sent and the                                   baud rate           CH                                          CH                                            of baud rate, respectively. For example, the
+device must be powered on again to take eﬀect. The register description is shown in Table 1 below.                                                                                  01 06 00 84 BL1 BL2 CL                      01 06 00 84 BL1 BL2 CL                        modiﬁed baud rate is 9600，BH1=00 BH2=00
+                                                             Table 1 register                                                                                                       CH                                          CH                                            CL=78 CH=22,BL1=25 BL2=80 CL=D2 CH=D3
+
+ Register                                                                                                                                                       Modify the                                                                                                    IH, I L for ID high and low bytes, 1-247,0x00 for
+                  Deﬁnes                               Description                                      Permission                           Value range                            01 06 00 85 IH IL CL CH                     01 06 00 85 IH IL CL CH
+ address                                                                                                                                                        device ID                                                                                                     broadcast address. Modify ID to 2, IH = 00
+                                                                                                                                                                                                                                                                              IL = 02 cl = 19 ch = E2
+                the distance         The output result of the sensor,                                                                                           Change the                                                                                                    Set to odd check
+                value                which is the distance value for this                             Read only                    Same sensor range                                01 06 00 86 00 01 CL CH                     01 06 00 86 00 01 CL CH
+    00 00                                                                                                                                                       parity bit
+                                     sensor，Unit: resolution                                                                                                                                                                                                                  M is device mode instruction byte
+                                                                                                                                                                Modify the          01 06 00 87 00 M CL CH                      01 06 00 87 00 M CL CH
+                major version                                                                                                                                   device mode                                                                                                   M = 00 is continuous send mode
+    00 06                             00+ major version number                                        Read only                    Actual version number                                                                                                                      M = 01 is query mode (default)
+                number
+                                                                                                                                                                Save the                                                                                                      Reboot takes eﬀect after saving
+                Minor version Minor version number+revision number                                                                                                                  01 06 00 80 00 00 88 22                     01 06 00 80 00 00 88 22
+    00 07                                                                                             Read only                    Actual version number        conﬁguration
+                number
+                                                                                                                                                                Restore factory                                                                                              The device ID address and baud rate are reset to
+                                                                                                                                                                settings            01 06 00 89 00 00 58 20                     01 06 00 89 00 00 58 20                      factory status
+                Save         Can write any number, the device only
+    00 80       conﬁguration focus on instruction function code                                       Write only                   0~65535
+
+                 Baud rate           Conﬁgure baud rate. The reboot takes
+    00 83                                                                                             Read and write               0 or 1
+                 High                eﬀect after the save conﬁguration
+               Baud rate             instruction is sent. For now 2400、4800、                          Read and write               2400、4800、9600、19200、
+    00 84                            9600、19200、38400、115200                                                                       38400、49664
+               Low
+
+    00 85      Device ID             Conﬁgure device address, default 0x01,                           Read and writew              1~247
+                                     save and restart valid
+                                                                                                                                   0-No parity ;1-odd parity
+    00 86      Parity check          Check bit settings                                             Read and write
+                                                                                                                                   2-even parity check
+
+                                      Conﬁgure the working mode of the                                                             0-continuous sending mode
+    00 87                                                                                             Read and write
+                                      device                                                                                       1-polling mode（ default ）
+
+
+       We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                                We reserve the right to make technical alterations without prior notice. |EN & CN| Creation date: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                                               Page 9                                                                                                                                                                    Page 10
+OSM41高精度位移传感器                                                                                                    OSM41高精度位移传感器
+
+2. Modbus通信说明                                                                                                  4)寄存器数量：
+                                                                                                               读取寄存器指令中，预读取的寄存器的数量。取值1~8。
+2.1基本信息（默认）                                                                                                    5)数据字节长度：
+波特率：9600bps，8位数据位，1位起始位，1位停止位，无奇偶校验。                                                                           读取寄存器指令应答中，表示应答数据段的字节个数。
+默认输出方式：被动(Poll)；默认地址：0x01；                                                                                     6)错误码：
+2.2Modbus通信交互指令格式                                                                                              读写寄存器时下发指令格式错误或设备内部处理异常时，设备应答包中数据段为错误码。
+2.2.1以默认地址0x01为例说明指令格式                                                                                         错误码含义如下表2。
+1)读取寄存器的指令格式如下：                                                                                                                     表2 错误码说明
+ 地址      功能码               寄存器地址                    寄存器数量            CRC_L       CRC_H                                                       错误码                               说明
+  01     03           00            00             00          01      xx         xx                                                         0x0001                       寄存器地址错误
+2)读取寄存器的设备应答包格式：                                                                                                                             0x0002                       寄存器写入值错误
+                                                                                                               7)CRC校验：
+ 地址      功能码        数据字节长度          距离值高位                距离值低位       CRC_L       CRC_H
+                                                                                                               协议中一帧报文携带两个字节的CRC校验码，为CRC16校验，报文倒数第二字节为校验码低字节，
+  01     03              02              xx               xx           xx         xx                           报文倒数第一字节为校验码高字节。
+3)读取寄存器指令错误或内部设备出错的设备应答格式：                                                                                     参数模型：x16 + x15 + x2 + 1；
+                                                                                                               多项式：0x8005；
+ 地址      功能码        数据字节长度          错误码高位                错误码低位       CRC_L       CRC_H                         初始值：0xFFFF
+  01     83              02              00               xx           xx         xx
+                                                                                                               2.3交互信息示例
+4)写入寄存器数值的指令格式如下：                                                                                                                                       表1 寄存器说明
+ 地址      功能码          寄存器地址               数据高位            数据低位       CRC_L       CRC_H                             功能        指令                            成功返回值                                    说明
+  01     06         xx         xx             xx           xx          xx         xx
+                                                                                                                                                                                DH、DL分别是传感器测量值低16位的高8bit和低8bit；
+5)写入寄存器操作设备端处理正确的应答格式：应答数据包与下发数据包相同。                                                                           获取距离值         01 03 00 00 00 01 84 0A 01 03 02 DH DL CL CH
+                                                                                                                                                                                CH、CL分别为CRC的低8bit和高8bit
+6)写入寄存器操作设备端处理异常的应答格式：
+                                                                                                               获取软件版本号 01 03 00 06 00 02 24 0A 01 03 04 00 VM VS VC CL CH       VM,VS,VC 分别是版本的主、次、修正版本号
+ 地址      功能码        数据字节长度          错误码高位                错误码低位       CRC_L       CRC_H
+  01     86              02              00               xx           xx         xx                                         01 06 00 83 BH1 BH2 CL 01 06 00 83 BH1 BH2 CL CH   BH1,BH2,BL1,BL2分别为波特率的高，次高，次低，低
+                                                                                                                             CH                     01 06 00 84 BL1 BL2 CL CH   字节。 例如修改波特率为9600，BH1=00 BH2=00 CL=78
+                                                                                                               设置波特率
+2.2.2字段说明：                                                                                                                   01 06 00 84 BL1 BL2 CL                             CH=22,BL1=25 BL2=80 CL=D2 CH=D3
+1)地址：设备地址，默认0x01                                                                                                             CH
+2)功能码:03⸺读寄存器；06⸺写寄存器；83⸺读寄存器异常应答；86⸺写寄存器异常应答；                                                                                                                                  IH,IL为ID的高字节和低字节，1-247，0x00为广播地址，
+                                                                                                               修改设备ID        01 06 00 85 IH IL CL CH 01 06 00 85 IH IL CL CH
+3)寄存器地址:                                                                                                                                                                        修改ID为 2，IH=00 IL=02 CL=19 CH=E2
+所有寄存器都为16bit寄存器，所有寄存器修改后必须发送“保存配置”指令且重新上电设备才生效。                                                                修改奇偶校验位 01 06 00 82 00 01 E8 22 01 06 00 86 00 01 CL CH          设置成奇校验
+寄存器说明见下表1。                                                                                                                                                                      M为设备模式的指令字节
+                                         表1 寄存器说明                                                              修改设备模式        01 06 00 87 00 M CL CH 01 06 00 87 00 M CL CH      M=00为连续发送模式
+                                                                         权限                                                                                                     M=01为查询模式（默认）
+寄存器地址         定义                              说明                                         取值范围
+                           传感器的输出结果，对于此传感器为距离值，                                                                保存配置          01 06 00 80 00 00 88 22 01 06 00 80 00 00 88 22    保存后重启生效
+ 00 00        距离值                                                        只读            同传感器量程
+                           单位：分辨率                                                                                                                                               保存后重启生效，设备的ID地址和波特率重置为
+                                                                                                               恢复出厂设置        01 06 00 89 00 00 58 20 01 06 00 89 00 00 58 20
+ 00 06    主版本号           00+主版本号                                         只读            实际版本号                                                                                    出厂状态
+ 00 07    次版本号             次版本号+修正版本号                                    只读            实际版本号
+ 00 80    保存配置           可以写入任意数值，设备只关注指令功能码                             只读            0~65535
+ 00 83    波特率High          配置波特率。 发送保存配置指令后重启生效。                         读写            0或1
+                           暂仅支持2400、4800、9600、19200、38400、               读写            2400、4800、9600、19200、
+ 00 84    波特率Low
+                           115200                                                      38400、49664
+ 00 85    设备ID             配置设备地址，默认0x01，保存后重启有效                         读写            1~247
+00 86     奇偶校验             校验位设置                                         读写            0-无校验；1-奇校验；2-偶校验
+                                                                                       0-为连续发送模式
+ 00 87    工作模式             配置设备的工作模式                                     读写
+                                                                                       1-为查询模式（默认）
+          恢复出厂                                                                         0~65535
+ 00 89                     可以写入任意数值，重启有效                                    读写
+          设置
+
+
+
+
+                 我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN                                       我们保留在不事先通知下进行技术更改的权利。|EN & CN| 创建日期: 25.12.08 | UM_SP_OSM41-TOF-485_V1.0_EN&CN
+                                                   第9页                                                                                                      第10页
+

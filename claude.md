@@ -15,7 +15,21 @@
 
 ---
 
-## 2026-06-11 18:45 — Op01_PE 스캔 TEMP 표시 (정식 라벨 전 임시)
+## 2026-06-11 — OP05_NEW 상위 repo 합치기 (gitlink → 일반 폴더)
+
+### 배경
+- `OP05_NEW`가 중첩 `.git` + gitlink(`160000`)로만 상위 `Daeil_RS4`에 등록되어 GitHub에 폴더만 보이고 소스 미포함
+
+### 조치 (`C:\Users\Administrator\source\repos\ftech-projects\Daeil_RS4`)
+1. `OP05_NEW\.git` 삭제 (중첩 저장소 해제)
+2. `git rm --cached OP05_NEW` → `git add OP05_NEW/` (89파일, 일반 트리로 추적)
+3. `.gitmodules` 없음 — submodule 아닌 **단일 mono-repo**로 통합
+
+### 이후
+- `git push origin main` 시 GitHub에서 `OP05_NEW` 내부 파일 전체 표시
+- 클론 한 번에 전체 소스 수신 (submodule update 불필요)
+
+---
 
 ### 사용자 확인
 - `TryParseGs1LabelScan` / `TryResolveLabelScan` 등 **현재 수정은 테스트용 임의 구현**

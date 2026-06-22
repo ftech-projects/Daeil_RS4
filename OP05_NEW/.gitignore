@@ -1,0 +1,42 @@
+# Build outputs
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.xml
+!docs/*.pdf
+!lib/**/*.dll
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userprefs
+*.userosscache
+*.sln.docstates
+UpgradeLog*.htm
+_UpgradeReport*
+_UpgradeReport*/
+
+# IDE
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Resharper / Rider
+.idea/
+*.DotSettings.user
+
+# 로그
+logs/
+*.log
+
+# NuGet packages 캐시 (lib/EEIP.dll 은 추적)
+packages/
+
+# 임시
+*.tmp
+*.bak

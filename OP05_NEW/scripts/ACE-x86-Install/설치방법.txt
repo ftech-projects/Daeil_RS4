@@ -1,0 +1,36 @@
+OP05 현장 PC — Access Database Engine x86 설치
+============================================
+
+[왜 필요한가]
+  RS4_OP05_NEW.exe 는 32비트(x86) 프로그램입니다.
+  DB\DB.mdb (Basic / Port / Barcode) 를 열려면
+  Microsoft ACE OLEDB x86 이 PC에 설치되어 있어야 합니다.
+
+  DB 파일이 있어도 "공급자를 찾을 수 없습니다" 오류가 나면
+  이 설치가 필요합니다.
+
+[설치 방법]
+  1. 이 폴더(ACE-x86-Install) 전체를 현장 PC로 복사
+     예: USB → C:\Temp\ACE-x86-Install\
+
+  2. Install-ACE-x86.bat 우클릭
+     → "관리자 권한으로 실행"
+
+  3. 설치 완료 후 PC 재부팅(권장) 또는 프로그램 재실행
+
+  4. RS4_OP05_NEW.exe → Menu → Basic 열어 확인
+
+[폴더 내용]
+  accessdatabaseengine.exe  — Microsoft 공식 x86 (약 78MB)
+  Install-ACE-x86.bat       — 설치 실행 (관리자 필수)
+  설치방법.txt              — 이 파일
+
+[Office 64비트 PC]
+  /quiet 가 실패하면 bat 이 자동으로 /passive 로 재시도합니다.
+  그래도 실패하면:
+  - 제어판에서 기존 "Microsoft Access Database Engine" 제거 후 재시도
+  - 또는 Microsoft 다운로드 페이지에서 accessdatabaseengine.exe 수동 설치
+    https://www.microsoft.com/download/details.aspx?id=54920
+
+[출처]
+  Microsoft Access Database Engine 2016 Redistributable (x86)

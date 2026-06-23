@@ -1,6 +1,14 @@
 # Daeil_RS4 작업 기록
 
-## ★ 공정별 DB 컬럼 규칙 (필수 숙지)
+## 2026-06-15 — RS4 Program Files vs Git 소스 비교
+
+- PF: `C:\Program Files (x86)\business\대일공업\RS4`
+- Repo: `C:\Users\Administrator\source\repos\ftech-projects\Daeil_RS4`
+- **소스(.cs/.vb/.proj 등, .md 제외)**: 공통 **439개 전부 동일** (줄바꿈 정규화 후)
+- **차이**: Repo만 `OP05_NEW\OP05_NEW.vbproj` 존재 (PF는 `OP05_NEW(192.168.0.10).vbproj`만 있음, 내용 동일 추정)
+- **문서**: 루트 `claude.md`만 수정 시각 상이
+
+---
 
 | 공정 | 프로젝트 | Table_Main 접두어 | Table_Part 목표/사용 플래그 |
 |------|----------|-------------------|----------------------------|

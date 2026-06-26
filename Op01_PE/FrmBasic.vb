@@ -7,7 +7,7 @@ Public Class FrmBasic
         EnsureAtlasIpControls()
         srcTxtMin.Text = CStr(BasicToolMin)
         srcTxtMax.Text = CStr(BasicToolMax)
-        srcTxtUnit.Text = CStr(BAsicUnit)
+        srcTxtUnit.Text = NormalizeTorqueUnit(CStr(BAsicUnit))
         srcTxtAtlasTool1Ip.Text = CStr(AtlasTool1Ip)
         srcTxtAtlasTool2Ip.Text = CStr(AtlasTool2Ip)
 
@@ -81,7 +81,7 @@ Public Class FrmBasic
 
     Private Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
 
-        BAsicUnit = CStr(srcTxtUnit.Text)
+        BAsicUnit = NormalizeTorqueUnit(CStr(srcTxtUnit.Text))
         BasicToolMin = CStr(srcTxtMin.Text)
         BasicToolMax = CStr(srcTxtMax.Text)
         AtlasTool1Ip = CStr(srcTxtAtlasTool1Ip.Text).Trim()

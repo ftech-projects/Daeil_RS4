@@ -107,6 +107,7 @@ Public Class FrmPart
         cboType.Items.Add("STD")
         cboType.Items.Add("FOLD")
         cboType.Items.Add("VIP")
+        cboType.Items.Add("PE Line")
         cboType.SelectedIndex = 0
 
         cboLhRh.Items.Clear()
@@ -151,6 +152,9 @@ Public Class FrmPart
         dgvParts.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Target_Op04_RivetNum", .HeaderText = "RivetNum", .Width = 80})
         dgvParts.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Target_Op03_InsideCoverL", .HeaderText = "CoverL", .Width = 120})
         dgvParts.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Target_Op03_InsideCoverR", .HeaderText = "CoverR", .Width = 120})
+
+        dgvParts.Columns.Add(New DataGridViewCheckBoxColumn() With {.Name = "Use_PE_Line", .HeaderText = "PE Line", .Width = 70})
+        dgvParts.Columns.Add(New DataGridViewTextBoxColumn() With {.Name = "Target_PE05_ToolNum", .HeaderText = "PE05 Tool", .Width = 90})
     End Sub
 
     Private Sub LoadGrid()
@@ -171,7 +175,12 @@ Public Class FrmPart
 
             Dim whereParts As New List(Of String)()
             If cboType.SelectedIndex > 0 Then
-                whereParts.Add("OptionType = '" & EscapeSql(CStr(cboType.SelectedItem)) & "'")
+                Dim typeFilter As String = CStr(cboType.SelectedItem)
+                If typeFilter = "PE Line" Then
+                    whereParts.Add("(Use_PE_Line = 1 OR Use_PE_Line = True)")
+                Else
+                    whereParts.Add("OptionType = '" & EscapeSql(typeFilter) & "'")
+                End If
             End If
             If cboLhRh.SelectedIndex > 0 Then
                 whereParts.Add("OptionLHRH = '" & EscapeSql(CStr(cboLhRh.SelectedItem)) & "'")
@@ -202,6 +211,8 @@ Public Class FrmPart
                     row.Cells("Target_Op04_RivetNum").Value = SafeToString(rs, "Target_Op04_RivetNum")
                     row.Cells("Target_Op03_InsideCoverL").Value = SafeToString(rs, "Target_Op03_InsideCoverL")
                     row.Cells("Target_Op03_InsideCoverR").Value = SafeToString(rs, "Target_Op03_InsideCoverR")
+                    row.Cells("Use_PE_Line").Value = SafeToBool(rs, "Use_PE_Line")
+                    row.Cells("Target_PE05_ToolNum").Value = SafeToString(rs, "Target_PE05_ToolNum")
                     rs.MoveNext()
                 Loop
             End If
@@ -288,6 +299,22 @@ Public Class FrmPart
         rs.Fields("Target_Op04_RivetNum").Value = GridIntValue(row, "Target_Op04_RivetNum")
         rs.Fields("Target_Op03_InsideCoverL").Value = GridValue(row, "Target_Op03_InsideCoverL")
         rs.Fields("Target_Op03_InsideCoverR").Value = GridValue(row, "Target_Op03_InsideCoverR")
+        TrySetFieldBool(rs, "Use_PE_Line", GridBoolValue(row, "Use_PE_Line"))
+        TrySetFieldInt(rs, "Target_PE05_ToolNum", GridIntValue(row, "Target_PE05_ToolNum"))
+    End Sub
+
+    Private Shared Sub TrySetFieldBool(rs As ADODB.Recordset, fieldName As String, value As Boolean)
+        Try
+            rs.Fields(fieldName).Value = value
+        Catch
+        End Try
+    End Sub
+
+    Private Shared Sub TrySetFieldInt(rs As ADODB.Recordset, fieldName As String, value As Integer)
+        Try
+            rs.Fields(fieldName).Value = value
+        Catch
+        End Try
     End Sub
 
     ''' <summary>SQL 우선, 실패 시 MDB Table_Part_Local (동기화 없음)</summary>
@@ -380,6 +407,8 @@ Public Class FrmPart
         row.Cells("Target_Op04_RivetNum").Value = "0"
         row.Cells("Target_Op03_InsideCoverL").Value = "0"
         row.Cells("Target_Op03_InsideCoverR").Value = "0"
+        row.Cells("Use_PE_Line").Value = False
+        row.Cells("Target_PE05_ToolNum").Value = "0"
     End Sub
 
     Private Sub BtnDelete_Click(sender As Object, e As EventArgs)

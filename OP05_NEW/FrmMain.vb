@@ -1,4 +1,4 @@
-﻿Imports System.Runtime.InteropServices
+Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Net
 Imports System.IO
@@ -85,6 +85,7 @@ Public Class FrmMain
     Private TargetMotorBarcode As String
     Private TargetToolNum As Integer
     Private TargetRivetNum As Integer
+    Private _usePeLine As Boolean
 
     Private D_OutString As String
     Private rStep As Double
@@ -189,6 +190,27 @@ Public Class FrmMain
         Return decText = "OK" OrElse decText = "PASS"
     End Function
 
+    Private Function ReadDbUseFlag(ByVal field As Object) As Boolean
+        If field Is Nothing OrElse IsDBNull(field) Then Return False
+        Dim s As String = Trim(CStr(field))
+        If s = "" OrElse s = "0" Then Return False
+        If String.Equals(s, "false", StringComparison.OrdinalIgnoreCase) Then Return False
+        Return True
+    End Function
+
+    Private Sub MarkBeforeCheckNa(lbl As Label)
+        lbl.Text = "NA"
+        lbl.BackColor = Color.Green
+    End Sub
+
+    Private Sub ApplyPeLineLegacyBeforeCheckNa()
+        MarkBeforeCheckNa(srcLbCheck1)
+        MarkBeforeCheckNa(srcLbCheck2_1)
+        MarkBeforeCheckNa(srcLbCheck2_2)
+        MarkBeforeCheckNa(srcLbCheckVip)
+        MarkBeforeCheckNa(srcLbCheckNoiseTest)
+    End Sub
+
     ''' <summary>목표 0(미체결)·커버 미사용 등 시퀀스 생략 항목 PASS 처리</summary>
     Private Sub ApplyPartSkipDecisions()
         If TargetToolNum = 0 Then
@@ -206,13 +228,12 @@ Public Class FrmMain
         LabelTextFitHelper.FitLabels(
             srcLbPartNo, srcLbPartName, srcLbPartOption, srcLbSerial,
             srclbTargetTool, srclbDataTool, srclbDecTool,
-            srclbTargetRivet, srclbDataRivet, srclbDecRivet,
             srclbSpecLengthTest, srclbDataLengthTestFrt, srclbDecLengthTestFrt,
             srclbDataLengthTestRear, srclbDecLengthTestRear,
             srclbTargetCoverL, srclbDataCoverL, srclbDecCoverL,
             srclbTargetCoverR, srclbDataCoverR, srclbDecCoverR,
             srcLsrLeftUpper, srcLsrRightUpper, srcLsrLeftLower, srcLsrRightLower,
-            srcLbCheck1, srcLbCheck2_1, srcLbCheck2_2, srcLbCheckVip, srcLbCheckNoiseTest,
+            srcLbCheck1, srcLbCheckPe01, srcLbCheck2_1, srcLbCheck2_2, srcLbCheckVip, srcLbCheckNoiseTest,
             LabelFrt, LabelRear, srclbAlarm)
     End Sub
 
@@ -319,12 +340,14 @@ Public Class FrmMain
         srclbDecLengthTestRear.BackColor = Color.Black
 
         srcLbCheck1.Text = ""
+        srcLbCheckPe01.Text = ""
         srcLbCheck2_1.Text = ""
         srcLbCheck2_2.Text = ""
         srcLbCheckVip.Text = ""
         srcLbCheckNoiseTest.Text = ""
 
         srcLbCheck1.BackColor = Color.Black
+        srcLbCheckPe01.BackColor = Color.Black
         srcLbCheck2_1.BackColor = Color.Black
         srcLbCheck2_2.BackColor = Color.Black
         srcLbCheckVip.BackColor = Color.Black
@@ -340,6 +363,7 @@ Public Class FrmMain
         srclbDecCoverR.BackColor = Color.Black
 
         ResetIoToolRivetCounts()
+        _usePeLine = False
         UpdateStepTraceLabels()
         FitDynamicLabels()
 
@@ -669,28 +693,36 @@ Public Class FrmMain
             OptionMonitor = RsFieldBool(rs, "OptionMon")
 
             srcLbPartOption.Text = OptionType & " " & OptionLHRH
-            TargetToolNum = RsFieldInt(rs, "Target_Op04_ToolNum")
-            TargetRivetNum = RsFieldInt(rs, "Target_Op04_RivetNum")
+            _usePeLine = RsFieldBool(rs, "Use_PE_Line")
+            If _usePeLine Then
+                TargetToolNum = RsFieldInt(rs, "Target_PE05_ToolNum")
+                TargetRivetNum = 0
+            Else
+                TargetToolNum = RsFieldInt(rs, "Target_Op04_ToolNum")
+                TargetRivetNum = RsFieldInt(rs, "Target_Op04_RivetNum")
+            End If
             srclbTargetTool.Text = CStr(TargetToolNum)
             srclbTargetRivet.Text = CStr(TargetRivetNum)
 
-            If Trim(rs.Fields("Target_Op03_InsideCoverL").Value) = "0" Then
+            Dim coverL As String = RsFieldStr(rs, "Target_Op03_InsideCoverL")
+            If coverL = "0" OrElse coverL = "" Then
                 srclbTargetCoverL.Text = "0"
                 srclbDataCoverL.Text = ""
                 MarkDecisionPass(srclbDecCoverL)
             Else
-                srclbTargetCoverL.Text = Trim(rs.Fields("Target_Op03_InsideCoverL").Value) & Microsoft.VisualBasic.Right(srcLbPartNo.Text, 3)
+                srclbTargetCoverL.Text = coverL & Microsoft.VisualBasic.Right(srcLbPartNo.Text, 3)
                 srclbDataCoverL.Text = ""
                 srclbDecCoverL.Text = ""
                 srclbDecCoverL.BackColor = Color.Black
             End If
 
-            If Trim(rs.Fields("Target_Op03_InsideCoverR").Value) = "0" Then
+            Dim coverR As String = RsFieldStr(rs, "Target_Op03_InsideCoverR")
+            If coverR = "0" OrElse coverR = "" Then
                 srclbTargetCoverR.Text = "0"
                 srclbDataCoverR.Text = ""
                 MarkDecisionPass(srclbDecCoverR)
             Else
-                srclbTargetCoverR.Text = Trim(rs.Fields("Target_Op03_InsideCoverR").Value) & Microsoft.VisualBasic.Right(srcLbPartNo.Text, 3)
+                srclbTargetCoverR.Text = coverR & Microsoft.VisualBasic.Right(srcLbPartNo.Text, 3)
                 srclbDataCoverR.Text = ""
                 srclbDecCoverR.Text = ""
                 srclbDecCoverR.BackColor = Color.Black
@@ -698,7 +730,9 @@ Public Class FrmMain
 
             ApplyPartSkipDecisions()
 
-            If OptionType = "VIP" Then
+            If _usePeLine Then
+                srclbSpecLengthTest.Text = BasicFrtMin_PE & " ~ " & BasicFrtMax_PE
+            ElseIf OptionType = "VIP" Then
                 srclbSpecLengthTest.Text = BAsicFrtMin_VIPRH & " ~ " & BAsicFrtMax_VIPRH
             ElseIf OptionType = "STD" Then
                 srclbSpecLengthTest.Text = BAsicFrtMin_STDLH & " ~ " & BAsicFrtMax_STDLH
@@ -1065,8 +1099,19 @@ Public Class FrmMain
         FitDynamicLabels()
     End Sub
 
-    ''' <summary>wStep 3 길이시험 — OptionType(VIP/STD/FOLD), 비어 있으면 STD</summary>
+    ''' <summary>wStep 3 길이시험 — Use_PE_Line 또는 OptionType(VIP/STD/FOLD)</summary>
     Private Sub RunLengthTestStep3()
+        If _usePeLine Then
+            Dim frtValPe As Double = basicFrtTolPE - ValueLsrLeftUpper - ValueLsrRightUpper
+            Dim rearValPe As Double = BasicRearTolPE - ValueLsrLeftLower - ValueLsrRightLower
+            srclbDataLengthTestFrt.Text = Format(frtValPe, "0.0#")
+            srclbDataLengthTestRear.Text = Format(rearValPe, "0.0#")
+            Dim frtOkPe As Boolean = frtValPe >= BasicFrtMin_PE And frtValPe <= BasicFrtMax_PE
+            Dim rearOkPe As Boolean = rearValPe >= BasicRearMin_PE And rearValPe <= BasicRearMax_PE
+            FinalizeLengthSetJudgment(frtOkPe, rearOkPe)
+            Return
+        End If
+
         Dim opt = ResolveOptionTypeForLength()
         If String.IsNullOrEmpty(OptionType.Trim()) Then
             WriteTxtMessage("[LENGTH] OptionType 미설정 — STD 공차로 계산")
@@ -1979,14 +2024,22 @@ Public Class FrmMain
                             WriteTxtMessage("[SCAN] Part 조회 실패 — wStep 0 유지 (재스캔 대기)")
                         Else
                             CheckBefore(srcLbSerial.Text)
-                            If srcLbPartName.Text.Contains("VIP") = True Then
+                            Dim scanPass As Boolean
+                            If _usePeLine Then
+                                ApplyPeLineLegacyBeforeCheckNa()
+                                scanPass = (srcLbCheckPe01.Text = "OK")
                             Else
-                                srcLbCheckVip.Text = "NA"
-                                srcLbCheckVip.BackColor = Color.Green
+                                MarkBeforeCheckNa(srcLbCheckPe01)
+                                If srcLbPartName.Text.Contains("VIP") = True Then
+                                Else
+                                    srcLbCheckVip.Text = "NA"
+                                    srcLbCheckVip.BackColor = Color.Green
+                                End If
+                                scanPass = srcLbCheck1.Text = "OK" And srcLbCheck2_1.Text = "OK" And srcLbCheck2_2.Text = "OK" And
+                                    (srcLbCheckVip.Text = "OK" Or srcLbCheckVip.Text = "NA") And srcLbCheckNoiseTest.Text = "OK"
                             End If
 
-                            If srcLbCheck1.Text = "OK" And srcLbCheck2_1.Text = "OK" And srcLbCheck2_2.Text = "OK" And
-                                (srcLbCheckVip.Text = "OK" Or srcLbCheckVip.Text = "NA") And srcLbCheckNoiseTest.Text = "OK" Then
+                            If scanPass Then
                                 srclbAlarm.Visible = False
                                 wStep = 1
                                 WriteTxtMessage("[SCAN] OK -> wStep 1 (Start 대기)")
@@ -2145,6 +2198,25 @@ Public Class FrmMain
                 srcLbCheckNoiseTest.Text = "NG"
                 srcLbCheckNoiseTest.BackColor = Color.Red
             End Try
+
+            Try
+                If Rs.Fields("PE_Decision").Value = "OK" Then
+                    srcLbCheckPe01.Text = "OK"
+                    srcLbCheckPe01.BackColor = Color.Blue
+                Else
+                    srcLbCheckPe01.Text = "NG"
+                    srcLbCheckPe01.BackColor = Color.Red
+                End If
+            Catch ex As Exception
+                srcLbCheckPe01.Text = "NG"
+                srcLbCheckPe01.BackColor = Color.Red
+            End Try
+
+            If _usePeLine Then
+                ApplyPeLineLegacyBeforeCheckNa()
+            Else
+                MarkBeforeCheckNa(srcLbCheckPe01)
+            End If
 
 
         End If

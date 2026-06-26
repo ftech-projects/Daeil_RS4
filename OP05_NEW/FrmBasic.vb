@@ -1,13 +1,56 @@
-﻿Imports System.Globalization
+Imports System.Globalization
+Imports System.Drawing
+Imports System.Windows.Forms
 
 Public Class FrmBasic
 
+    Private txtPeFrtMax As TextBox
+    Private txtPeFrtMin As TextBox
+    Private txtPeRearMax As TextBox
+    Private txtPeRearMin As TextBox
+    Private txtPeFrtTol As TextBox
+    Private txtPeRearTol As TextBox
+    Private _peUiReady As Boolean
+
     Private Sub FrmBasic_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        EnsurePeBasicUi()
         If Not LoadBasicData() Then
             MessageBox.Show("Basic 불러오기 실패" & vbCrLf & LastMdbError & vbCrLf & MdbFilePath(),
                             "DB", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
         BindBasicFieldsToForm()
+    End Sub
+
+    Private Sub EnsurePeBasicUi()
+        If _peUiReady Then Return
+        _peUiReady = True
+
+        Dim gb As New GroupBox With {
+            .Text = "PE Line 길이 공차",
+            .Location = New Point(12, 430),
+            .Size = New Size(870, 120),
+            .Font = New Font("맑은 고딕", 10.0F, FontStyle.Bold)
+        }
+
+        Dim lblFrt As New Label With {.Text = "FRT Min/Max", .Location = New Point(16, 32), .AutoSize = True}
+        txtPeFrtMin = New TextBox With {.Location = New Point(120, 28), .Size = New Size(80, 27)}
+        txtPeFrtMax = New TextBox With {.Location = New Point(210, 28), .Size = New Size(80, 27)}
+
+        Dim lblRear As New Label With {.Text = "REAR Min/Max", .Location = New Point(310, 32), .AutoSize = True}
+        txtPeRearMin = New TextBox With {.Location = New Point(430, 28), .Size = New Size(80, 27)}
+        txtPeRearMax = New TextBox With {.Location = New Point(520, 28), .Size = New Size(80, 27)}
+
+        Dim lblTol As New Label With {.Text = "FRT/REAR 보정치", .Location = New Point(16, 72), .AutoSize = True}
+        txtPeFrtTol = New TextBox With {.Location = New Point(150, 68), .Size = New Size(80, 27)}
+        txtPeRearTol = New TextBox With {.Location = New Point(240, 68), .Size = New Size(80, 27)}
+
+        gb.Controls.AddRange(New Control() {
+            lblFrt, txtPeFrtMin, txtPeFrtMax,
+            lblRear, txtPeRearMin, txtPeRearMax,
+            lblTol, txtPeFrtTol, txtPeRearTol
+        })
+        Controls.Add(gb)
+        ClientSize = New Size(902, 570)
     End Sub
 
     Private Sub BindBasicFieldsToForm()
@@ -34,6 +77,15 @@ Public Class FrmBasic
 
         TextBox16.Text = CStr(basicFrtTolFOLD)
         TextBox15.Text = CStr(BasicRearTolFOLD)
+
+        If txtPeFrtMin IsNot Nothing Then
+            txtPeFrtMin.Text = CStr(BasicFrtMin_PE)
+            txtPeFrtMax.Text = CStr(BasicFrtMax_PE)
+            txtPeRearMin.Text = CStr(BasicRearMin_PE)
+            txtPeRearMax.Text = CStr(BasicRearMax_PE)
+            txtPeFrtTol.Text = CStr(basicFrtTolPE)
+            txtPeRearTol.Text = CStr(BasicRearTolPE)
+        End If
 
         CheckBox1.Checked = FlagBeforeCheck
         CheckBox2.Checked = FlagDuplicate
@@ -71,6 +123,15 @@ Public Class FrmBasic
 
             basicFrtTolFOLD = ParseBasicNumber(TextBox16.Text, "FOLD FRT 보정치")
             BasicRearTolFOLD = ParseBasicNumber(TextBox15.Text, "FOLD REAR 보정치")
+
+            If txtPeFrtMin IsNot Nothing Then
+                BasicFrtMin_PE = ParseBasicNumber(txtPeFrtMin.Text, "PE FRT Min")
+                BasicFrtMax_PE = ParseBasicNumber(txtPeFrtMax.Text, "PE FRT Max")
+                BasicRearMin_PE = ParseBasicNumber(txtPeRearMin.Text, "PE REAR Min")
+                BasicRearMax_PE = ParseBasicNumber(txtPeRearMax.Text, "PE REAR Max")
+                basicFrtTolPE = ParseBasicNumber(txtPeFrtTol.Text, "PE FRT 보정치")
+                BasicRearTolPE = ParseBasicNumber(txtPeRearTol.Text, "PE REAR 보정치")
+            End If
 
             FlagBeforeCheck = CheckBox1.Checked
             FlagDuplicate = CheckBox2.Checked

@@ -1130,3 +1130,40 @@ ScanData : 20260619000188311-T4060NNB
 - **원격**: `https://github.com/ftech-projects/Daeil_RS4` — `main` 브랜치 푸시 완료 (`origin/main` 추적 설정)
 - **추가**: `.gitignore` (Visual Studio `.vs/`, `*.suo`, bin/obj 등) — `git add` 시 `.vs` 파일 잠금(Permission denied) 방지
 - **주의**: `OP05_NEW`는 내부에 별도 Git 저장소가 있어 submodule 형태로만 인덱스됨. 클론 시 해당 폴더 내용이 비어 있을 수 있음. 로컬에 `modified content, untracked content` 잔여
+
+---
+
+## 2026-06-24 — ServerManager LoadGridOp02_2 DBNull 크래시 분석
+
+### 증상
+- `ServerManager.exe` → OP02_2 그리드 로드(Button1) 시 `InvalidCastException`: DBNull → String 변환 실패
+- 스택: `FrmMain.LoadGridOp02_2()` → `Conversions.ToString` (VB `Trim()` 내부)
+
+### 서버 직접 조회 (`192.168.0.222\Ftech_Svr` / `FTECH_SVR`)
+- SQL Server 2008 Enterprise — **연결·쿼리 정상** (서버 장애 아님)
+- `Table_Part` 전체 136건 중 **50건**이 OP02_2 관련 컬럼 NULL
+- 정렬 `ORDER BY LEN(PartNo), PartNo` 기준 **첫 행 `88310-T4330`** 에서 `Use_Op02_MotorTq` NULL → 즉시 크래시
+- NULL 다발 컬럼: `Use_Op02_MotorTq`, `Use_Op02_Sab_Tq`, `Use_Op02_Sab_Resist`, `Use_Op02_cSab_Tq`, `Target_Op02_cSab_Barcode`, `Use_Op02_cSab_Resist`, `Target_Op02_MonitorCableBarcode` 등
+- 스키마상 전부 `IS_NULLABLE=YES` (NULL 허용)
+
+### 원인 판정
+| 구분 | 판정 |
+|------|------|
+| SQL Server 장애 | **아님** |
+| DB 데이터 미설정 | **예** — OP02_2 품번 설정 50건 미입력 |
+| 프로그램 결함 | **예** — `LoadGridOp02_2`가 NULL 미처리 (`Trim(Rs.Fields(...).Value)` 직접 호출) |
+
+### 코드 위치
+- `ServerManager\FrmMain.vb` — `LoadGridOp02_2()` 291~303행
+
+### 권장 조치
+1. **즉시**: `Table_Part` NULL 컬럼에 기본값 입력 (bit→0/1, nchar→`''` 또는 실제 목표값)
+2. **근본**: `LoadGridOp02_2`에 `IsDBNull`/`If(..., "")` 방어 코드 추가 (Op01 `LoadPArt` 동일 패턴)
+
+### 코드 수정 (2026-06-24)
+- `ServerManager\FrmMain.vb` — `FieldGridValue()` 추가, `LoadGridOp02_2()` NULL → `DBNull.Value` 유지
+- 동기화: `C:\Program Files (x86)\business\대일공업\RS4\ServerManager\FrmMain.vb` ← Git repo 동일 복사
+
+### 적용 (2026-06-24)
+- `ServerManager\FrmMain.vb` — `FieldGridValue()` 헬퍼 추가: `IsDBNull`이면 `DBNull.Value` 그대로 반환, 문자열은 `Trim`
+- `LoadGridOp02_2()` 12개 필드 전부 `FieldGridValue()` 경유로 변경 → NULL 50건도 그리드 조회 가능

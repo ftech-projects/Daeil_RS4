@@ -11,6 +11,16 @@ Public Class FrmMain
     Private myDataAdapter2 As OleDbDataAdapter
     Private myDataSet2 As DataSet
 
+    Private Function FieldGridValue(ByVal fld As ADODB.Field) As Object
+        If IsDBNull(fld.Value) Then
+            Return DBNull.Value
+        ElseIf TypeOf fld.Value Is String Then
+            Return Trim(CStr(fld.Value))
+        Else
+            Return fld.Value
+        End If
+    End Function
+
     Private Sub FrmMain_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ComboBox1.Items.Add("OP01")
@@ -289,18 +299,18 @@ Public Class FrmMain
             Rs.MoveFirst()
             Do Until Rs.EOF
                 Grid2.Rows.Add("",
-                    Trim(Rs.Fields("PartNo").Value),
-                    Trim(Rs.Fields("OptionLhrh").Value),
-                    Trim(Rs.Fields("OptionType").Value),
-                    Trim(Rs.Fields("Use_Op02_MotorTq").Value),
-                    Trim(Rs.Fields("Target_Op02_MotorBarcode").Value),
-                    Trim(Rs.Fields("Use_Op02_Sab_Tq").Value),
-                    Trim(Rs.Fields("Target_Op02_Sab_Barcode").Value),
-                    Trim(Rs.Fields("Use_Op02_Sab_Resist").Value),
-                    Trim(Rs.Fields("Use_Op02_cSab_Tq").Value),
-                    Trim(Rs.Fields("Target_Op02_cSab_Barcode").Value),
-                    Trim(Rs.Fields("Use_Op02_cSab_Resist").Value),
-                    Trim(Rs.Fields("Target_Op02_MonitorCableBarcode").Value))
+                    FieldGridValue(Rs.Fields("PartNo")),
+                    FieldGridValue(Rs.Fields("OptionLhrh")),
+                    FieldGridValue(Rs.Fields("OptionType")),
+                    FieldGridValue(Rs.Fields("Use_Op02_MotorTq")),
+                    FieldGridValue(Rs.Fields("Target_Op02_MotorBarcode")),
+                    FieldGridValue(Rs.Fields("Use_Op02_Sab_Tq")),
+                    FieldGridValue(Rs.Fields("Target_Op02_Sab_Barcode")),
+                    FieldGridValue(Rs.Fields("Use_Op02_Sab_Resist")),
+                    FieldGridValue(Rs.Fields("Use_Op02_cSab_Tq")),
+                    FieldGridValue(Rs.Fields("Target_Op02_cSab_Barcode")),
+                    FieldGridValue(Rs.Fields("Use_Op02_cSab_Resist")),
+                    FieldGridValue(Rs.Fields("Target_Op02_MonitorCableBarcode")))
                 Rs.MoveNext()
             Loop
         End If

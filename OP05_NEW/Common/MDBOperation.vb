@@ -12,6 +12,44 @@ Module DBOperation
         Return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB", "DB.mdb")
     End Function
 
+    ''' <summary>Access ALTER TABLE — 컬럼이 이미 있으면 무시</summary>
+    Private Sub TryAddMdbColumn(tableName As String, columnDef As String)
+        Try
+            MdbConnect.Execute("ALTER TABLE " & tableName & " ADD COLUMN " & columnDef, , ADODB.ExecuteOptionEnum.adExecuteNoRecords)
+        Catch
+        End Try
+    End Sub
+
+    ''' <summary>Table_BASIC PE 길이 공차 컬럼 보강</summary>
+    Public Sub EnsurePeBasicColumns()
+        If Not ConnectionOpenMDB() Then Exit Sub
+        Try
+            TryAddMdbColumn("Table_BASIC", "FrtMin_PE DOUBLE")
+            TryAddMdbColumn("Table_BASIC", "FrtMax_PE DOUBLE")
+            TryAddMdbColumn("Table_BASIC", "RearMin_PE DOUBLE")
+            TryAddMdbColumn("Table_BASIC", "RearMax_PE DOUBLE")
+            TryAddMdbColumn("Table_BASIC", "FrtTolPE DOUBLE")
+            TryAddMdbColumn("Table_BASIC", "RearTolPE DOUBLE")
+        Catch ex As Exception
+            LastMdbError = "Table_BASIC PE 컬럼 추가 실패: " & ex.Message
+        End Try
+        ConnectionCloseMDB()
+    End Sub
+
+    ''' <summary>Table_Part_Local PE 라인 컬럼 보강</summary>
+    Public Sub EnsurePePartLocalColumns()
+        If Not ConnectionOpenMDB() Then Exit Sub
+        Try
+            TryAddMdbColumn("Table_Part_Local", "Use_PE_Line YESNO")
+            TryAddMdbColumn("Table_Part_Local", "Target_PE05_ToolNum LONG")
+            TryAddMdbColumn("Table_Part_Local", "Target_Op03_InsideCoverL TEXT(50)")
+            TryAddMdbColumn("Table_Part_Local", "Target_Op03_InsideCoverR TEXT(50)")
+        Catch ex As Exception
+            LastMdbError = "Table_Part_Local PE 컬럼 추가 실패: " & ex.Message
+        End Try
+        ConnectionCloseMDB()
+    End Sub
+
     ''' <summary>기존 DB에 Laser 컬럼이 없으면 추가 (Table_SerialPort)</summary>
     Public Sub EnsureSerialPortLaserColumn()
         If Not ConnectionOpenMDB() Then Exit Sub
@@ -124,6 +162,7 @@ Module DBOperation
                     ,
                     ADODB.ExecuteOptionEnum.adExecuteNoRecords)
             End If
+            EnsurePeBasicColumns()
             ConnectionCloseMDB()
             Return True
         Catch ex As Exception
@@ -141,6 +180,7 @@ Module DBOperation
             Dim probe As New ADODB.Recordset
             probe.Open("SELECT PartNo FROM Table_Part_Local WHERE 1=0", MdbConnect)
             probe.Close()
+            EnsurePePartLocalColumns()
             ConnectionCloseMDB()
             Return True
         Catch
@@ -158,7 +198,9 @@ Module DBOperation
                     "Target_Op04_ToolNum LONG, " &
                     "Target_Op04_RivetNum LONG, " &
                     "Target_Op03_InsideCoverL TEXT(50), " &
-                    "Target_Op03_InsideCoverR TEXT(50)" &
+                    "Target_Op03_InsideCoverR TEXT(50), " &
+                    "Use_PE_Line YESNO, " &
+                    "Target_PE05_ToolNum LONG" &
                     ")",
                     ,
                     ADODB.ExecuteOptionEnum.adExecuteNoRecords)

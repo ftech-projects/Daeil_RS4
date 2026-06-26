@@ -1,4 +1,4 @@
-﻿Module Module1
+Module Module1
 
     Public PlcValue(0 To 5000) As Integer
 
@@ -49,6 +49,15 @@
     Public BasicToolMin As Double
     Public AtlasTool1Ip As String = "192.168.250.12"
     Public AtlasTool2Ip As String = "192.168.250.13"
+
+    ''' <summary>Table_BASIC.Unit 표기 정규화 (N.m → N/m)</summary>
+    Public Function NormalizeTorqueUnit(ByVal unit As String) As String
+        If String.IsNullOrWhiteSpace(unit) Then Return "N/m"
+        Dim u As String = unit.Trim()
+        If String.Equals(u, "N.m", StringComparison.OrdinalIgnoreCase) Then Return "N/m"
+        If String.Equals(u, "Nm", StringComparison.OrdinalIgnoreCase) Then Return "N/m"
+        Return u
+    End Function
     
     Public Class HiResTimer
 
@@ -211,7 +220,12 @@
 
         If Rs.RecordCount = 1 Then
 
-            BAsicUnit = CStr(Rs.Fields("Unit").Value)
+            Dim rawUnit As String = CStr(Rs.Fields("Unit").Value)
+            BAsicUnit = NormalizeTorqueUnit(rawUnit)
+            If Not String.Equals(rawUnit, BAsicUnit, StringComparison.Ordinal) Then
+                Rs.Fields("Unit").Value = BAsicUnit
+                Rs.Update()
+            End If
             BasicToolMin = CStr(Rs.Fields("toolmin").Value)
             BasicToolMax = CStr(Rs.Fields("toolmax").Value)
             Try

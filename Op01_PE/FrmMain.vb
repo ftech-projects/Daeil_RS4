@@ -70,11 +70,39 @@ Public Class FrmMain
 
     Private TargetToolNum As Integer
     Private _usePeMonitorbracketTq As Boolean
+    Private _usePeHeadrestFolding As Boolean
 
-    Private Const MonitorbracketTqCount As Integer = 4
+    Private Const PeTorqueSlotCount As Integer = 6
+    Private Const MonitorbracketSlotCount As Integer = 4
+    Private Const HrfSlotStart As Integer = 4
+    Private Const PeAirToolPulseTarget As Integer = 5
+    Private _ioToolPulseCount As Integer
+
+    Private Enum PeTorquePhase
+        MbFinal
+        MbPre
+        HrfInitial
+        HrfFinal
+    End Enum
+    Private _peTorquePhase As PeTorquePhase = PeTorquePhase.MbFinal
+    Private _mbPreTq(MonitorbracketSlotCount - 1) As String
+    Private _hrfTq(1) As String
+    Private _hrfFinalTq(MonitorbracketSlotCount - 1) As String
+
+    Private Const MonitorbracketTqCount As Integer = MonitorbracketSlotCount
     Private _dataMonitorbracketTq() As Label
     Private _decMonitorbracketTq() As Label
     Private _monitorbracketTqWired As Boolean
+    Private srclbDataMonitorbracketTq5 As Label
+    Private srclbDecMonitorbracketTq5 As Label
+    Private srclbDataMonitorbracketTq6 As Label
+    Private srclbDecMonitorbracketTq6 As Label
+    Private _specMbTq() As Label
+    Private _specHrfTq() As Label
+    Private _pnlPeTorque As Panel
+    Private srclbStepName As Label
+    Private srclbRStep As Label
+    Private _peTorqueUiReady As Boolean
 
     Private D_OutString As String
     Private rStep As Double
@@ -179,21 +207,295 @@ Public Class FrmMain
     '   ... (미사용)
     'End Sub
 
+    Private LabelHrfTitle As Label
+
+    ''' <summary>관리 항목 T/Q 패널 높이 — 생산수량 GridCount와 동일</summary>
+    Private Function PeTorquePanelHeight() As Integer
+        If GridCount IsNot Nothing AndAlso GridCount.Height > 0 Then
+            Return GridCount.Height
+        End If
+        Return 422
+    End Function
+
+    Private Sub GetPeTorqueRowBounds(ByVal panelH As Integer, ByVal rowIdx As Integer, ByRef y As Integer, ByRef h As Integer)
+        Const totalRows As Integer = 7
+        Dim baseH As Integer = panelH \ totalRows
+        Dim extra As Integer = panelH Mod totalRows
+        y = 0
+        For i As Integer = 0 To rowIdx - 1
+            y += baseH + If(i < extra, 1, 0)
+        Next
+        h = baseH + If(rowIdx < extra, 1, 0)
+    End Sub
+
+    Private Function PeTorqueRowsHeight(ByVal panelH As Integer, ByVal firstRow As Integer, ByVal lastRow As Integer) As Integer
+        Dim total As Integer = 0
+        For i As Integer = firstRow To lastRow
+            Dim yi As Integer, hi As Integer
+            GetPeTorqueRowBounds(panelH, i, yi, hi)
+            total += hi
+        Next
+        Return total
+    End Function
+
+    Private Function PeTorqueRowTop(ByVal panelH As Integer, ByVal rowIdx As Integer) As Integer
+        Dim y As Integer, h As Integer
+        GetPeTorqueRowBounds(panelH, rowIdx, y, h)
+        Return y
+    End Function
+
+    Private Sub EnsurePeTorqueUi()
+        If _peTorqueUiReady Then Return
+
+        Const formSectionX As Integer = 760
+        Const formTopY As Integer = 624
+        Const panelWidth As Integer = 733
+        Const secW As Integer = 143
+        Const specW As Integer = 106
+        Const measW As Integer = 385
+        Const decW As Integer = 99
+        Const specX As Integer = secW
+        Const measX As Integer = secW + specW
+        Const decX As Integer = measX + measW
+
+        Dim panelH As Integer = PeTorquePanelHeight()
+        Dim rowH As Integer = panelH \ 7
+        Dim valueFont As Single = CSng(Math.Min(24.0F, Math.Max(17.0F, rowH * 0.42F)))
+        Dim specFont As Single = CSng(Math.Min(18.0F, Math.Max(14.0F, rowH * 0.34F)))
+        Dim titleFont As Single = CSng(Math.Min(15.0F, Math.Max(11.0F, rowH * 0.26F)))
+
+        Label24.Visible = False
+        Label20.Visible = False
+        Label23.Visible = False
+        srclbTargetMonitorbracketTq.Visible = False
+
+        If _pnlPeTorque Is Nothing Then
+            _pnlPeTorque = New Panel()
+            _pnlPeTorque.BackColor = Color.Black
+            _pnlPeTorque.BorderStyle = BorderStyle.FixedSingle
+            Controls.Add(_pnlPeTorque)
+        End If
+        _pnlPeTorque.Location = New Point(formSectionX, formTopY)
+        _pnlPeTorque.Size = New Size(panelWidth, panelH)
+
+        Dim attach As Action(Of Control) =
+            Sub(c As Control)
+                If c Is Nothing Then Return
+                If c.Parent IsNot Nothing AndAlso c.Parent IsNot _pnlPeTorque Then
+                    c.Parent.Controls.Remove(c)
+                End If
+                If Not _pnlPeTorque.Controls.Contains(c) Then
+                    _pnlPeTorque.Controls.Add(c)
+                End If
+            End Sub
+
+        Dim layoutRow As Action(Of Integer, Control, Control, Control, Control) =
+            Sub(rowIdx As Integer, specLb As Control, measLb As Control, decLb As Control, titleLb As Control)
+                Dim y As Integer, h As Integer
+                GetPeTorqueRowBounds(panelH, rowIdx, y, h)
+                If titleLb IsNot Nothing Then
+                    titleLb.Location = New Point(0, y)
+                    titleLb.Size = New Size(secW, h)
+                    titleLb.Font = New Font("Arial Narrow", titleFont, FontStyle.Bold)
+                    attach(titleLb)
+                End If
+                If specLb IsNot Nothing Then
+                    specLb.Location = New Point(specX, y)
+                    specLb.Size = New Size(specW, h)
+                    specLb.Font = New Font("Arial Narrow", specFont, FontStyle.Bold)
+                    attach(specLb)
+                End If
+                If measLb IsNot Nothing Then
+                    measLb.Location = New Point(measX, y)
+                    measLb.Size = New Size(measW, h)
+                    measLb.Font = New Font("Arial Narrow", valueFont, FontStyle.Bold)
+                    attach(measLb)
+                End If
+                If decLb IsNot Nothing Then
+                    decLb.Location = New Point(decX, y)
+                    decLb.Size = New Size(decW, h)
+                    decLb.Font = New Font("Arial Narrow", valueFont, FontStyle.Bold)
+                    attach(decLb)
+                End If
+            End Sub
+
+        ' 모니터브라켓 — 좌측 제목(4행) + 행0~3
+        Label19.Location = New Point(0, PeTorqueRowTop(panelH, 0))
+        Label19.Size = New Size(secW, PeTorqueRowsHeight(panelH, 0, 3))
+        Label19.Font = New Font("Arial Narrow", titleFont, FontStyle.Bold)
+        Label19.Text = "모니터브라켓" & vbCrLf & "T/Q"
+        Label19.TextAlign = ContentAlignment.MiddleCenter
+        attach(Label19)
+
+        ReDim _specMbTq(3)
+        Dim mbData() As Label = {srclbDataMonitorbracketTq1, srclbDataMonitorbracketTq2, srclbDataMonitorbracketTq3, srclbDataMonitorbracketTq4}
+        Dim mbDec() As Label = {srclbDecMonitorbracketTq1, srclbDecMonitorbracketTq2, srclbDecMonitorbracketTq3, srclbDecMonitorbracketTq4}
+        For i As Integer = 0 To 3
+            _specMbTq(i) = CreatePeSpecLabel(specFont)
+            layoutRow(i, _specMbTq(i), mbData(i), mbDec(i), Nothing)
+        Next
+
+        ' 헤드레스트 — 좌측 제목(2행) + 행4~5
+        LabelHrfTitle = New Label()
+        LabelHrfTitle.BackColor = Color.Black
+        LabelHrfTitle.BorderStyle = BorderStyle.FixedSingle
+        LabelHrfTitle.ForeColor = Color.White
+        LabelHrfTitle.Text = "헤드레스트" & vbCrLf & "T/Q"
+        LabelHrfTitle.TextAlign = ContentAlignment.MiddleCenter
+        LabelHrfTitle.Location = New Point(0, PeTorqueRowTop(panelH, 4))
+        LabelHrfTitle.Size = New Size(secW, PeTorqueRowsHeight(panelH, 4, 5))
+        LabelHrfTitle.Font = New Font("Arial Narrow", titleFont, FontStyle.Bold)
+        attach(LabelHrfTitle)
+
+        ReDim _specHrfTq(1)
+        If srclbDataMonitorbracketTq5 Is Nothing Then
+            srclbDataMonitorbracketTq5 = CreatePeTorqueDataLabel(valueFont)
+            srclbDecMonitorbracketTq5 = CreatePeTorqueDecLabel(valueFont)
+            srclbDataMonitorbracketTq6 = CreatePeTorqueDataLabel(valueFont)
+            srclbDecMonitorbracketTq6 = CreatePeTorqueDecLabel(valueFont)
+        End If
+        _specHrfTq(0) = CreatePeSpecLabel(specFont)
+        _specHrfTq(1) = CreatePeSpecLabel(specFont)
+        layoutRow(4, _specHrfTq(0), srclbDataMonitorbracketTq5, srclbDecMonitorbracketTq5, Nothing)
+        layoutRow(5, _specHrfTq(1), srclbDataMonitorbracketTq6, srclbDecMonitorbracketTq6, Nothing)
+
+        ' 에어툴 — 행6: 제목|목표툴|측정|판정
+        Label22.BackColor = Color.Black
+        Label22.ForeColor = Color.White
+        Label22.BorderStyle = BorderStyle.FixedSingle
+        Label22.TextAlign = ContentAlignment.MiddleCenter
+        layoutRow(6, srclbTargetTool, srclbDataTool, srclbDecTool, Label22)
+        Label22.Text = "에어툴"
+        srclbTargetTool.TextAlign = ContentAlignment.MiddleCenter
+
+        ' Panel11 스텝 표시 (별도)
+        If srclbStepName Is Nothing Then
+            srclbStepName = New Label()
+            srclbStepName.BackColor = Color.DimGray
+            srclbStepName.BorderStyle = BorderStyle.FixedSingle
+            srclbStepName.Font = New Font("Arial Narrow", 11.0F, FontStyle.Bold)
+            srclbStepName.ForeColor = Color.White
+            srclbStepName.Location = New Point(8, 9)
+            srclbStepName.Size = New Size(200, 36)
+            srclbStepName.TextAlign = ContentAlignment.MiddleCenter
+            Panel11.Controls.Add(srclbStepName)
+
+            srclbRStep = New Label()
+            srclbRStep.BackColor = Color.DimGray
+            srclbRStep.BorderStyle = BorderStyle.FixedSingle
+            srclbRStep.Font = New Font("Arial Narrow", 11.0F, FontStyle.Bold)
+            srclbRStep.ForeColor = Color.Yellow
+            srclbRStep.Location = New Point(214, 9)
+            srclbRStep.Size = New Size(120, 36)
+            srclbRStep.TextAlign = ContentAlignment.MiddleCenter
+            Panel11.Controls.Add(srclbRStep)
+        End If
+
+        _pnlPeTorque.BringToFront()
+
+        _peTorqueUiReady = True
+        EnsureMonitorbracketTqLabels()
+        RefreshPeTorqueSpecLabels()
+        RefreshAirToolTargetLabel()
+    End Sub
+
+    Private Function CreatePeSpecLabel(ByVal specFont As Single) As Label
+        Dim lb As New Label()
+        lb.BackColor = Color.FromArgb(56, 56, 56)
+        lb.BorderStyle = BorderStyle.FixedSingle
+        lb.ForeColor = Color.White
+        lb.TextAlign = ContentAlignment.MiddleCenter
+        lb.Font = New Font("Arial Narrow", specFont, FontStyle.Bold)
+        Return lb
+    End Function
+
+    Private Function CreatePeTorqueDataLabel(ByVal valueFont As Single) As Label
+        Dim lb As New Label()
+        lb.BackColor = Color.Black
+        lb.BorderStyle = BorderStyle.FixedSingle
+        lb.ForeColor = Color.White
+        lb.TextAlign = ContentAlignment.MiddleCenter
+        lb.Font = New Font("Arial Narrow", valueFont, FontStyle.Bold)
+        Return lb
+    End Function
+
+    Private Function CreatePeTorqueDecLabel(ByVal valueFont As Single) As Label
+        Dim lb As New Label()
+        lb.BackColor = Color.Black
+        lb.BorderStyle = BorderStyle.FixedSingle
+        lb.ForeColor = Color.White
+        lb.TextAlign = ContentAlignment.MiddleCenter
+        lb.Font = New Font("Arial Narrow", valueFont, FontStyle.Bold)
+        Return lb
+    End Function
+
     Private Sub EnsureMonitorbracketTqLabels()
+        EnsurePeTorqueUi()
         If _monitorbracketTqWired Then Return
-        _dataMonitorbracketTq = {srclbDataMonitorbracketTq1, srclbDataMonitorbracketTq2, srclbDataMonitorbracketTq3, srclbDataMonitorbracketTq4}
-        _decMonitorbracketTq = {srclbDecMonitorbracketTq1, srclbDecMonitorbracketTq2, srclbDecMonitorbracketTq3, srclbDecMonitorbracketTq4}
+        _dataMonitorbracketTq = {srclbDataMonitorbracketTq1, srclbDataMonitorbracketTq2, srclbDataMonitorbracketTq3, srclbDataMonitorbracketTq4, srclbDataMonitorbracketTq5, srclbDataMonitorbracketTq6}
+        _decMonitorbracketTq = {srclbDecMonitorbracketTq1, srclbDecMonitorbracketTq2, srclbDecMonitorbracketTq3, srclbDecMonitorbracketTq4, srclbDecMonitorbracketTq5, srclbDecMonitorbracketTq6}
         _monitorbracketTqWired = True
-        UpdateMonitorbracketTqHeader()
+        UpdatePeTorqueHeaders()
+    End Sub
+
+    Private Sub UpdatePeTorqueHeaders()
+        EnsureMonitorbracketTqLabels()
+        Select Case _peTorquePhase
+            Case PeTorquePhase.MbPre
+                Label19.Text = "MB" & vbCrLf & "가체결"
+            Case PeTorquePhase.HrfFinal
+                Label19.Text = "HRF" & vbCrLf & "정체결"
+            Case Else
+                Label19.Text = "모니터브라켓" & vbCrLf & "T/Q"
+        End Select
+
+        If LabelHrfTitle IsNot Nothing Then
+            LabelHrfTitle.Text = "헤드레스트" & vbCrLf & "T/Q"
+        End If
+
+        RefreshPeTorqueSpecLabels()
+        RefreshAirToolTargetLabel()
+    End Sub
+
+    ''' <summary>각 T/Q 행 좌측 — Table_BASIC 토크 목표 (5~8 N/m 등)</summary>
+    Private Sub RefreshPeTorqueSpecLabels()
+        Dim mbSpec As String = MonitorbracketTqSpecText
+        If _partScannedReady AndAlso IsPeMonitorbracketTqNa() AndAlso _peTorquePhase <> PeTorquePhase.HrfFinal Then
+            mbSpec = "NA"
+        End If
+        Dim hrfSpec As String = MonitorbracketTqSpecText
+        If _partScannedReady AndAlso Not _usePeHeadrestFolding Then
+            hrfSpec = "NA"
+        End If
+        If _specMbTq IsNot Nothing Then
+            For i As Integer = 0 To _specMbTq.Length - 1
+                If _specMbTq(i) IsNot Nothing Then _specMbTq(i).Text = mbSpec
+            Next
+        End If
+        If _specHrfTq IsNot Nothing Then
+            For i As Integer = 0 To _specHrfTq.Length - 1
+                If _specHrfTq(i) IsNot Nothing Then _specHrfTq(i).Text = hrfSpec
+            Next
+        End If
+    End Sub
+
+    ''' <summary>에어툴 목표 — 품번 Target_PE_ToolNum (미설정 시 NA)</summary>
+    Private Sub RefreshAirToolTargetLabel()
+        If srclbTargetTool Is Nothing Then Return
+        If _partScannedReady AndAlso PeNeedsAirTool() Then
+            srclbTargetTool.Text = CStr(TargetToolNum)
+            srclbTargetTool.ForeColor = Color.White
+        ElseIf _partScannedReady Then
+            srclbTargetTool.Text = "NA"
+            srclbTargetTool.ForeColor = Color.LightGray
+        Else
+            srclbTargetTool.Text = "—"
+            srclbTargetTool.ForeColor = Color.LightGray
+        End If
     End Sub
 
     Private Sub UpdateMonitorbracketTqHeader()
-        Label19.Text = "모니터브라켓 T/Q"
-        If IsPeMonitorbracketTqNa() Then
-            srclbTargetMonitorbracketTq.Text = "NA"
-        Else
-            srclbTargetMonitorbracketTq.Text = MonitorbracketTqSpecText
-        End If
+        UpdatePeTorqueHeaders()
     End Sub
 
     Private ReadOnly Property MonitorbracketTqSpecText As String
@@ -220,8 +522,9 @@ Public Class FrmMain
         Return Not PeNeedsAirTool()
     End Function
 
-    Private Sub ResetMonitorbracketTqRow(ByVal index As Integer, ByVal markNa As Boolean)
+    Private Sub ResetPeTorqueRow(ByVal index As Integer, ByVal markNa As Boolean)
         EnsureMonitorbracketTqLabels()
+        If index < 0 OrElse index >= PeTorqueSlotCount Then Return
         If markNa Then
             _dataMonitorbracketTq(index).Text = "NA"
             _decMonitorbracketTq(index).Text = "NA"
@@ -233,30 +536,255 @@ Public Class FrmMain
         End If
     End Sub
 
-    Private Sub ResetAllMonitorbracketTq()
-        Dim markNa As Boolean = IsPeMonitorbracketTqNa()
-        For i As Integer = 0 To MonitorbracketTqCount - 1
-            ResetMonitorbracketTqRow(i, markNa)
+    Private Sub ResetMonitorbracketTqRow(ByVal index As Integer, ByVal markNa As Boolean)
+        ResetPeTorqueRow(index, markNa)
+    End Sub
+
+    Private Sub ResetAllPeTorqueSlots()
+        For i As Integer = 0 To MonitorbracketSlotCount - 1
+            ResetPeTorqueRow(i, IsPeMonitorbracketTqNa())
+        Next
+        For i As Integer = HrfSlotStart To PeTorqueSlotCount - 1
+            ResetPeTorqueRow(i, Not _usePeHeadrestFolding)
         Next
     End Sub
 
-    Private Function GetNextMonitorbracketTqSlot() As Integer
+    Private Sub ResetAllMonitorbracketTq()
+        ResetAllPeTorqueSlots()
+    End Sub
+
+    Private Sub ClearPeTorqueWorkBuffers()
+        For i As Integer = 0 To MonitorbracketSlotCount - 1
+            _mbPreTq(i) = ""
+            _hrfFinalTq(i) = ""
+        Next
+        _hrfTq(0) = ""
+        _hrfTq(1) = ""
+    End Sub
+
+    Private Function GetTorqueSlotStart() As Integer
+        If _peTorquePhase = PeTorquePhase.HrfInitial Then Return HrfSlotStart
+        Return 0
+    End Function
+
+    Private Function GetTorqueSlotEnd() As Integer
+        If _peTorquePhase = PeTorquePhase.HrfInitial Then Return PeTorqueSlotCount - 1
+        Return MonitorbracketSlotCount - 1
+    End Function
+
+    Private Function GetNextPeTorqueSlot() As Integer
         EnsureMonitorbracketTqLabels()
-        For i As Integer = 0 To MonitorbracketTqCount - 1
+        For i As Integer = GetTorqueSlotStart() To GetTorqueSlotEnd()
             Dim state As String = _decMonitorbracketTq(i).Text
-            If state <> "OK" AndAlso state <> "NA" Then Return i
+            If _peTorquePhase = PeTorquePhase.MbPre Then
+                If state <> "PRE" AndAlso state <> "NA" Then Return i
+            Else
+                If state <> "OK" AndAlso state <> "NA" AndAlso state <> "PASS" Then Return i
+            End If
         Next
         Return -1
     End Function
 
-    Private Function AllMonitorbracketTqDone() As Boolean
+    Private Function GetNextMonitorbracketTqSlot() As Integer
+        Return GetNextPeTorqueSlot()
+    End Function
+
+    Private Function AllCurrentTorquePhaseDone() As Boolean
         EnsureMonitorbracketTqLabels()
-        For i As Integer = 0 To MonitorbracketTqCount - 1
+        For i As Integer = GetTorqueSlotStart() To GetTorqueSlotEnd()
             Dim state As String = _decMonitorbracketTq(i).Text
-            If state <> "OK" AndAlso state <> "NA" AndAlso state <> "PASS" Then Return False
+            If _peTorquePhase = PeTorquePhase.MbPre Then
+                If state <> "PRE" AndAlso state <> "NA" Then Return False
+            Else
+                If state <> "OK" AndAlso state <> "NA" AndAlso state <> "PASS" Then Return False
+            End If
         Next
         Return True
     End Function
+
+    Private Function AllMonitorbracketTqDone() As Boolean
+        Return AllCurrentTorquePhaseDone()
+    End Function
+
+    Private Sub MarkPeTorquePass(ByVal index As Integer)
+        ResetPeTorqueRow(index, True)
+        WriteTxtMessage("[SEQ] T/Q 슬롯 " & CStr(index + 1) & " N/A 스킵")
+    End Sub
+
+    Private Sub ResetAirToolRow(ByVal markNa As Boolean)
+        _ioToolPulseCount = 0
+        RefreshAirToolTargetLabel()
+        If markNa Then
+            srclbDataTool.Text = "NA"
+            srclbDecTool.Text = "NA"
+            srclbDecTool.BackColor = Color.Green
+        Else
+            srclbDataTool.Text = "0/" & CStr(PeAirToolPulseTarget)
+            srclbDecTool.Text = ""
+            srclbDecTool.BackColor = Color.Black
+        End If
+    End Sub
+
+    Private Function GetStepName(ByVal stepVal As Double) As String
+        Select Case stepVal
+            Case 0 : Return "대기"
+            Case 0.1 : Return "원위치복귀"
+            Case 2.3, 2.4 : Return "제품고정"
+            Case 2.5 : Return "지그회전1"
+            Case 2.6 : Return "지그회전2"
+            Case 2.7 : Return "지그회전3"
+            Case 2.8 : Return "지그회전4"
+            Case 3 : Return "MB정체결"
+            Case 3.0 : Return "MB가체결"
+            Case 3.1 : Return "Start대기(다운)"
+            Case 3.2 : Return "지그다운"
+            Case 3.4 : Return "에어툴"
+            Case 3.5 : Return "HRF체결"
+            Case 3.55 : Return "HRF정체결"
+            Case 3.6 : Return "지그업"
+            Case 3.7 : Return "Start대기(해제)"
+            Case 3.8 : Return "지그업확인"
+            Case 3.9 : Return "제품해제"
+            Case 4 : Return "저장"
+            Case Else : Return "wStep " & stepVal.ToString()
+        End Select
+    End Function
+
+    Private Sub UpdateStepTraceLabels()
+        srclbStep.Text = wStep.ToString()
+        If srclbStepName IsNot Nothing Then srclbStepName.Text = GetStepName(wStep)
+        If srclbRStep IsNot Nothing Then
+            If wStep = 0.1 Then
+                srclbRStep.Text = JigClampSequence.CurrentHomingStage
+            Else
+                srclbRStep.Text = "-"
+            End If
+        End If
+    End Sub
+
+    Private Sub BeginJigRotateStep(ByVal nextTag As String)
+        WriteTxtMessage("[SEQ] " & nextTag & " — 지그 회전 시작 (wStep 대기)")
+        JigClampSequence.BeginJigRotate()
+    End Sub
+
+    Private Sub BeginMbTorqueWork(ByVal preMode As Boolean)
+        _peStartWait = PeStartWait.None
+        ClearPeTorqueWorkBuffers()
+        If preMode Then
+            _peTorquePhase = PeTorquePhase.MbPre
+            WriteTxtMessage("[SEQ] MB 가체결 T/Q 4회 시작 (wStep 3.0)")
+        Else
+            _peTorquePhase = PeTorquePhase.MbFinal
+            WriteTxtMessage("[SEQ] MB 정체결 T/Q 4회 시작 (wStep 3)")
+        End If
+        UpdatePeTorqueHeaders()
+        For i As Integer = 0 To MonitorbracketSlotCount - 1
+            If IsPeMonitorbracketTqNa() Then
+                MarkPeTorquePass(i)
+            Else
+                ResetPeTorqueRow(i, False)
+            End If
+        Next
+        For i As Integer = HrfSlotStart To PeTorqueSlotCount - 1
+            ResetPeTorqueRow(i, True)
+        Next
+        ResetAirToolRow(PeNeedsAirTool() = False)
+    End Sub
+
+    Private Sub BeginMonitorbracketWorkStep()
+        BeginMbTorqueWork(False)
+    End Sub
+
+    Private Sub BeginHrfInitialWork()
+        _peTorquePhase = PeTorquePhase.HrfInitial
+        UpdatePeTorqueHeaders()
+        For i As Integer = HrfSlotStart To PeTorqueSlotCount - 1
+            ResetPeTorqueRow(i, False)
+        Next
+        WriteTxtMessage("[SEQ] HRF T/Q 2회 시작 (wStep 3.5)")
+    End Sub
+
+    Private Sub BeginHrfFinalWork()
+        _peTorquePhase = PeTorquePhase.HrfFinal
+        UpdatePeTorqueHeaders()
+        For i As Integer = 0 To MonitorbracketSlotCount - 1
+            ResetPeTorqueRow(i, False)
+        Next
+        WriteTxtMessage("[SEQ] HRF 정체결 T/Q 4회 — 슬롯 1~4 재사용 (wStep 3.55)")
+    End Sub
+
+    ''' <summary>클램프 완료(IN 확인) 후 지그회전1</summary>
+    Private Sub RouteAfterClampComplete()
+        WriteTxtMessage("[SEQ] 클램프 완료 → 지그회전1 (wStep 2.5)")
+        wStep = 2.5
+        BeginJigRotateStep("클램프 후")
+    End Sub
+
+    Private Sub RouteAfterJigRotate(ByVal fromStep As Double)
+        Select Case fromStep
+            Case 2.5
+                If _usePeHeadrestFolding AndAlso PeNeedsMonitorbracketTq() Then
+                    wStep = 3.0
+                    BeginMbTorqueWork(True)
+                ElseIf PeNeedsMonitorbracketTq() Then
+                    wStep = 3
+                    BeginMbTorqueWork(False)
+                Else
+                    WriteTxtMessage("[SEQ] MB T/Q N/A — 지그회전2로 건너뜀")
+                    wStep = 2.6
+                    BeginJigRotateStep("MB N/A 후")
+                End If
+            Case 2.6
+                If PeNeedsAirTool() OrElse _usePeHeadrestFolding Then
+                    _peStartWait = PeStartWait.JigDown
+                    wStep = 3.1
+                    WriteTxtMessage("[SEQ] 지그회전2 완료 — Start 대기 (지그 다운)")
+                Else
+                    _peStartWait = PeStartWait.Unclamp
+                    wStep = 3.7
+                    WriteTxtMessage("[SEQ] 지그회전2 완료 — 에어툴 N/A, Start 대기 (언클램프)")
+                End If
+            Case 2.7
+                wStep = 3.55
+                BeginHrfFinalWork()
+            Case 2.8
+                _peStartWait = PeStartWait.Unclamp
+                wStep = 3.7
+                WriteTxtMessage("[SEQ] 지그회전4 완료 — Start 대기 (언클램프)")
+            Case Else
+                WriteTxtMessage("[SEQ] 지그회전 완료 — 미정의 fromStep " & fromStep)
+        End Select
+    End Sub
+
+    Private Sub RouteAfterMbTorquePhase()
+        WriteTxtMessage("[SEQ] MB T/Q 단계 완료 → 지그회전2 (wStep 2.6)")
+        wStep = 2.6
+        BeginJigRotateStep("MB T/Q 후")
+    End Sub
+
+    Private Sub RouteAfterHrfInitial()
+        If PeNeedsAirTool() Then
+            ResetAirToolRow(False)
+            wStep = 3.4
+            WriteTxtMessage("[SEQ] HRF 2점 체결 완료 → 에어툴 (wStep 3.4)")
+        Else
+            ResetAirToolRow(True)
+            wStep = 3.4
+            _peStartWait = PeStartWait.JigUp
+            WriteTxtMessage("[SEQ] HRF 2점 완료 — 에어툴 N/A, Start 대기 (지그 업)")
+        End If
+    End Sub
+
+    Private Sub RouteAfterHrfFinal()
+        WriteTxtMessage("[SEQ] HRF 정체결 완료 → 지그회전4 (wStep 2.8)")
+        wStep = 2.8
+        BeginJigRotateStep("HRF 정체결 후")
+    End Sub
+
+    ''' <summary>모니터브라켓 T/Q 4회 완료 후 다음 공정 분기 (레거시 호환)</summary>
+    Private Sub RouteAfterTqComplete()
+        RouteAfterMbTorquePhase()
+    End Sub
 
     Private Function SqlEscape(ByVal value As String) As String
         Return Trim(If(value, "")).Replace("'", "''")
@@ -269,48 +797,6 @@ Public Class FrmMain
         If String.Equals(s, "false", StringComparison.OrdinalIgnoreCase) Then Return False
         Return True
     End Function
-
-    ''' <summary>클램프 완료 후 wStep 3 — 모니터브라켓 T/Q (Use_PE_MonitorbracketTq=1 일 때만)</summary>
-    Private Sub BeginMonitorbracketWorkStep()
-        _peStartWait = PeStartWait.None
-        For i As Integer = 0 To MonitorbracketTqCount - 1
-            ResetMonitorbracketTqRow(i, False)
-        Next
-
-        srclbDataTool.Text = ""
-        srclbDecTool.Text = ""
-        srclbDecTool.BackColor = Color.Black
-
-        WriteTxtMessage("[IO] 제품 고정 완료 — 모니터브라켓 T/Q 시작 (4회)")
-    End Sub
-
-    ''' <summary>클램프 완료(IN 확인) 후 다음 공정 분기</summary>
-    Private Sub RouteAfterClampComplete()
-        If PeNeedsMonitorbracketTq() Then
-            wStep = 3
-            BeginMonitorbracketWorkStep()
-        ElseIf PeNeedsAirTool() Then
-            wStep = 3.1
-            _peStartWait = PeStartWait.JigDown
-            WriteTxtMessage("[IO] 클램프 완료 — T/Q N/A, Start 대기 (지그 다운)")
-        Else
-            wStep = 3.7
-            _peStartWait = PeStartWait.Unclamp
-            WriteTxtMessage("[IO] 클램프 완료 — T/Q·에어툴 N/A, Start 대기 (언클램프)")
-        End If
-    End Sub
-
-    ''' <summary>모니터브라켓 T/Q 4회 완료 후 다음 공정 분기</summary>
-    Private Sub RouteAfterTqComplete()
-        If PeNeedsAirTool() Then
-            _peStartWait = PeStartWait.JigDown
-            WriteTxtMessage("[IO] 모니터브라켓 T/Q 완료 — Start 대기 (지그 다운)")
-        Else
-            wStep = 3.7
-            _peStartWait = PeStartWait.Unclamp
-            WriteTxtMessage("[IO] 모니터브라켓 T/Q 완료 — 에어툴 N/A, Start 대기 (언클램프)")
-        End If
-    End Sub
 
     ''' <summary>언클램프 시작 — 1·2번 OUT:03,09→IN:06,12 / OUT:01,07→IN:04,10</summary>
     Private Sub BeginPeUnclamp()
@@ -329,9 +815,8 @@ Public Class FrmMain
         WriteTxtMessage("[IO] 제품 해제 시작 (wStep 3.9)")
     End Sub
 
-    Private Sub SavePeMonitorbracketTqToMain(ByVal slot As Integer, ByVal tqValue As String)
-        If srcLbSerial.Text = "" OrElse slot < 0 OrElse slot >= MonitorbracketTqCount Then Return
-        Dim col As String = "PE_MonitorbracketTq" & CStr(slot + 1)
+    Private Sub SavePeColumnToMain(ByVal col As String, ByVal tqValue As String)
+        If srcLbSerial.Text = "" OrElse col = "" Then Return
         Try
             ConnectionOpenSQL()
             Dim sql As String = "UPDATE TABLE_MAIN SET " & col & " = '" & SqlEscape(tqValue) &
@@ -345,18 +830,64 @@ Public Class FrmMain
         End Try
     End Sub
 
+    Private Sub SavePeMonitorbracketTqToMain(ByVal slot As Integer, ByVal tqValue As String)
+        If slot < 0 OrElse slot >= MonitorbracketSlotCount Then Return
+        SavePeColumnToMain("PE_MonitorbracketTq" & CStr(slot + 1), tqValue)
+    End Sub
+
+    Private Sub SavePeMonitorbracketPreTqToMain(ByVal slot As Integer, ByVal tqValue As String)
+        If slot < 0 OrElse slot >= MonitorbracketSlotCount Then Return
+        SavePeColumnToMain("PE_MonitorbracketPreTq" & CStr(slot + 1), tqValue)
+    End Sub
+
+    Private Sub SavePeHrfTqToMain(ByVal hrfIndex As Integer, ByVal tqValue As String)
+        If hrfIndex < 0 OrElse hrfIndex > 1 Then Return
+        SavePeColumnToMain("PE_HeadrestFoldingTq" & CStr(hrfIndex + 1), tqValue)
+    End Sub
+
+    Private Sub SavePeHrfFinalTqToMain(ByVal slot As Integer, ByVal tqValue As String)
+        If slot < 0 OrElse slot >= MonitorbracketSlotCount Then Return
+        SavePeColumnToMain("PE_HeadrestFoldingFinalTq" & CStr(slot + 1), tqValue)
+    End Sub
+
     Private Sub SavePeWorkToMain()
         EnsureMonitorbracketTqLabels()
+        Dim mb1 As String, mb2 As String, mb3 As String, mb4 As String
+        If _usePeHeadrestFolding Then
+            mb1 = _hrfFinalTq(0)
+            mb2 = _hrfFinalTq(1)
+            mb3 = _hrfFinalTq(2)
+            mb4 = _hrfFinalTq(3)
+            If mb1 = "" Then mb1 = _dataMonitorbracketTq(0).Text
+            If mb2 = "" Then mb2 = _dataMonitorbracketTq(1).Text
+            If mb3 = "" Then mb3 = _dataMonitorbracketTq(2).Text
+            If mb4 = "" Then mb4 = _dataMonitorbracketTq(3).Text
+        Else
+            mb1 = _dataMonitorbracketTq(0).Text
+            mb2 = _dataMonitorbracketTq(1).Text
+            mb3 = _dataMonitorbracketTq(2).Text
+            mb4 = _dataMonitorbracketTq(3).Text
+        End If
         Try
             ConnectionOpenSQL()
             Dim sql As String = "UPDATE TABLE_MAIN SET " &
                 "PE_Date = '" & Format(Now, "yyyy-MM-dd") & "'," &
                 "PE_StartTime = '" & SqlEscape(StartTime) & "'," &
                 "PE_EndTime = '" & Format(Now, "HH:mm:ss") & "'," &
-                "PE_MonitorbracketTq1 = '" & SqlEscape(_dataMonitorbracketTq(0).Text) & "'," &
-                "PE_MonitorbracketTq2 = '" & SqlEscape(_dataMonitorbracketTq(1).Text) & "'," &
-                "PE_MonitorbracketTq3 = '" & SqlEscape(_dataMonitorbracketTq(2).Text) & "'," &
-                "PE_MonitorbracketTq4 = '" & SqlEscape(_dataMonitorbracketTq(3).Text) & "'," &
+                "PE_MonitorbracketTq1 = '" & SqlEscape(mb1) & "'," &
+                "PE_MonitorbracketTq2 = '" & SqlEscape(mb2) & "'," &
+                "PE_MonitorbracketTq3 = '" & SqlEscape(mb3) & "'," &
+                "PE_MonitorbracketTq4 = '" & SqlEscape(mb4) & "'," &
+                "PE_MonitorbracketPreTq1 = '" & SqlEscape(_mbPreTq(0)) & "'," &
+                "PE_MonitorbracketPreTq2 = '" & SqlEscape(_mbPreTq(1)) & "'," &
+                "PE_MonitorbracketPreTq3 = '" & SqlEscape(_mbPreTq(2)) & "'," &
+                "PE_MonitorbracketPreTq4 = '" & SqlEscape(_mbPreTq(3)) & "'," &
+                "PE_HeadrestFoldingTq1 = '" & SqlEscape(_hrfTq(0)) & "'," &
+                "PE_HeadrestFoldingTq2 = '" & SqlEscape(_hrfTq(1)) & "'," &
+                "PE_HeadrestFoldingFinalTq1 = '" & SqlEscape(_hrfFinalTq(0)) & "'," &
+                "PE_HeadrestFoldingFinalTq2 = '" & SqlEscape(_hrfFinalTq(1)) & "'," &
+                "PE_HeadrestFoldingFinalTq3 = '" & SqlEscape(_hrfFinalTq(2)) & "'," &
+                "PE_HeadrestFoldingFinalTq4 = '" & SqlEscape(_hrfFinalTq(3)) & "'," &
                 "PE_Decision = 'OK' " &
                 "WHERE SerialNo = '" & SqlEscape(srcLbSerial.Text) & "'"
             SqlConnect.Execute(sql)
@@ -370,29 +901,54 @@ Public Class FrmMain
         End Try
     End Sub
 
-    Private Sub ApplyMonitorbracketTqResult(ByVal slot As Integer, ByVal torqueNm As Double, ByVal controllerOk As Boolean)
+    Private Sub ApplyPeTorqueResult(ByVal slot As Integer, ByVal torqueNm As Double, ByVal controllerOk As Boolean)
         If InvokeRequired Then
-            BeginInvoke(New Action(Of Integer, Double, Boolean)(AddressOf ApplyMonitorbracketTqResult), slot, torqueNm, controllerOk)
+            BeginInvoke(New Action(Of Integer, Double, Boolean)(AddressOf ApplyPeTorqueResult), slot, torqueNm, controllerOk)
             Return
         End If
 
         EnsureMonitorbracketTqLabels()
         Dim tqText As String = torqueNm.ToString("0.00")
-        Dim isOk As Boolean = controllerOk AndAlso torqueNm >= BasicToolMin AndAlso torqueNm <= BasicToolMax
+        Dim inRange As Boolean = torqueNm >= BasicToolMin AndAlso torqueNm <= BasicToolMax
         _dataMonitorbracketTq(slot).Text = tqText
+
+        If _peTorquePhase = PeTorquePhase.MbPre Then
+            _mbPreTq(slot) = tqText
+            _decMonitorbracketTq(slot).Text = "PRE"
+            _decMonitorbracketTq(slot).BackColor = Color.DimGray
+            SavePeMonitorbracketPreTqToMain(slot, tqText)
+            WriteTxtMessage("[SEQ] MB 가체결 " & CStr(slot + 1) & " = " & tqText & " PRE (최종 OK 아님)")
+            Return
+        End If
+
+        Dim isOk As Boolean = controllerOk AndAlso inRange
         If isOk Then
             _decMonitorbracketTq(slot).Text = "OK"
             _decMonitorbracketTq(slot).BackColor = Color.Blue
-            SavePeMonitorbracketTqToMain(slot, tqText)
+            Select Case _peTorquePhase
+                Case PeTorquePhase.HrfInitial
+                    _hrfTq(slot - HrfSlotStart) = tqText
+                    SavePeHrfTqToMain(slot - HrfSlotStart, tqText)
+                    WriteTxtMessage("[SEQ] HRF T/Q " & CStr(slot - HrfSlotStart + 1) & " = " & tqText & " OK")
+                Case PeTorquePhase.HrfFinal
+                    _hrfFinalTq(slot) = tqText
+                    SavePeHrfFinalTqToMain(slot, tqText)
+                    WriteTxtMessage("[SEQ] HRF 정체결 " & CStr(slot + 1) & " = " & tqText & " OK")
+                Case Else
+                    SavePeMonitorbracketTqToMain(slot, tqText)
+                    WriteTxtMessage("[SEQ] MB 정체결 " & CStr(slot + 1) & " = " & tqText & " OK")
+            End Select
             PlayOkSound()
-            WriteTxtMessage("[T/Q] 모니터브라켓 T/Q " & CStr(slot + 1) & " = " & tqText & " OK")
         Else
             _decMonitorbracketTq(slot).Text = "NG"
             _decMonitorbracketTq(slot).BackColor = Color.Red
-            SavePeMonitorbracketTqToMain(slot, tqText)
+            WriteTxtMessage("[SEQ] T/Q " & CStr(slot + 1) & " = " & tqText & " NG")
             PlayNgSound()
-            WriteTxtMessage("[T/Q] 모니터브라켓 T/Q " & CStr(slot + 1) & " = " & tqText & " NG")
         End If
+    End Sub
+
+    Private Sub ApplyMonitorbracketTqResult(ByVal slot As Integer, ByVal torqueNm As Double, ByVal controllerOk As Boolean)
+        ApplyPeTorqueResult(slot, torqueNm, controllerOk)
     End Sub
 
     Private Sub InitControl()
@@ -406,11 +962,10 @@ Public Class FrmMain
         srcLbSerial.Text = ""
 
         _usePeMonitorbracketTq = False
+        _usePeHeadrestFolding = False
+        ClearPeTorqueWorkBuffers()
         ResetAllMonitorbracketTq()
-
-        srclbDataTool.Text = ""
-        srclbDecTool.Text = ""
-        srclbDecTool.BackColor = Color.Black
+        ResetAirToolRow(True)
 
         _peStartWait = PeStartWait.None
         _partScannedReady = False
@@ -421,20 +976,18 @@ Public Class FrmMain
     Private Sub InitJudgmentOnly()
 
         _peStartWait = PeStartWait.None
+        ClearPeTorqueWorkBuffers()
+        _peTorquePhase = If(_usePeHeadrestFolding, PeTorquePhase.MbPre, PeTorquePhase.MbFinal)
+        UpdatePeTorqueHeaders()
 
-        For i As Integer = 0 To MonitorbracketTqCount - 1
-            ResetMonitorbracketTqRow(i, IsPeMonitorbracketTqNa())
+        For i As Integer = 0 To MonitorbracketSlotCount - 1
+            ResetPeTorqueRow(i, IsPeMonitorbracketTqNa())
+        Next
+        For i As Integer = HrfSlotStart To PeTorqueSlotCount - 1
+            ResetPeTorqueRow(i, Not _usePeHeadrestFolding)
         Next
 
-        If PeNeedsAirTool() Then
-            srclbDataTool.Text = ""
-            srclbDecTool.Text = ""
-            srclbDecTool.BackColor = Color.Black
-        Else
-            srclbDataTool.Text = "NA"
-            srclbDecTool.Text = "NA"
-            srclbDecTool.BackColor = Color.Green
-        End If
+        ResetAirToolRow(Not PeNeedsAirTool())
 
     End Sub
 
@@ -510,6 +1063,22 @@ Public Class FrmMain
 
         Dim partOptionType As String = Trim(CStr(Rs.Fields("OptionType").Value))
 
+        Try
+            If Not ReadDbUseFlag(Rs.Fields("Use_PE_Line").Value) Then
+                faultMessage = "PE 라인 전용 품번 아님 (Use_PE_Line=1 필요) — " & str
+                Rs.ActiveConnection = Nothing
+                Rs.Close()
+                ConnectionCloseSQL()
+                Return False
+            End If
+        Catch
+            faultMessage = "Use_PE_Line 컬럼 없음 — SQL Migrate-PE-Line.sql 실행 필요 — " & str
+            Rs.ActiveConnection = Nothing
+            Rs.Close()
+            ConnectionCloseSQL()
+            Return False
+        End Try
+
         srcLbPartName.Text = Trim(Rs.Fields("PartName").Value)
         LoadPicture(srcPictureBox, Mid(str, 1, 11))
 
@@ -523,7 +1092,15 @@ Public Class FrmMain
         srcLbPartNo.Text = Trim(CStr(Rs.Fields("PartNo").Value))
         TargetToolNum = CInt(Val(Trim(CStr(Rs.Fields("Target_PE_ToolNum").Value))))
         _usePeMonitorbracketTq = ReadDbUseFlag(Rs.Fields("Use_PE_MonitorbracketTq").Value)
-        UpdateMonitorbracketTqHeader()
+        _usePeHeadrestFolding = False
+        Try
+            _usePeHeadrestFolding = ReadDbUseFlag(Rs.Fields("Use_PE_HeadrestFolding").Value)
+        Catch
+            WriteTxtMessage("[DB] Use_PE_HeadrestFolding 컬럼 없음 — 일반 PE 시퀀스 (Migrate-PE-HeadrestFolding.sql)")
+        End Try
+        UpdatePeTorqueHeaders()
+        WriteTxtMessage("[SEQ] 품번 로드 — HRF=" & If(_usePeHeadrestFolding, "1", "0") &
+            " MB T/Q=" & If(_usePeMonitorbracketTq, "1", "0") & " Tool=" & CStr(TargetToolNum))
 
         Rs.ActiveConnection = Nothing
         Rs.Close()
@@ -783,13 +1360,12 @@ Public Class FrmMain
 
     ''' <summary>스캔 품번 → DB 로드·화면 표시 (wStep 0, Start 전 확인용)</summary>
     Private Sub ApplyPartPreviewTargets()
+        RefreshAirToolTargetLabel()
         If PeNeedsAirTool() Then
-            srclbTargetTool.Text = CStr(TargetToolNum)
-            srclbDataTool.Text = ""
+            srclbDataTool.Text = "0/" & CStr(PeAirToolPulseTarget)
             srclbDecTool.Text = ""
             srclbDecTool.BackColor = Color.Black
         Else
-            srclbTargetTool.Text = "NA"
             srclbDataTool.Text = "NA"
             srclbDecTool.Text = "NA"
             srclbDecTool.BackColor = Color.Green
@@ -952,8 +1528,8 @@ Public Class FrmMain
             LoadBasicData()
             WriteTxtMessage("[CFG] 토크 " & BasicToolMin & "~" & BasicToolMax & " " & BAsicUnit &
                 " | Atlas T1=" & AtlasTool1Ip & " T2=" & AtlasTool2Ip)
-            EnsureMonitorbracketTqLabels()
-            UpdateMonitorbracketTqHeader()
+            EnsurePeTorqueUi()
+            UpdatePeTorqueHeaders()
             LoadALarmMessage()
             InitControl()
             WriteTxtMessage("Init Complete")
@@ -974,10 +1550,7 @@ Public Class FrmMain
         InitializeIoDevices()     ' FBEI I/O 연결
         AddHandler JigClampSequence.JigLog, AddressOf OnJigClampLog
         JigClampSequence.EnableAllMotionSensors()
-        ' 1번 지그 클램프·언클램프 센서 미동작 — IN:05/06 위치확인 우회(정비 후 SetSensorRequired(5/6, True))
-        JigClampSequence.SetSensorRequired(5, False)
-        JigClampSequence.SetSensorRequired(6, False)
-        WriteTxtMessage("[JIG] IN:05/06 센서 우회 — 1번 클램프·언클램프 위치확인 생략(3초 타이머)")
+        WriteTxtMessage("[JIG] 동작 센서 필수 — IN:05/06 포함 위치확인 활성")
         AddIoMenu()
         Label11.Text = IoInputIp
 
@@ -1108,10 +1681,10 @@ Public Class FrmMain
             Return
         End If
 
-        ' 지그 다운 (T/Q 완료 또는 클램프만+에어툴)
-        If (wStep = 3 OrElse wStep = 3.1) AndAlso _peStartWait = PeStartWait.JigDown Then
-            If wStep = 3 AndAlso Not AllMonitorbracketTqDone() Then
-                WriteTxtMessage("[IO] Start 무시 — 모니터브라켓 T/Q 미완료")
+        ' 지그 다운 (T/Q 완료 후)
+        If (wStep = 3 OrElse wStep = 3.0 OrElse wStep = 3.1) AndAlso _peStartWait = PeStartWait.JigDown Then
+            If (wStep = 3 OrElse wStep = 3.0) AndAlso Not AllCurrentTorquePhaseDone() Then
+                WriteTxtMessage("[SEQ] Start 무시 — T/Q 미완료 (wStep " & wStep & ")")
                 Return
             End If
             If Not JigClampSequence.IsJigAtUp(Ios) Then
@@ -1122,14 +1695,14 @@ Public Class FrmMain
             _peStartWait = PeStartWait.None
             JigClampSequence.BeginJigDown()
             wStep = 3.2
-            WriteTxtMessage("[IO] Start → 지그 다운 OUT:10 (wStep 3.2)")
+            WriteTxtMessage("[SEQ] Start → 지그 다운 OUT:10 (wStep 3.2)")
             Return
         End If
 
-        ' 지그 업 (에어툴 체결 후)
+        ' 지그 업 (에어툴 5회 체결 후)
         If wStep = 3.4 AndAlso _peStartWait = PeStartWait.JigUp Then
             If srclbDecTool.Text <> "OK" Then
-                WriteTxtMessage("[IO] Start 무시 — 에어툴 체결 미완료")
+                WriteTxtMessage("[SEQ] Start 무시 — 에어툴 " & PeAirToolPulseTarget & "회 미완료")
                 Return
             End If
             If Not JigClampSequence.IsJigAtDown(Ios) Then
@@ -1140,16 +1713,12 @@ Public Class FrmMain
             _peStartWait = PeStartWait.None
             JigClampSequence.BeginJigUp()
             wStep = 3.6
-            WriteTxtMessage("[IO] Start → 지그 업 OUT:11 (wStep 3.6)")
+            WriteTxtMessage("[SEQ] Start → 지그 업 OUT:11 (wStep 3.6)")
             Return
         End If
 
-        ' 언클램프 (T/Q만 또는 클램프만)
-        If (wStep = 3 OrElse wStep = 3.7) AndAlso _peStartWait = PeStartWait.Unclamp Then
-            If wStep = 3 AndAlso Not AllMonitorbracketTqDone() Then
-                WriteTxtMessage("[IO] Start 무시 — 모니터브라켓 T/Q 미완료")
-                Return
-            End If
+        ' 언클램프
+        If wStep = 3.7 AndAlso _peStartWait = PeStartWait.Unclamp Then
             BeginPeUnclamp()
             Return
         End If
@@ -1174,7 +1743,8 @@ Public Class FrmMain
         InitJudgmentOnly()
         HideEStopAlarm()
         StartTime = Format(Now, "HH:mm:ss")
-        WriteTxtMessage("[IO] Start → 제품 고정 OUT:00,02,06,08 (1·2번 핀+클램프 동시, wStep 2.3) — " & srcLbPartNo.Text)
+        WriteTxtMessage("[SEQ] Start → 제품 고정 (wStep 2.3) — " & srcLbPartNo.Text &
+            " HRF=" & If(_usePeHeadrestFolding, "1", "0"))
         wStep = 2.3
     End Sub
 
@@ -1223,20 +1793,43 @@ Public Class FrmMain
     Private Sub HandleJigIoResult(result As String, okStep As Double, faultMessage As String)
         If result = "COMPLETE" Then
             If okStep = 3.4 AndAlso Not JigClampSequence.IsJigAtDown(Ios) Then
-                WriteTxtMessage("[IO] 지그 다운 미확인 — IN:13 대기 (wStep 유지)")
+                WriteTxtMessage("[SEQ] 지그 다운 미확인 — IN:13 대기 (wStep 유지)")
                 Return
             End If
             If okStep = 3.8 AndAlso Not JigClampSequence.IsJigAtUp(Ios) Then
-                WriteTxtMessage("[IO] 지그 업 미확인 — IN:14 대기 (wStep 유지)")
+                WriteTxtMessage("[SEQ] 지그 업 미확인 — IN:14 대기 (wStep 유지)")
                 Return
             End If
             If okStep = 3 Then
                 RouteAfterClampComplete()
                 Return
             End If
+            If okStep = 3.4 Then
+                If _usePeHeadrestFolding Then
+                    wStep = 3.5
+                    BeginHrfInitialWork()
+                Else
+                    ResetAirToolRow(Not PeNeedsAirTool())
+                    wStep = 3.4
+                    If PeNeedsAirTool() Then
+                        WriteTxtMessage("[SEQ] 지그 다운 완료 → 에어툴 (wStep 3.4)")
+                    Else
+                        _peStartWait = PeStartWait.JigUp
+                        WriteTxtMessage("[SEQ] 지그 다운 완료 — 에어툴 N/A, Start 대기 (지그 업)")
+                    End If
+                End If
+                Return
+            End If
             wStep = okStep
             If okStep = 3.8 Then
-                BeginPeUnclamp()
+                If _usePeHeadrestFolding Then
+                    wStep = 2.7
+                    BeginJigRotateStep("지그업 후")
+                Else
+                    _peStartWait = PeStartWait.Unclamp
+                    wStep = 3.7
+                    WriteTxtMessage("[SEQ] 지그 업 완료 — Start 대기 (언클램프)")
+                End If
             End If
         ElseIf result = "FAULT" Then
             Dim faultText As String = If(faultMessage <> "", faultMessage, "센서 및 지그 이상")
@@ -1254,30 +1847,47 @@ Public Class FrmMain
         End If
     End Sub
 
+    Private Function IsAtPeTorqueWorkStep() As Boolean
+        Return wStep = 3 OrElse wStep = 3.0 OrElse wStep = 3.5 OrElse wStep = 3.55
+    End Function
+
     Private Function IsAtMonitorbracketTqWorkStep() As Boolean
-        Return wStep >= 2.99 AndAlso wStep <= 3.01
+        Return IsAtPeTorqueWorkStep()
     End Function
 
     Private Function IsAtAirToolWorkStep() As Boolean
         Return wStep >= 3.39 AndAlso wStep <= 3.41
     End Function
 
-    Private Function TryApplyMonitorbracketTq(ByVal torqueNm As Double, ByVal controllerOk As Boolean, ByVal source As String) As Boolean
-        If Not IsAtMonitorbracketTqWorkStep() Then
-            WriteTxtMessage("[" & source & "] T/Q 무시 — wStep " & wStep & " (모니터브라켓 T/Q는 wStep 3)")
+    Private Function TryApplyPeTorque(ByVal torqueNm As Double, ByVal controllerOk As Boolean, ByVal source As String) As Boolean
+        If Not IsAtPeTorqueWorkStep() Then
+            WriteTxtMessage("[" & source & "] T/Q 무시 — wStep " & wStep)
             Return False
         End If
-        If IsPeMonitorbracketTqNa() Then
-            WriteTxtMessage("[" & source & "] T/Q 무시 — Use_PE_MonitorbracketTq N/A 품번")
-            Return False
+        Select Case wStep
+            Case 3.0 : _peTorquePhase = PeTorquePhase.MbPre
+            Case 3 : _peTorquePhase = PeTorquePhase.MbFinal
+            Case 3.5 : _peTorquePhase = PeTorquePhase.HrfInitial
+            Case 3.55 : _peTorquePhase = PeTorquePhase.HrfFinal
+        End Select
+        If wStep = 3 OrElse wStep = 3.0 Then
+            If IsPeMonitorbracketTqNa() Then
+                WriteTxtMessage("[" & source & "] T/Q 무시 — Use_PE_MonitorbracketTq N/A")
+                Return False
+            End If
         End If
-        Dim slot As Integer = GetNextMonitorbracketTqSlot()
+        If wStep = 3.5 AndAlso Not _usePeHeadrestFolding Then Return False
+        Dim slot As Integer = GetNextPeTorqueSlot()
         If slot < 0 Then
-            WriteTxtMessage("[" & source & "] T/Q 무시 — 4회 체결 완료")
+            WriteTxtMessage("[" & source & "] T/Q 무시 — 현재 단계 체결 완료")
             Return False
         End If
-        ApplyMonitorbracketTqResult(slot, torqueNm, controllerOk)
+        ApplyPeTorqueResult(slot, torqueNm, controllerOk)
         Return True
+    End Function
+
+    Private Function TryApplyMonitorbracketTq(ByVal torqueNm As Double, ByVal controllerOk As Boolean, ByVal source As String) As Boolean
+        Return TryApplyPeTorque(torqueNm, controllerOk, source)
     End Function
 
     Private Sub TryApplyAirTool(ByVal toolNo As Integer, ByVal source As String)
@@ -1313,20 +1923,25 @@ Public Class FrmMain
         End If
     End Sub
 
-    ''' <summary>에어툴 체결 OK — 1회만 인정 (wStep 3.4)</summary>
+    ''' <summary>에어툴 체결 — 5회 펄스 인정 (wStep 3.4)</summary>
     Private Sub ApplyAirToolOk(Optional ByVal toolDisplay As String = "")
         If srclbDecTool.Text = "OK" Then Exit Sub
 
+        _ioToolPulseCount += 1
         Dim display As String = Trim(If(toolDisplay, ""))
         If display = "" Then
             display = If(TargetToolNum > 0, CStr(TargetToolNum), "1")
         End If
 
-        srclbDataTool.Text = display
+        srclbDataTool.Text = _ioToolPulseCount & "/" & CStr(PeAirToolPulseTarget) & " (" & display & ")"
+        WriteTxtMessage("[SEQ] 에어툴 펄스 " & _ioToolPulseCount & "/" & PeAirToolPulseTarget)
+
+        If _ioToolPulseCount < PeAirToolPulseTarget Then Exit Sub
+
         srclbDecTool.Text = "OK"
         srclbDecTool.BackColor = Color.Blue
         PlayOkSound()
-        WriteTxtMessage("[IO] 에어툴 체결 OK — " & display)
+        WriteTxtMessage("[SEQ] 에어툴 " & PeAirToolPulseTarget & "회 체결 OK — " & display)
     End Sub
 
     Private Function IsAirToolTargetMatch(ByVal toolNo As Integer) As Boolean
@@ -1770,7 +2385,7 @@ Public Class FrmMain
 
     Private Sub Tmr_Work_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Tmr_Work.Tick
 
-        srclbStep.Text = wStep
+        UpdateStepTraceLabels()
 
         ' Reset 원위치 복귀 (비상정지 중에도 Reset 가능)
         If wStep = 0.1 Then
@@ -1785,51 +2400,64 @@ Public Class FrmMain
 
         ElseIf wStep = 2.3 Then
             If Ios Is Nothing OrElse Not IoConnected Then
-                WriteTxtMessage("[IO] 제품 고정 대기 — FBEI 미연결")
+                WriteTxtMessage("[SEQ] 제품 고정 대기 — FBEI 미연결")
                 Exit Sub
             End If
             JigClampSequence.BeginClamp()
             wStep = 2.4
 
         ElseIf wStep = 2.4 Then
-            ' 제품 고정: 1·2번 핀전진+클램프 동시 → IN:03,05,09,11
             HandleJigIoResult(JigClampSequence.Tick(Ios), 3, "제품 고정")
 
-        ElseIf wStep = 3 Then
-            ' 모니터브라켓 T/Q 4회 — 완료 후 RouteAfterTqComplete
-            If AllMonitorbracketTqDone() AndAlso _peStartWait = PeStartWait.None Then
-                RouteAfterTqComplete()
+        ElseIf wStep = 2.5 OrElse wStep = 2.6 OrElse wStep = 2.7 OrElse wStep = 2.8 Then
+            Dim rotResult As String = JigClampSequence.Tick(Ios)
+            If rotResult = "COMPLETE" Then
+                RouteAfterJigRotate(wStep)
+            ElseIf rotResult = "FAULT" Then
+                WriteTxtMessage("[SEQ] 지그 회전 이상 — Reset 후 재시도")
+                NG()
+            End If
+
+        ElseIf wStep = 3 OrElse wStep = 3.0 Then
+            If AllCurrentTorquePhaseDone() AndAlso _peStartWait = PeStartWait.None Then
+                RouteAfterMbTorquePhase()
             End If
 
         ElseIf wStep = 3.1 OrElse wStep = 3.7 Then
             ' Start 대기 (지그 다운 / 언클램프)
 
         ElseIf wStep = 3.2 Then
-            ' 지그 다운: OUT:10 → IN:13
             HandleJigIoResult(JigClampSequence.Tick(Ios), 3.4, "지그 다운")
 
+        ElseIf wStep = 3.5 Then
+            If AllCurrentTorquePhaseDone() AndAlso _peStartWait = PeStartWait.None Then
+                RouteAfterHrfInitial()
+            End If
+
         ElseIf wStep = 3.4 Then
-            ' 지그 다운 유지 + 에어툴 IN:31 / Atlas
             If Not JigClampSequence.IsJigAtDown(Ios) Then
-                WriteTxtMessage("[IO] 지그 다운 이탈 — IN:13/14 확인 후 Reset")
+                WriteTxtMessage("[SEQ] 지그 다운 이탈 — IN:13/14 확인 후 Reset")
                 _peStartWait = PeStartWait.None
                 Exit Sub
             End If
 
             If srclbDecTool.Text = "OK" AndAlso _peStartWait = PeStartWait.None Then
                 _peStartWait = PeStartWait.JigUp
-                WriteTxtMessage("[IO] 에어툴 OK — Start 대기 (지그 업)")
+                WriteTxtMessage("[SEQ] 에어툴 OK — Start 대기 (지그 업)")
+            End If
+
+        ElseIf wStep = 3.55 Then
+            If AllCurrentTorquePhaseDone() AndAlso _peStartWait = PeStartWait.None Then
+                RouteAfterHrfFinal()
             End If
 
         ElseIf wStep = 3.6 Then
-            ' 지그 업: OUT:11 → IN:14
             HandleJigIoResult(JigClampSequence.Tick(Ios), 3.8, "지그 업")
 
         ElseIf wStep = 3.8 Then
-            ' 지그 업 확인 후 해제 (HandleJigIoResult에서 BeginPeUnclamp)
+            ' HandleJigIoResult에서 분기
 
         ElseIf wStep = 3.9 Then
-            ' 제품 해제: 1·2번 언클램프→핀후진
             HandleJigIoResult(JigClampSequence.Tick(Ios), 4, "제품 해제")
 
         ElseIf wStep = 4 Then
@@ -1840,7 +2468,7 @@ Public Class FrmMain
             InitControl()
             wStep = 0
             HideEStopAlarm()
-            WriteTxtMessage("[IO] PE 작업 완료 — wStep 0")
+            WriteTxtMessage("[SEQ] PE 작업 완료 — wStep 0")
 
         End If
 

@@ -66,6 +66,13 @@ Module Module1
     Public BasicRearTolFOLD As Double
     Public basicFrtTolFOLD As Double
 
+    Public BasicFrtMin_PE As Double
+    Public BasicFrtMax_PE As Double
+    Public BasicRearMin_PE As Double
+    Public BasicRearMax_PE As Double
+    Public basicFrtTolPE As Double
+    Public BasicRearTolPE As Double
+
     Public Class HiResTimer
 
         Private isPerfCounterSupported As Boolean = False
@@ -241,6 +248,23 @@ Module Module1
         End Try
     End Function
 
+    Private Function TryReadDoubleField(Rs As ADODB.Recordset, fieldName As String, defaultValue As Double) As Double
+        Try
+            Dim raw As Object = Rs.Fields(fieldName).Value
+            If IsDBNull(raw) Then Return defaultValue
+            Return CDbl(raw)
+        Catch
+            Return defaultValue
+        End Try
+    End Function
+
+    Private Sub TryWriteDoubleField(Rs As ADODB.Recordset, fieldName As String, value As Double)
+        Try
+            Rs.Fields(fieldName).Value = value
+        Catch
+        End Try
+    End Sub
+
     Private Sub ReadBasicFromRecordset(Rs As ADODB.Recordset)
         BAsicFrtMin_STDLH = CDbl(Rs.Fields("FrtMin_STDLH").Value)
         BAsicFrtMax_STDLH = CDbl(Rs.Fields("FrtMax_STDLH").Value)
@@ -265,6 +289,13 @@ Module Module1
 
         BasicRearTolFOLD = CDbl(Rs.Fields("RearTolFOLD").Value)
         basicFrtTolFOLD = CDbl(Rs.Fields("FrtTolFOLD").Value)
+
+        BasicFrtMin_PE = TryReadDoubleField(Rs, "FrtMin_PE", BAsicFrtMin_STDLH)
+        BasicFrtMax_PE = TryReadDoubleField(Rs, "FrtMax_PE", BAsicFrtMax_STDLH)
+        BasicRearMin_PE = TryReadDoubleField(Rs, "RearMin_PE", BAsicRearMin_STDLH)
+        BasicRearMax_PE = TryReadDoubleField(Rs, "RearMax_PE", BAsicRearMax_STDLH)
+        basicFrtTolPE = TryReadDoubleField(Rs, "FrtTolPE", basicFrtTolSTD)
+        BasicRearTolPE = TryReadDoubleField(Rs, "RearTolPE", BasicRearTolSTD)
 
         FlagDuplicate = Rs.Fields("FlagDuplicate").Value
         FlagBeforeCheck = Rs.Fields("FlagBeforeCheck").Value
@@ -292,6 +323,13 @@ Module Module1
         Rs.Fields("FrtTolSTD").Value = basicFrtTolSTD
         Rs.Fields("RearTolFOLD").Value = BasicRearTolFOLD
         Rs.Fields("FrtTolFOLD").Value = basicFrtTolFOLD
+
+        TryWriteDoubleField(Rs, "FrtMin_PE", BasicFrtMin_PE)
+        TryWriteDoubleField(Rs, "FrtMax_PE", BasicFrtMax_PE)
+        TryWriteDoubleField(Rs, "RearMin_PE", BasicRearMin_PE)
+        TryWriteDoubleField(Rs, "RearMax_PE", BasicRearMax_PE)
+        TryWriteDoubleField(Rs, "FrtTolPE", basicFrtTolPE)
+        TryWriteDoubleField(Rs, "RearTolPE", BasicRearTolPE)
 
         Rs.Fields("FlagDuplicate").Value = FlagDuplicate
         Rs.Fields("FlagBeforeCheck").Value = FlagBeforeCheck

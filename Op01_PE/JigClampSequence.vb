@@ -40,6 +40,7 @@ Module JigClampSequence
         Homing
         JigDown
         JigUp
+        JigRotate
     End Enum
 
     Private Enum SeqPhase
@@ -203,6 +204,29 @@ Module JigClampSequence
         End Get
     End Property
 
+    ''' <summary>Reset 호밍 단계 (시스템 정보 rStep 표시용)</summary>
+    Public ReadOnly Property CurrentHomingStage As String
+        Get
+            Select Case _homingStage
+                Case HomingStage.JigLift : Return "지그업"
+                Case HomingStage.Jig1Release : Return "1번해제"
+                Case HomingStage.Jig2Release : Return "2번해제"
+                Case HomingStage.Verify : Return "원위치확인"
+                Case Else : Return "-"
+            End Select
+        End Get
+    End Property
+
+    ''' <summary>지그 회전 — I/O 미연동 시 즉시 COMPLETE (추후 OUT:04/05·IN:07/08 연결)</summary>
+    Public Sub BeginJigRotate()
+        EnsureSensorConfig()
+        _mode = SeqMode.JigRotate
+        _phase = SeqPhase.None
+        _ticks = 0
+        _phaseTicks = 0
+        WriteJigLog(0, "지그 회전 대기 (I/O 추후 연동 — placeholder)")
+    End Sub
+
     Public Sub BeginClamp()
         EnsureSensorConfig()
         _mode = SeqMode.Clamp
@@ -268,6 +292,8 @@ Module JigClampSequence
                 TickJigDown(ios)
             Case SeqMode.JigUp
                 TickJigUp(ios)
+            Case SeqMode.JigRotate
+                TickJigRotate(ios)
         End Select
 
         If _phase = SeqPhase.Done Then
@@ -419,6 +445,14 @@ Module JigClampSequence
                 Dim rd As Integer = TickWaitForPosition(ios, InJigDown, True, "지그 다운", OutJigDown, 0, InJigUp, False)
                 If rd = 1 Then _phase = SeqPhase.Done
         End Select
+    End Sub
+
+    Private Sub TickJigRotate(ios As FbeiIoClient)
+        _phaseTicks += 1
+        If _phaseTicks = 1 Then
+            WriteJigLog(0, "지그 회전 placeholder 완료 (실 I/O 미구동)")
+            _phase = SeqPhase.Done
+        End If
     End Sub
 
     Private Sub TickJigUp(ios As FbeiIoClient)

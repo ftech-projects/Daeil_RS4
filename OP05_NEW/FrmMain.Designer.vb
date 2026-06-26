@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FrmMain
     Inherits System.Windows.Forms.Form
 
@@ -137,6 +137,8 @@ Partial Class FrmMain
         Me.Label26 = New System.Windows.Forms.Label()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Label28 = New System.Windows.Forms.Label()
+        Me.LabelPe01 = New System.Windows.Forms.Label()
+        Me.srcLbCheckPe01 = New System.Windows.Forms.Label()
         Me.srcLbCheckNoiseTest = New System.Windows.Forms.Label()
         Me.srcLbCheckVip = New System.Windows.Forms.Label()
         Me.srcLbCheck2_2 = New System.Windows.Forms.Label()
@@ -1126,6 +1128,7 @@ Partial Class FrmMain
         Me.srclbDecRivet.Size = New System.Drawing.Size(99, 48)
         Me.srclbDecRivet.TabIndex = 151
         Me.srclbDecRivet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.srclbDecRivet.Visible = False
         '
         'srclbDataRivet
         '
@@ -1138,6 +1141,7 @@ Partial Class FrmMain
         Me.srclbDataRivet.Size = New System.Drawing.Size(385, 48)
         Me.srclbDataRivet.TabIndex = 150
         Me.srclbDataRivet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.srclbDataRivet.Visible = False
         '
         'srclbTargetRivet
         '
@@ -1150,6 +1154,7 @@ Partial Class FrmMain
         Me.srclbTargetRivet.Size = New System.Drawing.Size(484, 48)
         Me.srclbTargetRivet.TabIndex = 149
         Me.srclbTargetRivet.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.srclbTargetRivet.Visible = False
         '
         'Label14
         '
@@ -1163,6 +1168,7 @@ Partial Class FrmMain
         Me.Label14.TabIndex = 148
         Me.Label14.Text = "TOTAL"
         Me.Label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label14.Visible = False
         '
         'Label15
         '
@@ -1176,6 +1182,7 @@ Partial Class FrmMain
         Me.Label15.TabIndex = 147
         Me.Label15.Text = "리벳"
         Me.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label15.Visible = False
         '
         'Label16
         '
@@ -1189,6 +1196,7 @@ Partial Class FrmMain
         Me.Label16.TabIndex = 146
         Me.Label16.Text = "체결"
         Me.Label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Label16.Visible = False
         '
         'srcPictureBox
         '
@@ -1258,7 +1266,7 @@ Partial Class FrmMain
         Me.Label17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label17.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
         Me.Label17.ForeColor = System.Drawing.Color.White
-        Me.Label17.Location = New System.Drawing.Point(760, 816)
+        Me.Label17.Location = New System.Drawing.Point(760, 720)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(143, 144)
         Me.Label17.TabIndex = 157
@@ -1271,7 +1279,7 @@ Partial Class FrmMain
         Me.Label18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label18.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label18.ForeColor = System.Drawing.Color.White
-        Me.Label18.Location = New System.Drawing.Point(903, 816)
+        Me.Label18.Location = New System.Drawing.Point(903, 720)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(106, 48)
         Me.Label18.TabIndex = 158
@@ -1284,7 +1292,7 @@ Partial Class FrmMain
         Me.Label19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label19.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.Label19.ForeColor = System.Drawing.Color.White
-        Me.Label19.Location = New System.Drawing.Point(1394, 816)
+        Me.Label19.Location = New System.Drawing.Point(1394, 720)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(99, 48)
         Me.Label19.TabIndex = 160
@@ -1297,7 +1305,7 @@ Partial Class FrmMain
         Me.srclbSpecLengthTest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbSpecLengthTest.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbSpecLengthTest.ForeColor = System.Drawing.Color.White
-        Me.srclbSpecLengthTest.Location = New System.Drawing.Point(1009, 816)
+        Me.srclbSpecLengthTest.Location = New System.Drawing.Point(1009, 720)
         Me.srclbSpecLengthTest.Name = "srclbSpecLengthTest"
         Me.srclbSpecLengthTest.Size = New System.Drawing.Size(385, 48)
         Me.srclbSpecLengthTest.TabIndex = 159
@@ -1309,7 +1317,7 @@ Partial Class FrmMain
         Me.Label24.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label24.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label24.ForeColor = System.Drawing.Color.White
-        Me.Label24.Location = New System.Drawing.Point(903, 864)
+        Me.Label24.Location = New System.Drawing.Point(903, 768)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(106, 48)
         Me.Label24.TabIndex = 161
@@ -1322,7 +1330,7 @@ Partial Class FrmMain
         Me.Label25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label25.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label25.ForeColor = System.Drawing.Color.White
-        Me.Label25.Location = New System.Drawing.Point(903, 912)
+        Me.Label25.Location = New System.Drawing.Point(903, 816)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(106, 48)
         Me.Label25.TabIndex = 162
@@ -1335,7 +1343,7 @@ Partial Class FrmMain
         Me.srclbDecLengthTestFrt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbDecLengthTestFrt.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbDecLengthTestFrt.ForeColor = System.Drawing.Color.White
-        Me.srclbDecLengthTestFrt.Location = New System.Drawing.Point(1394, 864)
+        Me.srclbDecLengthTestFrt.Location = New System.Drawing.Point(1394, 768)
         Me.srclbDecLengthTestFrt.Name = "srclbDecLengthTestFrt"
         Me.srclbDecLengthTestFrt.Size = New System.Drawing.Size(99, 48)
         Me.srclbDecLengthTestFrt.TabIndex = 164
@@ -1347,7 +1355,7 @@ Partial Class FrmMain
         Me.srclbDataLengthTestFrt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbDataLengthTestFrt.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbDataLengthTestFrt.ForeColor = System.Drawing.Color.White
-        Me.srclbDataLengthTestFrt.Location = New System.Drawing.Point(1009, 864)
+        Me.srclbDataLengthTestFrt.Location = New System.Drawing.Point(1009, 768)
         Me.srclbDataLengthTestFrt.Name = "srclbDataLengthTestFrt"
         Me.srclbDataLengthTestFrt.Size = New System.Drawing.Size(385, 48)
         Me.srclbDataLengthTestFrt.TabIndex = 163
@@ -1359,7 +1367,7 @@ Partial Class FrmMain
         Me.srclbDecLengthTestRear.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbDecLengthTestRear.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbDecLengthTestRear.ForeColor = System.Drawing.Color.White
-        Me.srclbDecLengthTestRear.Location = New System.Drawing.Point(1394, 912)
+        Me.srclbDecLengthTestRear.Location = New System.Drawing.Point(1394, 816)
         Me.srclbDecLengthTestRear.Name = "srclbDecLengthTestRear"
         Me.srclbDecLengthTestRear.Size = New System.Drawing.Size(99, 48)
         Me.srclbDecLengthTestRear.TabIndex = 166
@@ -1371,7 +1379,7 @@ Partial Class FrmMain
         Me.srclbDataLengthTestRear.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srclbDataLengthTestRear.Font = New System.Drawing.Font("Arial Narrow", 24.0!, System.Drawing.FontStyle.Bold)
         Me.srclbDataLengthTestRear.ForeColor = System.Drawing.Color.White
-        Me.srclbDataLengthTestRear.Location = New System.Drawing.Point(1009, 912)
+        Me.srclbDataLengthTestRear.Location = New System.Drawing.Point(1009, 816)
         Me.srclbDataLengthTestRear.Name = "srclbDataLengthTestRear"
         Me.srclbDataLengthTestRear.Size = New System.Drawing.Size(385, 48)
         Me.srclbDataLengthTestRear.TabIndex = 165
@@ -1448,7 +1456,7 @@ Partial Class FrmMain
         Me.Label9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label9.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
         Me.Label9.ForeColor = System.Drawing.Color.White
-        Me.Label9.Location = New System.Drawing.Point(760, 960)
+        Me.Label9.Location = New System.Drawing.Point(760, 864)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(143, 85)
         Me.Label9.TabIndex = 174
@@ -1461,9 +1469,9 @@ Partial Class FrmMain
         Me.Label12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label12.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label12.ForeColor = System.Drawing.Color.White
-        Me.Label12.Location = New System.Drawing.Point(903, 960)
+        Me.Label12.Location = New System.Drawing.Point(903, 864)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(118, 43)
+        Me.Label12.Size = New System.Drawing.Size(98, 43)
         Me.Label12.TabIndex = 175
         Me.Label12.Text = "1공정"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1472,11 +1480,11 @@ Partial Class FrmMain
         '
         Me.Label13.BackColor = System.Drawing.Color.Black
         Me.Label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label13.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.Label13.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
         Me.Label13.ForeColor = System.Drawing.Color.White
-        Me.Label13.Location = New System.Drawing.Point(1021, 960)
+        Me.Label13.Location = New System.Drawing.Point(1099, 864)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(118, 43)
+        Me.Label13.Size = New System.Drawing.Size(98, 43)
         Me.Label13.TabIndex = 176
         Me.Label13.Text = "2-1 공정"
         Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1485,11 +1493,11 @@ Partial Class FrmMain
         '
         Me.Label26.BackColor = System.Drawing.Color.Black
         Me.Label26.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Label26.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.Label26.Font = New System.Drawing.Font("Arial Narrow", 14.0!, System.Drawing.FontStyle.Bold)
         Me.Label26.ForeColor = System.Drawing.Color.White
-        Me.Label26.Location = New System.Drawing.Point(1139, 960)
+        Me.Label26.Location = New System.Drawing.Point(1197, 864)
         Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(118, 43)
+        Me.Label26.Size = New System.Drawing.Size(98, 43)
         Me.Label26.TabIndex = 177
         Me.Label26.Text = "2-2 공정"
         Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1500,9 +1508,9 @@ Partial Class FrmMain
         Me.Label27.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label27.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label27.ForeColor = System.Drawing.Color.White
-        Me.Label27.Location = New System.Drawing.Point(1257, 960)
+        Me.Label27.Location = New System.Drawing.Point(1295, 864)
         Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(118, 43)
+        Me.Label27.Size = New System.Drawing.Size(98, 43)
         Me.Label27.TabIndex = 178
         Me.Label27.Text = "VIP"
         Me.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1513,12 +1521,38 @@ Partial Class FrmMain
         Me.Label28.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label28.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Label28.ForeColor = System.Drawing.Color.White
-        Me.Label28.Location = New System.Drawing.Point(1375, 960)
+        Me.Label28.Location = New System.Drawing.Point(1393, 864)
         Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(118, 43)
+        Me.Label28.Size = New System.Drawing.Size(98, 43)
         Me.Label28.TabIndex = 179
         Me.Label28.Text = "방음실"
         Me.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'LabelPe01
+        '
+        Me.LabelPe01.BackColor = System.Drawing.Color.Black
+        Me.LabelPe01.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.LabelPe01.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.LabelPe01.ForeColor = System.Drawing.Color.White
+        Me.LabelPe01.Location = New System.Drawing.Point(1001, 864)
+        Me.LabelPe01.Name = "LabelPe01"
+        Me.LabelPe01.Size = New System.Drawing.Size(98, 43)
+        Me.LabelPe01.TabIndex = 185
+        Me.LabelPe01.Text = "pe01"
+        Me.LabelPe01.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'srcLbCheckPe01
+        '
+        Me.srcLbCheckPe01.BackColor = System.Drawing.Color.Black
+        Me.srcLbCheckPe01.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.srcLbCheckPe01.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.srcLbCheckPe01.ForeColor = System.Drawing.Color.White
+        Me.srcLbCheckPe01.Location = New System.Drawing.Point(1001, 907)
+        Me.srcLbCheckPe01.Name = "srcLbCheckPe01"
+        Me.srcLbCheckPe01.Size = New System.Drawing.Size(98, 43)
+        Me.srcLbCheckPe01.TabIndex = 186
+        Me.srcLbCheckPe01.Text = "REAR"
+        Me.srcLbCheckPe01.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'srcLbCheckNoiseTest
         '
@@ -1526,9 +1560,9 @@ Partial Class FrmMain
         Me.srcLbCheckNoiseTest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srcLbCheckNoiseTest.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.srcLbCheckNoiseTest.ForeColor = System.Drawing.Color.White
-        Me.srcLbCheckNoiseTest.Location = New System.Drawing.Point(1375, 1003)
+        Me.srcLbCheckNoiseTest.Location = New System.Drawing.Point(1393, 907)
         Me.srcLbCheckNoiseTest.Name = "srcLbCheckNoiseTest"
-        Me.srcLbCheckNoiseTest.Size = New System.Drawing.Size(118, 43)
+        Me.srcLbCheckNoiseTest.Size = New System.Drawing.Size(98, 43)
         Me.srcLbCheckNoiseTest.TabIndex = 184
         Me.srcLbCheckNoiseTest.Text = "REAR"
         Me.srcLbCheckNoiseTest.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1539,9 +1573,9 @@ Partial Class FrmMain
         Me.srcLbCheckVip.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srcLbCheckVip.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.srcLbCheckVip.ForeColor = System.Drawing.Color.White
-        Me.srcLbCheckVip.Location = New System.Drawing.Point(1257, 1003)
+        Me.srcLbCheckVip.Location = New System.Drawing.Point(1295, 907)
         Me.srcLbCheckVip.Name = "srcLbCheckVip"
-        Me.srcLbCheckVip.Size = New System.Drawing.Size(118, 43)
+        Me.srcLbCheckVip.Size = New System.Drawing.Size(98, 43)
         Me.srcLbCheckVip.TabIndex = 183
         Me.srcLbCheckVip.Text = "REAR"
         Me.srcLbCheckVip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1552,9 +1586,9 @@ Partial Class FrmMain
         Me.srcLbCheck2_2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srcLbCheck2_2.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.srcLbCheck2_2.ForeColor = System.Drawing.Color.White
-        Me.srcLbCheck2_2.Location = New System.Drawing.Point(1139, 1003)
+        Me.srcLbCheck2_2.Location = New System.Drawing.Point(1197, 907)
         Me.srcLbCheck2_2.Name = "srcLbCheck2_2"
-        Me.srcLbCheck2_2.Size = New System.Drawing.Size(118, 43)
+        Me.srcLbCheck2_2.Size = New System.Drawing.Size(98, 43)
         Me.srcLbCheck2_2.TabIndex = 182
         Me.srcLbCheck2_2.Text = "REAR"
         Me.srcLbCheck2_2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1565,9 +1599,9 @@ Partial Class FrmMain
         Me.srcLbCheck2_1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srcLbCheck2_1.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.srcLbCheck2_1.ForeColor = System.Drawing.Color.White
-        Me.srcLbCheck2_1.Location = New System.Drawing.Point(1021, 1003)
+        Me.srcLbCheck2_1.Location = New System.Drawing.Point(1099, 907)
         Me.srcLbCheck2_1.Name = "srcLbCheck2_1"
-        Me.srcLbCheck2_1.Size = New System.Drawing.Size(118, 43)
+        Me.srcLbCheck2_1.Size = New System.Drawing.Size(98, 43)
         Me.srcLbCheck2_1.TabIndex = 181
         Me.srcLbCheck2_1.Text = "REAR"
         Me.srcLbCheck2_1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1578,9 +1612,9 @@ Partial Class FrmMain
         Me.srcLbCheck1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.srcLbCheck1.Font = New System.Drawing.Font("Arial Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.srcLbCheck1.ForeColor = System.Drawing.Color.White
-        Me.srcLbCheck1.Location = New System.Drawing.Point(903, 1003)
+        Me.srcLbCheck1.Location = New System.Drawing.Point(903, 907)
         Me.srcLbCheck1.Name = "srcLbCheck1"
-        Me.srcLbCheck1.Size = New System.Drawing.Size(118, 43)
+        Me.srcLbCheck1.Size = New System.Drawing.Size(98, 43)
         Me.srcLbCheck1.TabIndex = 180
         Me.srcLbCheck1.Text = "REAR"
         Me.srcLbCheck1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1786,6 +1820,8 @@ Partial Class FrmMain
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Panel11)
+        Me.Controls.Add(Me.srcLbCheckPe01)
+        Me.Controls.Add(Me.LabelPe01)
         Me.Controls.Add(Me.srcLbCheckNoiseTest)
         Me.Controls.Add(Me.srcLbCheckVip)
         Me.Controls.Add(Me.srcLbCheck2_2)
@@ -1979,6 +2015,8 @@ Partial Class FrmMain
     Friend WithEvents Label26 As System.Windows.Forms.Label
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents Label28 As System.Windows.Forms.Label
+    Friend WithEvents LabelPe01 As System.Windows.Forms.Label
+    Friend WithEvents srcLbCheckPe01 As System.Windows.Forms.Label
     Friend WithEvents srcLbCheckNoiseTest As System.Windows.Forms.Label
     Friend WithEvents srcLbCheckVip As System.Windows.Forms.Label
     Friend WithEvents srcLbCheck2_2 As System.Windows.Forms.Label

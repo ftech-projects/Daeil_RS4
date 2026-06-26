@@ -16,13 +16,10 @@ namespace WindowsFormsApp1
         private double wStep1 = 0;
 
         // ── 시리얼 포트 ─────────────────────────────────────────────────
-        private SerialPort spRs485   = new SerialPort();  // RS-485 공용 (LVDT + 로드셀 1,2)
-        private SerialPort spScanner = new SerialPort();
-        private SerialPort spPrinter = new SerialPort();
+        private SerialPort spLvdt    = new SerialPort();  // DI-20W RS-232 전용
+        private SerialPort spRs485   = new SerialPort();  // RS-485 (로드셀 1,2)
+        private SerialPort spScanner = new SerialPort();  // 바코드 스캐너
 
-        // ── RS-485 폴링 스레드 ──────────────────────────────────────────
-        private Thread rs485Thread;
-        private volatile bool rs485Run = false;
 
         // ── PLC 드라이버 ────────────────────────────────────────────────
         private IPlcDriver plcDriver;
@@ -31,8 +28,12 @@ namespace WindowsFormsApp1
         private bool plcThreadRun = false;
 
         // ── 그래프 데이터 ───────────────────────────────────────────────
-        private ZedGraph.LineItem gapLine;
+        private ZedGraph.LineItem fwdLine;       // 전방 (전진)
+        private ZedGraph.LineItem bwdLine;       // 후방 (후진)
+        private ZedGraph.TextObj  fwdLastLabel;  // 전방 마지막 값 라벨
+        private ZedGraph.TextObj  bwdLastLabel;  // 후방 마지막 값 라벨
         private int graphPtCount = 0;
+        private GraphRecord _graphRec;           // 측정 사이클 그래프 데이터
 
         // ── 검사 시간 추적 ──────────────────────────────────────────────
         private DateTime _startTime;
@@ -78,6 +79,9 @@ namespace WindowsFormsApp1
             UpdateCountLabels();
             UpdateSpecLabel();
             UpdateFormulaLabel();
+            UpdateEquipTitle();
+
+            btnPartMgr.Visible = false;
 
             GlobalValues.ZeroSensorsAction = () => Task.Run((Action)ZeroAllSensors);
             GlobalValues.ZeroLvdtAction    = () => Task.Run((Action)ZeroLvdt);
@@ -116,18 +120,20 @@ namespace WindowsFormsApp1
         // ═══════════════════════════════════════════════════════════════
         private void RepositionHeaderButtons()
         {
-            const int BW   = 150; // 버튼 너비
-            const int BH   = 72;  // 버튼 높이
-            const int GAP  = 4;   // 버튼 간격
+            const int BW   = 150;
+            const int BH   = 72;
+            const int GAP  = 4;
             const int STEP = BW + GAP;
-            int r = panelHeader.ClientSize.Width;
-            int h = panelHeader.ClientSize.Height;
+            int r   = panelHeader.ClientSize.Width;
+            int h   = panelHeader.ClientSize.Height;
             int top = (h - BH) / 2;
-            btnSignal.SetBounds( r - BW,             top, BW, BH);
-            btnPartMgr.SetBounds(r - BW - STEP,      top, BW, BH);
-            btnConfig.SetBounds( r - BW - STEP * 2,  top, BW, BH);
-            btnBarcode.SetBounds(r - BW - STEP * 3,  top, BW, BH);
-            lblDateTime.SetBounds(r - BW - STEP * 3 - 156, (h - 18) / 2, 150, 18);
+
+            // btnPartMgr 숨김 — 화면 밖으로 내보내고 나머지 3개만 배치
+            btnPartMgr.SetBounds(-500, top, BW, BH);
+            btnSignal.SetBounds(   r - BW,          top, BW, BH);
+            btnConfig.SetBounds(   r - BW - STEP,   top, BW, BH);
+            btnDataView.SetBounds( r - BW - STEP*2, top, BW, BH);
+            lblDateTime.SetBounds( r - BW - STEP*3 - 156, (h - 18) / 2, 150, 18);
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -141,15 +147,18 @@ namespace WindowsFormsApp1
             // 배너 & 센서 패널 폭 = 전체 폭 - 16px
             int innerW = Math.Max(w - 16, 100);
 
-            panelBanner.Size = new Size(innerW, 84);
+            panelBanner.Size = new Size(innerW, 56);
             panelSensor.Size = new Size(innerW, 96);
 
-            // 그래프: 배너+센서+여백 = 8+84+8+96+8=204, 하단 결과(220)+8=228
-            int graphH = Math.Max(h - 204 - 228, 100);
-            PlotDiff1.Size = new Size(innerW, graphH);
+            // 배너(y=8,h=56) → 센서(y=72,h=96) → 그래프(y=176)
+            // 8+56+8=72, 72+96+8=176
+            int graphTop = 176;
+            int graphH   = Math.Max(h - graphTop - 228, 100);
+            PlotDiff1.Location = new Point(8, graphTop);
+            PlotDiff1.Size     = new Size(innerW, graphH);
 
-            // 결과 패널 (공식 레이블 포함: 180 → 220)
-            panelResult.Location = new Point(8, 204 + graphH + 8);
+            // 결과 패널
+            panelResult.Location = new Point(8, graphTop + graphH + 8);
             panelResult.Size     = new Size(innerW, 220);
 
             // 결과 카드 너비를 innerW에 맞게 3분할
@@ -171,6 +180,20 @@ namespace WindowsFormsApp1
             // 공식 레이블 — 3개 카드 전체 너비
             lblFormula.Location = new Point(0, 176);
             lblFormula.Size     = new Size(innerW - 16, 40);
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            BeginInvoke((Action)(() =>
+            {
+                panelMain.SuspendLayout();
+                ApplyLayout();
+                panelMain.ResumeLayout();
+                if (PlotDiff1 != null) { PlotDiff1.AxisChange(); PlotDiff1.Invalidate(); }
+                Logger.Log($"[레이아웃] panelMain={panelMain.ClientSize.Width}x{panelMain.ClientSize.Height}  panelSensor={panelSensor.Size.Width}x{panelSensor.Size.Height}");
+                Logger.Log($"[레이아웃] LC1위치=({lbLoadCell1.Location.X},{lbLoadCell1.Location.Y}) 크기={lbLoadCell1.Size.Width}x{lbLoadCell1.Size.Height} Visible={lbLoadCell1.Visible}");
+            }));
         }
 
         protected override void OnResize(EventArgs e)
@@ -222,12 +245,9 @@ namespace WindowsFormsApp1
             pane.Title.FontSpec.Fill.IsVisible = false;
             pane.Title.FontSpec.Border.IsVisible = false;
 
-            void SetAxis(ZedGraph.Axis ax, string title, double min, double max)
+            void SetAxis(ZedGraph.Axis ax, double min, double max, double step = 0)
             {
-                ax.Title.Text                    = title;
-                ax.Title.FontSpec.FontColor      = cText;
-                ax.Title.FontSpec.Family         = "맑은 고딕";
-                ax.Title.FontSpec.Fill.IsVisible = false;
+                ax.Title.IsVisible               = false;
                 ax.Scale.FontSpec.FontColor      = cText;
                 ax.Scale.FontSpec.Size           = 10f;
                 ax.Scale.FontSpec.Family         = "맑은 고딕";
@@ -242,22 +262,92 @@ namespace WindowsFormsApp1
                 ax.MinorGrid.IsVisible           = false;
                 ax.Scale.Min = min;
                 ax.Scale.Max = max;
+                if (step > 0)
+                {
+                    ax.Scale.MajorStep     = step;
+                    ax.Scale.MajorStepAuto = false;
+                }
             }
-            SetAxis(pane.XAxis, "변위 (mm)", -2.0, 2.0);
-            SetAxis(pane.YAxis, $"하중 ({MeasureData1.LoadUnit})", -10.0, 10.0);
+            SetAxis(pane.XAxis, -2.0, 2.0, 0.1);   // 변위 0.1mm 단위
+            SetAxis(pane.YAxis, -10.0, 10.0, 1.0);  // 하중 1.0 단위
+
+            // 축을 원점 기준 중앙에 표시 (4사분면)
+            pane.XAxis.Cross     = 0.0;
+            pane.XAxis.CrossAuto = false;
+            pane.YAxis.Cross     = 0.0;
+            pane.YAxis.CrossAuto = false;
+
+            // 축 제목 고정 위치 TextObj
+            ZedGraph.TextObj MakeLabel(string text, double x, double y, ZedGraph.AlignH ah, ZedGraph.AlignV av)
+            {
+                var t = new ZedGraph.TextObj(text, x, y, ZedGraph.CoordType.ChartFraction, ah, av);
+                t.FontSpec.FontColor      = cText;
+                t.FontSpec.Family         = "맑은 고딕";
+                t.FontSpec.Size           = 10f;
+                t.FontSpec.Fill.IsVisible = false;
+                t.FontSpec.Border.IsVisible = false;
+                return t;
+            }
+            pane.GraphObjList.Add(MakeLabel("변위 (mm)", 1.0, 0.5, ZedGraph.AlignH.Right, ZedGraph.AlignV.Bottom));
+            pane.GraphObjList.Add(MakeLabel($"하중 ({MeasureData1.LoadUnit})", 0.5, 0.0, ZedGraph.AlignH.Left, ZedGraph.AlignV.Top));
 
             pane.Legend.IsVisible = false;
 
+            // 수평 영점선 (Y=0)
             var hZero = pane.AddCurve("", new ZedGraph.PointPairList(
                 new double[] { -2, 2 }, new double[] { 0, 0 }), cZero, ZedGraph.SymbolType.None);
             hZero.Line.Width = 1f;
             hZero.Line.Style = System.Drawing.Drawing2D.DashStyle.Dash;
             hZero.IsSelectable = false;
 
-            var pts = new ZedGraph.PointPairList();
-            gapLine = pane.AddCurve("유격", pts, cCyan, ZedGraph.SymbolType.None);
-            gapLine.Line.Width = 2.5f;
-            gapLine.Line.IsAntiAlias = true;
+            // 수직 영점선 (X=0)
+            var vZero = pane.AddCurve("", new ZedGraph.PointPairList(
+                new double[] { 0, 0 }, new double[] { -10, 10 }), cZero, ZedGraph.SymbolType.None);
+            vZero.Line.Width = 1f;
+            vZero.Line.Style = System.Drawing.Drawing2D.DashStyle.Dash;
+            vZero.IsSelectable = false;
+
+            var cFwd = Color.FromArgb(0,   200, 255);  // 전방: 시안
+            var cBwd = Color.FromArgb(255, 140,   0);  // 후방: 오렌지
+
+            fwdLine = pane.AddCurve("전방", new ZedGraph.PointPairList(), cFwd, ZedGraph.SymbolType.None);
+            fwdLine.Line.Width = 2.5f;
+            fwdLine.Line.IsAntiAlias = true;
+
+            bwdLine = pane.AddCurve("후방", new ZedGraph.PointPairList(), cBwd, ZedGraph.SymbolType.None);
+            bwdLine.Line.Width = 2.5f;
+            bwdLine.Line.IsAntiAlias = true;
+
+            // 범례
+            pane.Legend.IsVisible       = true;
+            pane.Legend.Position        = ZedGraph.LegendPos.Right;
+            pane.Legend.FontSpec.FontColor    = cText;
+            pane.Legend.FontSpec.Family       = "맑은 고딕";
+            pane.Legend.FontSpec.Size         = 11f;
+            pane.Legend.FontSpec.Fill.IsVisible   = false;
+            pane.Legend.FontSpec.Border.IsVisible = false;
+            pane.Legend.Fill            = new ZedGraph.Fill(cCard);
+            pane.Legend.Border.Color    = cGrid;
+
+            // 마지막 값 라벨 (처음엔 숨김)
+            ZedGraph.TextObj MakeLastLabel(Color c)
+            {
+                var lbl = new ZedGraph.TextObj("", 0, 0,
+                    ZedGraph.CoordType.AxisXYScale,
+                    ZedGraph.AlignH.Left, ZedGraph.AlignV.Center);
+                lbl.FontSpec.FontColor      = c;
+                lbl.FontSpec.Size           = 10f;
+                lbl.FontSpec.Family         = "맑은 고딕";
+                lbl.FontSpec.IsBold         = true;
+                lbl.FontSpec.Fill           = new ZedGraph.Fill(Color.FromArgb(180, 30, 35, 40));
+                lbl.FontSpec.Border.IsVisible = false;
+                lbl.IsVisible               = false;
+                return lbl;
+            }
+            fwdLastLabel = MakeLastLabel(cFwd);
+            bwdLastLabel = MakeLastLabel(cBwd);
+            pane.GraphObjList.Add(fwdLastLabel);
+            pane.GraphObjList.Add(bwdLastLabel);
 
             graphPtCount = 0;
             PlotDiff1.IsEnableHZoom = false;
@@ -268,15 +358,45 @@ namespace WindowsFormsApp1
 
         private void ClearGraph()
         {
-            gapLine.Points = new ZedGraph.PointPairList();
+            fwdLine.Points = new ZedGraph.PointPairList();
+            bwdLine.Points = new ZedGraph.PointPairList();
+            if (fwdLastLabel != null) fwdLastLabel.IsVisible = false;
+            if (bwdLastLabel != null) bwdLastLabel.IsVisible = false;
             graphPtCount = 0;
+            _graphRec = new GraphRecord
+            {
+                MeasureTime = DateTime.Now,
+                PartNo      = MeasureData1.PartNo,
+                PartName    = MeasureData1.PartName,
+                LoadUnit    = MeasureData1.LoadUnit,
+                GapSpec     = MeasureData1.GapSpec,
+            };
             PlotDiff1.AxisChange();
             PlotDiff1.Invalidate();
         }
 
-        private void AddGraphPoint(double x, double y)
+        private void AddGraphPoint(double x, double y, bool isFwd)
         {
-            ((ZedGraph.PointPairList)gapLine.Points).Add(x, y);
+            var list = isFwd
+                ? (ZedGraph.PointPairList)fwdLine.Points
+                : (ZedGraph.PointPairList)bwdLine.Points;
+            list.Add(x, y);
+            _graphRec?.Points.Add(new GraphPoint
+            {
+                Direction = isFwd ? "FWD" : "BWD",
+                X = x, Y = y
+            });
+
+            // 마지막 점에 값 표시 (약간 우측으로 오프셋)
+            var lbl = isFwd ? fwdLastLabel : bwdLastLabel;
+            if (lbl != null)
+            {
+                lbl.Location.X = x + 0.05;
+                lbl.Location.Y = y;
+                lbl.Text       = $"X:{x:F2}\nY:{y:F1}";
+                lbl.IsVisible  = true;
+            }
+
             graphPtCount++;
             if (graphPtCount % 5 == 0)
                 PlotDiff1.Invalidate();
@@ -287,10 +407,10 @@ namespace WindowsFormsApp1
         // ═══════════════════════════════════════════════════════════════
         private void OpenPorts()
         {
-            OpenSerial(spRs485,  GlobalValues.Rs485Port,   GlobalValues.Rs485Baud);
+            OpenSerial(spLvdt,    GlobalValues.LvdtPort,    GlobalValues.LvdtBaud);
+            OpenSerial(spRs485,   GlobalValues.Rs485Port,   GlobalValues.Rs485Baud);
             OpenSerial(spScanner, GlobalValues.ScannerPort, 9600);
-            OpenSerial(spPrinter, GlobalValues.PrinterPort, 9600);
-
+            if (spLvdt.IsOpen)    spLvdt.DataReceived    += SpLvdt_DataReceived;
             if (spScanner.IsOpen) spScanner.DataReceived += SpScanner_DataReceived;
             if (spRs485.IsOpen)
             {
@@ -304,9 +424,9 @@ namespace WindowsFormsApp1
         {
             rs485Run = false;
             rs485Thread?.Join(500);
+            CloseSerial(spLvdt);
             CloseSerial(spRs485);
             CloseSerial(spScanner);
-            CloseSerial(spPrinter);
         }
 
         private void OpenSerial(SerialPort sp, string portName, int baud)
@@ -314,11 +434,24 @@ namespace WindowsFormsApp1
             try
             {
                 if (string.IsNullOrWhiteSpace(portName)) return;
-                sp.PortName = portName; sp.BaudRate = baud;
-                sp.DataBits = 8; sp.Parity = Parity.None; sp.StopBits = StopBits.One;
+                if (baud <= 0)
+                {
+                    Logger.Log($"[{portName}] 포트 열기 실패: 보드레이트 값 오류 ({baud}) — 환경설정에서 확인하세요");
+                    return;
+                }
+                if (sp.IsOpen) sp.Close();
+                sp.PortName  = portName;
+                sp.BaudRate  = baud;
+                sp.DataBits  = 8;
+                sp.Parity    = Parity.None;
+                sp.StopBits  = StopBits.One;
+                sp.ReadTimeout  = 500;
+                sp.WriteTimeout = 500;
+                Logger.Log($"[{portName}] 포트 열기 시도: {baud}bps 8N1");
                 sp.Open();
+                Logger.Log($"[{portName}] 포트 열기 성공");
             }
-            catch (Exception ex) { Logger.Log($"포트 열기 실패 [{portName}]: {ex.Message}"); }
+            catch (Exception ex) { Logger.Log($"[{portName}] 포트 열기 실패: {ex.Message}"); }
         }
 
         private void CloseSerial(SerialPort sp)
@@ -327,78 +460,105 @@ namespace WindowsFormsApp1
         }
 
         private readonly object _rs485Lock = new object();
+        private Thread rs485Thread;
+        private volatile bool rs485Run = false;
 
-        // ── RS-485 폴링 스레드 (LVDT + 로드셀1 + 로드셀2 순차 폴링) ──────
-        // DI-20W Command mode: 송신 "ID01P" → 수신 "ID,01,+1234.5\r\n"
-        // BS-205 Command mode: 송신 {idByte, 'R'} → 수신 STX+idByte+data+ETX
         private void Rs485PollThread()
         {
+            Logger.Log($"[RS485] 폴링 시작 — LC1Id={GlobalValues.LoadCell1Id} LC2Id={GlobalValues.LoadCell2Id}");
             while (rs485Run)
             {
                 try
                 {
-                    lock (_rs485Lock) { PollLvdt(); }
+                    lock (_rs485Lock) PollLoadCell(GlobalValues.LoadCell1Id, v => {
+                        MeasureData1.ValueLoadCell1 = v;
+                        try { if (IsHandleCreated && !IsDisposed) BeginInvoke((MethodInvoker)(() => lbLoadCell1.Text = v.ToString("F2"))); } catch { }
+                    });
                     if (!rs485Run) break;
-                    Thread.Sleep(30);
-                    lock (_rs485Lock) { PollLoadCell(GlobalValues.LoadCell1Id, v => MeasureData1.ValueLoadCell1 = v); }
-                    if (!rs485Run) break;
-                    Thread.Sleep(30);
-                    lock (_rs485Lock) { PollLoadCell(GlobalValues.LoadCell2Id, v => MeasureData1.ValueLoadCell2 = v); }
-                    Thread.Sleep(30);
+                    if (GlobalValues.LoadCell2Id > 0)
+                    {
+                        Thread.Sleep(20);
+                        lock (_rs485Lock) PollLoadCell(GlobalValues.LoadCell2Id, v => {
+                            MeasureData1.ValueLoadCell2 = v;
+                            try { if (IsHandleCreated && !IsDisposed) BeginInvoke((MethodInvoker)(() => lbLoadCell2.Text = v.ToString("F2"))); } catch { }
+                        });
+                    }
+                    Thread.Sleep(20);
                 }
-                catch { Thread.Sleep(100); }
+                catch (Exception ex)
+                {
+                    Logger.Log($"[RS485] 스레드 예외: {ex.GetType().Name}: {ex.Message}");
+                    Thread.Sleep(200);
+                }
             }
         }
 
-        // LVDT 1회 폴링: "ID01P" 송신 → "ID,01,+val\r\n" 수신
-        private void PollLvdt()
-        {
-            try
-            {
-                spRs485.DiscardInBuffer();
-                string id2 = GlobalValues.LvdtId.ToString("D2");
-                byte[] cmd = System.Text.Encoding.ASCII.GetBytes($"ID{id2}P");
-                spRs485.Write(cmd, 0, cmd.Length);
-                spRs485.ReadTimeout = 150;
-                string resp = spRs485.ReadLine(); // \n까지 읽음
-                var parts = resp.TrimEnd('\r').Split(',');
-                if (parts.Length >= 3 && parts[0] == "ID" &&
-                    double.TryParse(parts[2].Trim(),
-                        System.Globalization.NumberStyles.Float,
-                        System.Globalization.CultureInfo.InvariantCulture, out double val))
-                    MeasureData1.ValueLvdt = val;
-            }
-            catch { }
-        }
-
-        // 로드셀 1회 폴링: {idByte, 'R'} 송신 → STX+idByte+data+ETX 수신
+        private int _lcLogTick = 0;
         private void PollLoadCell(int id, Action<double> setVal)
         {
             try
             {
                 spRs485.DiscardInBuffer();
-                spRs485.Write(new byte[] { (byte)(0x30 + id), 0x52 }, 0, 2); // idByte + 'R'
+                spRs485.Write(new byte[] { (byte)(0x30 + id), 0x52 }, 0, 2);
                 spRs485.ReadTimeout = 150;
+
+                var rawBytes = new System.Collections.Generic.List<byte>();
                 var sb = new System.Text.StringBuilder();
                 bool stx = false;
-                for (int i = 0; i < 24; i++)
+                for (int i = 0; i < 40; i++)
                 {
-                    int b = spRs485.ReadByte(); // TimeoutException 시 catch로 이동
+                    int b = spRs485.ReadByte();
+                    rawBytes.Add((byte)b);
                     if (!stx) { if (b == 0x02) stx = true; }
                     else       { if (b == 0x03) break; sb.Append((char)b); }
                 }
-                // sb: idChar + data (예: "1+07.487") → [1] 이후가 실제 측정값
+
+                if (id == 1) _lcLogTick++;
+
                 if (stx && sb.Length > 1)
                 {
-                    string dataStr = sb.ToString().Substring(1);
-                    if (double.TryParse(dataStr.Trim(),
+                    // 프로토콜: STX + idByte + 부호+공백+값 + ETX
+                    // sb = "1+   5.0" → Substring(1) = "+   5.0" → 공백 제거 → "+5.0"
+                    string dataStr = sb.ToString().Substring(1).Replace(" ", "");
+                    if (double.TryParse(dataStr,
                         System.Globalization.NumberStyles.Float,
                         System.Globalization.CultureInfo.InvariantCulture, out double val))
                         setVal(val);
                 }
             }
-            catch { }
+            catch (Exception ex) { Logger.Log($"[LC{id}폴링오류] {ex.GetType().Name}: {ex.Message}"); }
         }
+
+        // DI-20W Stream mode 수신: "ST,NT,+1234.5\r\n"
+        private string _lvdtBuf = "";
+        private int _lvdtLogCount = 0;
+        private void SpLvdt_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            try
+            {
+                string recv = spLvdt.ReadExisting();
+                _lvdtLogCount++;
+                _lvdtBuf += recv;
+                int idx;
+                while ((idx = _lvdtBuf.IndexOf('\n')) >= 0)
+                {
+                    string line = _lvdtBuf.Substring(0, idx).TrimEnd('\r');
+                    _lvdtBuf = _lvdtBuf.Substring(idx + 1);
+                    var parts = line.Split(',');
+                    if (parts.Length >= 3 && parts[0] == "ST" && parts[1] == "NT" &&
+                        double.TryParse(parts[2].Replace(" ", ""),
+                            System.Globalization.NumberStyles.Float,
+                            System.Globalization.CultureInfo.InvariantCulture, out double val))
+                    {
+                        double net = val - MeasureData1.LvdtOffset;
+                        MeasureData1.ValueLvdt = net;
+                        try { if (IsHandleCreated && !IsDisposed) BeginInvoke((MethodInvoker)(() => srcLvdt1.Text = net.ToString("F3"))); } catch { }
+                    }
+                }
+            }
+            catch (Exception ex) { Logger.Log($"[LVDT오류] {ex.GetType().Name}: {ex.Message}"); }
+        }
+
 
         // ── RS-485 하드웨어 영점 명령 ────────────────────────────────────
         // DI-20W: "ID{id}Z", BS-205: {idByte, 'Z'(0x5A)}
@@ -406,16 +566,18 @@ namespace WindowsFormsApp1
         {
             try
             {
-                if (!spRs485.IsOpen) return;
-                lock (_rs485Lock)
+                // Stream mode에서는 PC 명령 무시됨 → 소프트웨어 영점으로 대체
+                // Command mode(F-40≠000)이면 하드웨어 영점도 시도
+                if (spLvdt.IsOpen && GlobalValues.LvdtId > 0)
                 {
                     string id2 = GlobalValues.LvdtId.ToString("D2");
                     byte[] cmd = System.Text.Encoding.ASCII.GetBytes($"ID{id2}Z");
-                    spRs485.DiscardInBuffer();
-                    spRs485.Write(cmd, 0, cmd.Length);
+                    spLvdt.Write(cmd, 0, cmd.Length);
                     Thread.Sleep(80);
                 }
-                Logger.Log("[영점] LVDT 영점 완료");
+                // 소프트웨어 영점: 현재 raw값을 기준으로 offset 저장
+                MeasureData1.LvdtOffset += MeasureData1.ValueLvdt;
+                Logger.Log($"[영점] LVDT 영점 완료 (offset={MeasureData1.LvdtOffset:F3})");
             }
             catch (Exception ex) { Logger.Log($"[영점] LVDT 실패: {ex.Message}"); }
         }
@@ -459,23 +621,46 @@ namespace WindowsFormsApp1
             ZeroLc2();
         }
 
-        // ── 스캐너 수신 ────────────────────────────────────────────────
-        private string scanBuf = "";
-        private void SpScanner_DataReceived(object sender, SerialDataReceivedEventArgs e)
+
+        // ═══════════════════════════════════════════════════════════════
+        // ── 바코드 스캐너 수신 ────────────────────────────────────────────
+        private string _scanBuf = "";
+        private void SpScanner_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             try
             {
-                scanBuf += spScanner.ReadExisting();
+                _scanBuf += spScanner.ReadExisting();
                 int idx;
-                while ((idx = scanBuf.IndexOf('\r')) >= 0)
+                while ((idx = _scanBuf.IndexOf('\r')) >= 0)
                 {
-                    string code = scanBuf.Substring(0, idx).Trim();
-                    scanBuf = scanBuf.Substring(idx + 1);
+                    string code = _scanBuf.Substring(0, idx).Trim();
+                    _scanBuf = _scanBuf.Substring(idx + 1);
                     if (!string.IsNullOrEmpty(code))
                         BeginInvoke(new Action(() => ApplyBarcode(code)));
                 }
             }
             catch { }
+        }
+
+        private void ApplyBarcode(string code)
+        {
+            if (code.Length < 35)
+            {
+                Logger.Log($"[바코드] 길이 {code.Length}자리 — 35자리 미만, 검사 불가");
+                return;
+            }
+            if (wStep1 != 0)
+            {
+                Logger.Log($"[바코드] 검사 진행 중 — 무시");
+                return;
+            }
+            _startTime = DateTime.Now;
+            wStep1 = 1.0;
+            workTimer1.Start();
+            lbBarcode1.Text = code;
+            srcState.Text = "PUSH 버튼을 누르세요";
+            cycleWatch.Restart();
+            Logger.Log($"[바코드] {code} ({code.Length}자리) → 검사 시작");
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -571,46 +756,6 @@ namespace WindowsFormsApp1
             errorPulseTick = 3;  // 300ms 후 자동 OFF
         }
 
-        private const int BARCODE_PREFIX_LEN = 12;  // 앞 날짜+시퀀스 자리수
-
-        private void ApplyBarcode(string code)
-        {
-            // 바코드 앞 12자리(날짜8+시퀀스4) 제거 → 품번 키 추출
-            string partKey = code.Length > BARCODE_PREFIX_LEN
-                           ? code.Substring(BARCODE_PREFIX_LEN)
-                           : code;
-
-            var (partNo, partName) = ClassDatabase.LookupPart(partKey);
-
-            MeasureData1.AssyParNo = code;      // 바코드 원문 (시리얼 번호)
-            MeasureData1.PartNo    = partNo ?? "";
-            MeasureData1.PartName  = partName ?? "";
-
-            lbBarcode1.Text  = code;
-            lbLPartNo1.Text  = partNo   ?? "DB 미등록";
-            lbPartName1.Text = partName ?? "";
-
-            if (partNo == null)
-            {
-                lbLPartNo1.ForeColor = System.Drawing.Color.OrangeRed;
-                srcState.Text = "DB 미등록 품번 — 검사 불가";
-                Logger.Log($"[바코드] {code} | 품번키={partKey} → DB 미등록");
-                return;
-            }
-
-            lbLPartNo1.ForeColor = System.Drawing.Color.White;
-            _frmWorkStandard?.LoadPicture(MeasureData1.PartNo);
-
-            if (wStep1 == 0)
-            {
-                _startTime = DateTime.Now;
-                wStep1 = 1.0;
-                workTimer1.Start();
-                srcState.Text = "PUSH 버튼을 누르세요";
-                cycleWatch.Restart();
-                Logger.Log($"[바코드] {code} | 품번={partNo} | 품명={partName}");
-            }
-        }
 
         // ═══════════════════════════════════════════════════════════════
         // PLC 스레드
@@ -619,7 +764,7 @@ namespace WindowsFormsApp1
         {
             try
             {
-                plcDriver = new MelsecMxDriver(GlobalValues.PlcIpAddress, GlobalValues.PlcIpPort);
+                plcDriver = new MelsecMxDriver(GlobalValues.PlcIpAddress, GlobalValues.PlcIpPort, this);
                 plcDriver.Connect();
                 plcThreadRun = true;
                 plcWorkThread    = new Thread(PlcWorkLoop)    { IsBackground = true };
@@ -649,9 +794,9 @@ namespace WindowsFormsApp1
                     PLCData1.writePlcValue[4000 + w] = val;
                 }
 
-                try { plcDriver.WriteWords(4000, 14);  } catch { }  // D4000~D4013 출력
-                try { plcDriver.WriteWords(5000, 200); } catch { }
-                try { plcDriver.WriteWords(6000, 40);  } catch { }  // D6000~D6039 서보 파라미터
+                try { plcDriver.WriteWords(4000, 14); } catch { }  // D4000~D4013 출력
+                try { plcDriver.WriteWords(5002, 4);  } catch { }  // D5002~D5005 JOG속도
+                try { plcDriver.WriteWords(6000, 24); } catch { }  // D6000~D6023 6포지션
                 Thread.Sleep(50);
             }
         }
@@ -661,8 +806,7 @@ namespace WindowsFormsApp1
             int flickerCount = 0;
             while (plcThreadRun)
             {
-                try { plcDriver.ReadWords(4000, 15);  } catch { }  // D4000~D4014 (비트 입력)
-                try { plcDriver.ReadWords(5000, 100); } catch { }
+                try { plcDriver.ReadWords(4000, 15); } catch { }  // D4000~D4014 (비트 입력)
 
                 // D4009.0 플리커: 100ms × 10 = 1초 주기 ON/OFF
                 if (++flickerCount >= 10)
@@ -678,8 +822,14 @@ namespace WindowsFormsApp1
         // ═══════════════════════════════════════════════════════════════
         // 디스플레이 타이머 (200ms)
         // ═══════════════════════════════════════════════════════════════
+        private int _tickLog = 0;
         private void tmrDisplay_Tick(object sender, EventArgs e)
         {
+            try
+            {
+            System.Threading.Thread.MemoryBarrier();
+            _tickLog++;
+
             lblDateTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             srcLvdt1.Text    = MeasureData1.ValueLvdt.ToString("F3");
             lbLoadCell1.Text = MeasureData1.ValueLoadCell1.ToString("F2");
@@ -689,6 +839,7 @@ namespace WindowsFormsApp1
 
             // D4008.1 서보 알람
             lbServoAlarm.Visible = PLCData1.PlcValueBit[8, 1];
+            } catch (Exception ex) { Logger.Log($"[Tick오류] {ex.GetType().Name}: {ex.Message}"); }
         }
 
         // ═══════════════════════════════════════════════════════════════
@@ -790,7 +941,7 @@ namespace WindowsFormsApp1
                 {
                     double lc1Net  = MeasureData1.ValueLoadCell1 - lc1Zero;
                     double lvdtNet = MeasureData1.ValueLvdt - lvdtZero;
-                    AddGraphPoint(lvdtNet, lc1Net);
+                    AddGraphPoint(lvdtNet, lc1Net, true);
                     if (lc1Net >= MeasureData1.CalcThreshold())
                     {
                         PLCData1.SetPlcBit(9, 1, false);
@@ -837,7 +988,7 @@ namespace WindowsFormsApp1
                 {
                     double lc2Net  = MeasureData1.ValueLoadCell2 - lc2Zero;
                     double lvdtNet = MeasureData1.ValueLvdt - lvdtZero;
-                    AddGraphPoint(lvdtNet, lc2Net);
+                    AddGraphPoint(lvdtNet, lc2Net, false);
                     if (lc2Net >= MeasureData1.CalcThreshold())
                     {
                         PLCData1.SetPlcBit(9, 2, false);
@@ -872,13 +1023,7 @@ namespace WindowsFormsApp1
                     cycleWatch.Stop();
                     srcState.Text = pass ? "OK" : "NG";
 
-                    MeasureData1.AssyParNo = "";
-                    MeasureData1.PartNo    = "";
-                    MeasureData1.PartName  = "";
-                    lbBarcode1.Text  = "";
-                    lbLPartNo1.Text  = "";
-                    lbLPartNo1.ForeColor = System.Drawing.Color.White;
-                    lbPartName1.Text = "";
+                    lbBarcode1.Text = "대기 중...";
                     workTimer1.Stop();
                     wStep1 = 0;
                     break;
@@ -907,17 +1052,10 @@ namespace WindowsFormsApp1
 
             // DB 저장
             ClassDatabase.SaveRecord(
-                serialNo:   MeasureData1.AssyParNo,
-                partNo:     MeasureData1.PartNo,
-                partName:   MeasureData1.PartName,
                 startTime:  _startTime,
                 endTime:    endTime,
-                fwdDisp:    MeasureData1.FwdDisp,
-                bwdDisp:    MeasureData1.BwdDisp,
                 play:       MeasureData1.GapAngle,
-                playSpec:   MeasureData1.GapSpec,
-                pass:       pass,
-                endBarcode: MeasureData1.AssyParNo);
+                pass:       pass);
 
             // CSV 저장 (기존 유지)
             string dir  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Result",
@@ -928,9 +1066,8 @@ namespace WindowsFormsApp1
             using (var sw = new StreamWriter(file, true, System.Text.Encoding.UTF8))
             {
                 if (header)
-                    sw.WriteLine("DateTime,Barcode,FwdDisp_mm,BwdDisp_mm,Play_deg,Spec_deg,Judge");
+                    sw.WriteLine("DateTime,FwdDisp_mm,BwdDisp_mm,Play_deg,Spec_deg,Judge");
                 sw.WriteLine($"{endTime:yyyy-MM-dd HH:mm:ss}," +
-                             $"{MeasureData1.AssyParNo}," +
                              $"{MeasureData1.FwdDisp:F3}," +
                              $"{MeasureData1.BwdDisp:F3}," +
                              $"{MeasureData1.GapAngle:F3}," +
@@ -938,35 +1075,24 @@ namespace WindowsFormsApp1
                              $"{(pass ? "OK" : "NG")}");
             }
 
-            AppendLog($"[{endTime:HH:mm:ss}] {MeasureData1.AssyParNo} " +
-                      $"유격={MeasureData1.GapAngle:F3}° → {(pass ? "OK" : "NG")}");
+            AppendLog($"[{endTime:HH:mm:ss}] 유격={MeasureData1.GapAngle:F3}° → {(pass ? "OK" : "NG")}");
 
-            // OK 판정 시 라벨 출력
-            if (pass)
+            // 그래프 포인트 CSV 저장
+            if (_graphRec != null && _graphRec.Points.Count > 0)
             {
-                try { PrintLabel(); }
-                catch (Exception ex) { Logger.Log($"[프린터] 출력 실패: {ex.Message}"); }
+                _graphRec.MeasureTime = endTime;
+                _graphRec.PartNo      = MeasureData1.PartNo;
+                _graphRec.PartName    = MeasureData1.PartName;
+                _graphRec.FwdDisp     = MeasureData1.FwdDisp;
+                _graphRec.BwdDisp     = MeasureData1.BwdDisp;
+                _graphRec.GapAngle    = MeasureData1.GapAngle;
+                _graphRec.GapSpec     = MeasureData1.GapSpec;
+                _graphRec.Pass        = pass;
+                _graphRec.LoadUnit    = MeasureData1.LoadUnit;
+                try { _graphRec.Save(); } catch (Exception ex) { Logger.Log($"[그래프CSV저장오류] {ex.Message}"); }
+                _graphRec = null;
             }
-        }
 
-        private void PrintLabel()
-        {
-            if (!spPrinter.IsOpen) return;
-
-            string folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "Labels");
-            string jsonPath = Path.Combine(folder, "Barcode_1.json");
-            if (!File.Exists(jsonPath)) return;
-
-            var printer = new ClassLabelPrinter();
-            printer.SetSerialPort(spPrinter);
-            printer.PrintLabel(jsonPath, new System.Collections.Generic.Dictionary<string, string>
-            {
-                { "PartNo",   MeasureData1.AssyParNo },
-                { "PartName", MeasureData1.PartName  },
-                { "SerialNo", MeasureData1.AssyParNo },
-                { "DateTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") },
-                { "Result",   "OK" }
-            });
         }
 
         private void UpdateCountLabels()
@@ -975,6 +1101,13 @@ namespace WindowsFormsApp1
             lbOkCount.Text    = GlobalValues.OkCount.ToString();
             lbNGCount.Text    = ng.ToString();
             lbTotalCount.Text = GlobalValues.TotalCount.ToString();
+        }
+
+        private void UpdateEquipTitle()
+        {
+            lblTitle.Text = GlobalValues.EquipTitle;
+            lblTitle.Font = new System.Drawing.Font("맑은 고딕", 24F, System.Drawing.FontStyle.Bold);
+            this.Text     = GlobalValues.EquipTitle;
         }
 
         private void UpdateSpecLabel()
@@ -991,7 +1124,12 @@ namespace WindowsFormsApp1
         private void UpdateGraphLabels()
         {
             var pane = PlotDiff1.GraphPane;
-            pane.YAxis.Title.Text = $"하중 ({MeasureData1.LoadUnit})";
+            // TextObj 중 하중 단위 라벨 갱신
+            foreach (ZedGraph.GraphObj obj in pane.GraphObjList)
+            {
+                if (obj is ZedGraph.TextObj t && t.Text.StartsWith("하중"))
+                    t.Text = $"하중 ({MeasureData1.LoadUnit})";
+            }
             PlotDiff1.AxisChange();
             PlotDiff1.Invalidate();
         }
@@ -1014,6 +1152,7 @@ namespace WindowsFormsApp1
             PLCData1.SetPlcBit(9, 2, false);
             PLCData1.SetPlcBit(OUT_SOL_WORD, OUT_SOL_BIT, false);
             wStep1 = 0;
+            lbBarcode1.Text = "대기 중...";
             srcState.Text = "정지";
             workTimer1.Stop();
         }
@@ -1021,12 +1160,6 @@ namespace WindowsFormsApp1
         // ═══════════════════════════════════════════════════════════════
         // 버튼 이벤트
         // ═══════════════════════════════════════════════════════════════
-        private void btnBarcode_Click(object sender, EventArgs e)
-        {
-            using (var frm = new _FrmBarcodeSetting())
-                frm.ShowDialog(this);
-        }
-
         private void btnPartMgr_Click(object sender, EventArgs e)
         {
             using (var frm = new _FrmPartManager())
@@ -1038,6 +1171,7 @@ namespace WindowsFormsApp1
             using (var frm = new _FrmConfiguration())
             {
                 frm.ShowDialog(this);
+                UpdateEquipTitle();
                 UpdateSpecLabel();
                 UpdateFormulaLabel();
                 UpdateGraphLabels();
@@ -1047,6 +1181,12 @@ namespace WindowsFormsApp1
         private void btnSignal_Click(object sender, EventArgs e)
         {
             using (var frm = new ResisterTest._FrmSignalPlc1())
+                frm.ShowDialog(this);
+        }
+
+        private void btnDataView_Click(object sender, EventArgs e)
+        {
+            using (var frm = new _FrmDataViewer())
                 frm.ShowDialog(this);
         }
 

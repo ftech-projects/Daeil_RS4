@@ -19,9 +19,9 @@ namespace WindowsFormsApp1
             this.srcState         = new System.Windows.Forms.Label();
             this.lbServoAlarm     = new System.Windows.Forms.Label();
             this.LbCycle1         = new System.Windows.Forms.Label();
-            this.btnBarcode       = new System.Windows.Forms.Button();
             this.btnConfig        = new System.Windows.Forms.Button();
             this.btnSignal        = new System.Windows.Forms.Button();
+            this.btnDataView      = new System.Windows.Forms.Button();
             this.btnPartMgr       = new System.Windows.Forms.Button();
             this.panelIconArea    = new System.Windows.Forms.Panel();
             this.lblSubTitle      = new System.Windows.Forms.Label();
@@ -42,10 +42,6 @@ namespace WindowsFormsApp1
             this.panelBanner      = new System.Windows.Forms.Panel();
             this.lblBarcodeTitle  = new System.Windows.Forms.Label();
             this.lbBarcode1       = new System.Windows.Forms.Label();
-            this.lblPartNoTitle   = new System.Windows.Forms.Label();
-            this.lbLPartNo1       = new System.Windows.Forms.Label();
-            this.lblPartNameTitle = new System.Windows.Forms.Label();
-            this.lbPartName1      = new System.Windows.Forms.Label();
 
             this.panelSensor      = new System.Windows.Forms.Panel();
             this.lblLvdtH         = new System.Windows.Forms.Label();
@@ -109,12 +105,12 @@ namespace WindowsFormsApp1
             // ══════════════════════════════════════════════════════════════
             this.panelHeader.BackColor = bgDark;
             this.panelHeader.Dock      = System.Windows.Forms.DockStyle.Top;
-            this.panelHeader.Height    = 80;
+            this.panelHeader.Height    = 100;
 
             // 파란 아이콘 패널 (좌측)
             this.panelIconArea.BackColor = colorBlue;
-            this.panelIconArea.Location  = new System.Drawing.Point(6, 14);
-            this.panelIconArea.Size      = new System.Drawing.Size(52, 52);
+            this.panelIconArea.Location  = new System.Drawing.Point(6, 18);
+            this.panelIconArea.Size      = new System.Drawing.Size(62, 62);
             this.panelIconArea.Paint    += (s, pe) =>
             {
                 pe.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
@@ -132,16 +128,16 @@ namespace WindowsFormsApp1
             };
 
             this.lblTitle.Text      = "유격 검사기";
-            this.lblTitle.Font      = new System.Drawing.Font("맑은 고딕", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.Font      = new System.Drawing.Font("맑은 고딕", 24F, System.Drawing.FontStyle.Bold);
             this.lblTitle.ForeColor = colorText;
-            this.lblTitle.Location  = new System.Drawing.Point(68, 14);
-            this.lblTitle.Size      = new System.Drawing.Size(220, 26);
+            this.lblTitle.Location  = new System.Drawing.Point(80, 14);
+            this.lblTitle.Size      = new System.Drawing.Size(700, 40);
 
             this.lblSubTitle.Text      = "DAEIL  -  v1.0";
             this.lblSubTitle.Font      = fontTiny;
             this.lblSubTitle.ForeColor = colorMuted;
-            this.lblSubTitle.Location  = new System.Drawing.Point(68, 42);
-            this.lblSubTitle.Size      = new System.Drawing.Size(160, 16);
+            this.lblSubTitle.Location  = new System.Drawing.Point(80, 58);
+            this.lblSubTitle.Size      = new System.Drawing.Size(200, 16);
 
             this.srcState.Font      = new System.Drawing.Font("맑은 고딕", 11F);
             this.srcState.ForeColor = colorCyan;
@@ -171,7 +167,6 @@ namespace WindowsFormsApp1
             this.lblDateTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
             // 헤더 우측 아이콘 버튼 (아이콘 + 명칭 Paint 렌더링)
-            this.btnBarcode.Tag = new string[] { "", "바코드" };
             this.btnConfig.Tag  = new string[] { "", "설정" };
             this.btnPartMgr.Tag = new string[] { "📋", "품번관리" };
             this.btnSignal.Tag  = new string[] { "", "신호" };
@@ -197,8 +192,10 @@ namespace WindowsFormsApp1
                 }
             };
 
+            this.btnDataView.Tag = new string[] { "", "데이터조회" };
+
             var hdrBtns = new System.Windows.Forms.Button[]
-                { this.btnBarcode, this.btnConfig, this.btnPartMgr, this.btnSignal };
+                { this.btnConfig, this.btnPartMgr, this.btnSignal, this.btnDataView };
             for (int i = 0; i < hdrBtns.Length; i++)
             {
                 hdrBtns[i].Text      = "";
@@ -213,14 +210,14 @@ namespace WindowsFormsApp1
                 hdrBtns[i].Cursor    = System.Windows.Forms.Cursors.Hand;
                 hdrBtns[i].Paint    += hdrBtnPaint;
             }
-            this.toolTip1.SetToolTip(this.btnBarcode, "바코드 라벨 설정");
             this.toolTip1.SetToolTip(this.btnConfig,  "환경설정");
             this.toolTip1.SetToolTip(this.btnPartMgr, "품번 관리");
             this.toolTip1.SetToolTip(this.btnSignal,  "시그널 모니터");
-            this.btnBarcode.Click += new System.EventHandler(this.btnBarcode_Click);
-            this.btnConfig.Click  += new System.EventHandler(this.btnConfig_Click);
-            this.btnPartMgr.Click += new System.EventHandler(this.btnPartMgr_Click);
-            this.btnSignal.Click  += new System.EventHandler(this.btnSignal_Click);
+            this.btnConfig.Click   += new System.EventHandler(this.btnConfig_Click);
+            this.btnPartMgr.Click  += new System.EventHandler(this.btnPartMgr_Click);
+            this.btnSignal.Click   += new System.EventHandler(this.btnSignal_Click);
+            this.btnDataView.Click += new System.EventHandler(this.btnDataView_Click);
+            this.toolTip1.SetToolTip(this.btnDataView, "그래프 데이터 조회");
 
             this.panelHeader.Controls.Add(this.panelIconArea);
             this.panelHeader.Controls.Add(this.lblTitle);
@@ -229,10 +226,10 @@ namespace WindowsFormsApp1
             this.panelHeader.Controls.Add(this.lbServoAlarm);
             this.panelHeader.Controls.Add(this.LbCycle1);
             this.panelHeader.Controls.Add(this.lblDateTime);
-            this.panelHeader.Controls.Add(this.btnBarcode);
             this.panelHeader.Controls.Add(this.btnConfig);
             this.panelHeader.Controls.Add(this.btnPartMgr);
             this.panelHeader.Controls.Add(this.btnSignal);
+            this.panelHeader.Controls.Add(this.btnDataView);
 
             // ══════════════════════════════════════════════════════════════
             // 우측 패널 — 수량 + 최종 결과 + LOG (300px, Dock=Right)
@@ -305,7 +302,7 @@ namespace WindowsFormsApp1
 
             var cardFinal = new System.Windows.Forms.Panel();
             cardFinal.BackColor = bgCard2;
-            cardFinal.Location  = new System.Drawing.Point(8, 288);
+            cardFinal.Location  = new System.Drawing.Point(8, 318);  // btnCountReset(y=284,h=30) 끝=314 + 여유4
             cardFinal.Size      = new System.Drawing.Size(284, 146);
             cardFinal.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             cardFinal.Region    = new System.Drawing.Region(RoundedPath(new System.Drawing.Rectangle(0, 0, 284, 146), 10));
@@ -337,7 +334,7 @@ namespace WindowsFormsApp1
             lblLogTitle.Font      = fontTiny;
             lblLogTitle.ForeColor = colorCyan;
             lblLogTitle.BackColor = bgCard;
-            lblLogTitle.Location  = new System.Drawing.Point(8, 442);
+            lblLogTitle.Location  = new System.Drawing.Point(8, 472);  // cardFinal(y=318,h=146) 끝=464 + 여유8
             lblLogTitle.Size      = new System.Drawing.Size(284, 20);
             lblLogTitle.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 
@@ -347,10 +344,10 @@ namespace WindowsFormsApp1
             this.srcTxtLog.BackColor   = System.Drawing.Color.FromArgb(15, 23, 42);
             this.srcTxtLog.ForeColor   = colorMuted;
             this.srcTxtLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.srcTxtLog.Location    = new System.Drawing.Point(8, 462);
-            this.srcTxtLog.Size        = new System.Drawing.Size(284, 100);
-            this.srcTxtLog.ReadOnly    = true;
-            this.srcTxtLog.Anchor      = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Bottom;
+            this.srcTxtLog.Location    = new System.Drawing.Point(8, 496);  // lblLogTitle(y=472,h=20) 끝=492 + 여유4
+            this.srcTxtLog.Size        = new System.Drawing.Size(284, 200);
+            this.srcTxtLog.ReadOnly    = false;
+            this.srcTxtLog.Anchor      = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 
             this.panelLog.Controls.Add(this.btnCountReset);
             this.panelLog.Controls.Add(cardFinal);
@@ -363,70 +360,34 @@ namespace WindowsFormsApp1
             this.panelMain.BackColor = System.Drawing.Color.FromArgb(15, 23, 42);
             this.panelMain.Dock      = System.Windows.Forms.DockStyle.Fill;
 
-            // ─ 바코드 배너 카드 ─────────────────────────────────────────
+            // ─ 바코드 배너 ────────────────────────────────────────────
             this.panelBanner.BackColor = bgCard;
             this.panelBanner.Location  = new System.Drawing.Point(8, 8);
-            this.panelBanner.Size      = new System.Drawing.Size(100, 90);
+            this.panelBanner.Size      = new System.Drawing.Size(100, 56);
             this.panelBanner.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 
-            this.lblBarcodeTitle.Text      = "바코드";
+            this.lblBarcodeTitle.Text      = "스캔 바코드";
             this.lblBarcodeTitle.Font      = fontSmall;
             this.lblBarcodeTitle.ForeColor = colorMuted;
             this.lblBarcodeTitle.BackColor = bgCard;
             this.lblBarcodeTitle.Location  = new System.Drawing.Point(16, 4);
             this.lblBarcodeTitle.AutoSize  = true;
 
-            this.lbBarcode1.Text      = "바코드 스캔 대기중...";
+            this.lbBarcode1.Text      = "대기 중...";
             this.lbBarcode1.Font      = fontMid;
             this.lbBarcode1.ForeColor = colorCyan;
             this.lbBarcode1.BackColor = bgCard;
-            this.lbBarcode1.Location  = new System.Drawing.Point(16, 26);
-            this.lbBarcode1.Size      = new System.Drawing.Size(420, 50);
+            this.lbBarcode1.Location  = new System.Drawing.Point(16, 24);
+            this.lbBarcode1.Size      = new System.Drawing.Size(700, 28);
             this.lbBarcode1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbBarcode1.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
-
-            this.lblPartNoTitle.Text      = "품번";
-            this.lblPartNoTitle.Font      = fontSmall;
-            this.lblPartNoTitle.ForeColor = colorMuted;
-            this.lblPartNoTitle.BackColor = bgCard;
-            this.lblPartNoTitle.Location  = new System.Drawing.Point(456, 4);
-            this.lblPartNoTitle.AutoSize  = true;
-
-            this.lbLPartNo1.Text      = "---";
-            this.lbLPartNo1.Font      = fontMid;
-            this.lbLPartNo1.ForeColor = colorText;
-            this.lbLPartNo1.BackColor = bgCard;
-            this.lbLPartNo1.Location  = new System.Drawing.Point(456, 26);
-            this.lbLPartNo1.Size      = new System.Drawing.Size(320, 50);
-            this.lbLPartNo1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbLPartNo1.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left;
-
-            this.lblPartNameTitle.Text      = "품명";
-            this.lblPartNameTitle.Font      = fontSmall;
-            this.lblPartNameTitle.ForeColor = colorMuted;
-            this.lblPartNameTitle.BackColor = bgCard;
-            this.lblPartNameTitle.Location  = new System.Drawing.Point(796, 4);
-            this.lblPartNameTitle.AutoSize  = true;
-
-            this.lbPartName1.Text      = "---";
-            this.lbPartName1.Font      = fontMid;
-            this.lbPartName1.ForeColor = colorText;
-            this.lbPartName1.BackColor = bgCard;
-            this.lbPartName1.Location  = new System.Drawing.Point(796, 26);
-            this.lbPartName1.Size      = new System.Drawing.Size(400, 50);
-            this.lbPartName1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbPartName1.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            this.lbBarcode1.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 
             this.panelBanner.Controls.Add(this.lblBarcodeTitle);
             this.panelBanner.Controls.Add(this.lbBarcode1);
-            this.panelBanner.Controls.Add(this.lblPartNoTitle);
-            this.panelBanner.Controls.Add(this.lbLPartNo1);
-            this.panelBanner.Controls.Add(this.lblPartNameTitle);
-            this.panelBanner.Controls.Add(this.lbPartName1);
 
             // ─ 센서 카드 ──────────────────────────────────────────────
             this.panelSensor.BackColor = System.Drawing.Color.FromArgb(15, 23, 42);
-            this.panelSensor.Location  = new System.Drawing.Point(8, 106);
+            this.panelSensor.Location  = new System.Drawing.Point(8, 72);
             this.panelSensor.Size      = new System.Drawing.Size(100, 96);
             this.panelSensor.Anchor    = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
 
@@ -463,7 +424,7 @@ namespace WindowsFormsApp1
             this.panelSensor.Controls.Add(this.lbLoadCell2);
 
             // ─ ZedGraph ───────────────────────────────────────────────
-            this.PlotDiff1.Location    = new System.Drawing.Point(8, 210);
+            this.PlotDiff1.Location    = new System.Drawing.Point(8, 176);
             this.PlotDiff1.Size        = new System.Drawing.Size(100, 100);
             this.PlotDiff1.Anchor      = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right | System.Windows.Forms.AnchorStyles.Bottom;
             this.PlotDiff1.ScrollGrace = 0D;
@@ -598,9 +559,9 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.Label   srcState;
         private System.Windows.Forms.Label   lbServoAlarm;
         private System.Windows.Forms.Label   LbCycle1;
-        private System.Windows.Forms.Button  btnBarcode;
         private System.Windows.Forms.Button  btnConfig;
         private System.Windows.Forms.Button  btnSignal;
+        private System.Windows.Forms.Button  btnDataView;
         private System.Windows.Forms.Button  btnPartMgr;
         private System.Windows.Forms.Panel   panelIconArea;
         private System.Windows.Forms.Label   lblSubTitle;
@@ -621,10 +582,6 @@ namespace WindowsFormsApp1
         private System.Windows.Forms.Panel   panelBanner;
         private System.Windows.Forms.Label   lblBarcodeTitle;
         private System.Windows.Forms.Label   lbBarcode1;
-        private System.Windows.Forms.Label   lblPartNoTitle;
-        private System.Windows.Forms.Label   lbLPartNo1;
-        private System.Windows.Forms.Label   lblPartNameTitle;
-        private System.Windows.Forms.Label   lbPartName1;
 
         private System.Windows.Forms.Panel   panelSensor;
         private System.Windows.Forms.Label   lblLvdtH;

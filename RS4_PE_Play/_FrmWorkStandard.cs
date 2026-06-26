@@ -15,6 +15,7 @@ namespace WindowsFormsApp1
         public void LoadPicture(string picName)
         {
             string dir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Image_WorkStandard");
+            Directory.CreateDirectory(dir);
 
             // 원본 이름으로 시도
             if (TryLoad(dir, picName + ".png")) return;

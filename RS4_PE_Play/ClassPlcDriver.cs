@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using System.Threading;
 using ResisterTest.Managers;
 
 namespace WindowsFormsApp1
@@ -16,73 +15,50 @@ namespace WindowsFormsApp1
     }
 
 
-    // 미쓰비시 MX Component 이더넷 방식 (동적 COM - MX Component 4 필요)
+    // 미쓰비시 MX Component 이더넷 — 동적 COM 바인딩, 1워드씩 읽기/쓰기
     public class MelsecMxDriver : IPlcDriver
     {
         private readonly string _ipAddress;
-        private readonly int _port;
         private object _plc;
         private Type _plcType;
         private bool _connected;
 
         public bool IsConnected => _connected;
 
-        // MX Component 4 표준 CPU 타입
-        // Q04UDEHCPU = 210 (0xD2), Q06UDEHCPU = 211
         private const int CPU_TYPE_Q04UDEH = 210;
-        private const int MELSEC_PORT = 5001;
 
-        public MelsecMxDriver(string ipAddress, int port = MELSEC_PORT)
+        public MelsecMxDriver(string ipAddress, int port = 5001, System.Windows.Forms.Form hostForm = null)
         {
             _ipAddress = ipAddress;
-            _port = port;
         }
 
         public bool Connect()
         {
             try
             {
-                // MX Component 4 COM ProgID 시도 순서
                 string[] progIds = {
+                    "ActEther.ActQNUDECPUTCP",
+                    "ActEther.ActQNUDECPUTCP.1",
                     "ACTEtherLib.ActQNUDECPUTCP",
-                    "ActProgTypeLib.ActProgType1",
                     "ACT.ActQNUDECPUTCP"
                 };
-
-                foreach (var progId in progIds)
+                foreach (var id in progIds)
                 {
-                    _plcType = Type.GetTypeFromProgID(progId);
+                    _plcType = Type.GetTypeFromProgID(id);
                     if (_plcType != null) break;
                 }
-
-                if (_plcType == null)
-                {
-                    Logger.Log("[MX] MX Component가 설치되어 있지 않습니다.");
-                    return false;
-                }
+                if (_plcType == null) { Logger.Log("[MX] MX Component 미설치"); return false; }
 
                 _plc = Activator.CreateInstance(_plcType);
+                SetProp("ActCpuType",    CPU_TYPE_Q04UDEH);
                 SetProp("ActHostAddress", _ipAddress);
-                SetProp("ActPortNumber", _port);
-                SetProp("ActCpuType", CPU_TYPE_Q04UDEH);
-                SetProp("ActTimeOut", 3000);
 
-                int ret = (int)_plcType.InvokeMember("Open",
-                    BindingFlags.InvokeMethod, null, _plc, null);
+                int ret = (int)_plcType.InvokeMember("Open", BindingFlags.InvokeMethod, null, _plc, null);
                 _connected = (ret == 0);
-
-                if (_connected)
-                    Logger.Log($"[MX] 연결 성공: {_ipAddress}:{_port}");
-                else
-                    Logger.Log($"[MX] 연결 실패 ret={ret}");
-
+                Logger.Log(_connected ? $"[MX] 연결 성공: {_ipAddress}" : $"[MX] 연결 실패 ret={ret:X}");
                 return _connected;
             }
-            catch (Exception ex)
-            {
-                Logger.Log("[MX] 연결 오류: " + ex.Message);
-                return false;
-            }
+            catch (Exception ex) { Logger.Log("[MX] 연결 오류: " + ex.Message); return false; }
         }
 
         public void Disconnect()
@@ -92,34 +68,32 @@ namespace WindowsFormsApp1
             _connected = false;
         }
 
-        // D영역 워드 읽기 후 PLCData1에 직접 저장
+        // D워드 1개씩 읽기 — ReadDeviceBlock(szDevice, 1, ref int)
         public bool ReadWords(int startAddress, int count)
         {
             if (!_connected) return false;
             try
             {
-                int[] buf = new int[count];
-                object[] args = new object[] { $"D{startAddress}", count, buf };
-                var pm = new ParameterModifier(3);
-                pm[2] = true; // 3번째 파라미터 ref
-                int ret = (int)_plcType.InvokeMember("ReadDeviceBlock",
-                    BindingFlags.InvokeMethod, null, _plc, args,
-                    new[] { pm }, null, null);
-
-                if (ret != 0) return false;
-
                 for (int i = 0; i < count; i++)
                 {
+                    object[] args = { $"D{startAddress + i}", 1, (object)0 };
+                    var pm = new ParameterModifier(3);
+                    pm[2] = true;
+                    int ret = (int)_plcType.InvokeMember("ReadDeviceBlock",
+                        BindingFlags.InvokeMethod, null, _plc, args, new[] { pm }, null, null);
+                    if (ret != 0) continue;
+
+                    int wordVal = Convert.ToInt32(args[2]);
                     int addr = startAddress + i;
                     if (addr >= 4000 && addr <= 4031)
                     {
                         int wi = addr - 4000;
                         for (int b = 0; b < 16; b++)
-                            PLCData1.PlcValueBit[wi, b] = ((buf[i] >> b) & 1) == 1;
+                            PLCData1.PlcValueBit[wi, b] = ((wordVal >> b) & 1) == 1;
                     }
                     else
                     {
-                        PLCData1.PlcValue[addr] = buf[i];
+                        PLCData1.PlcValue[addr] = wordVal;
                     }
                 }
                 return true;
@@ -137,16 +111,19 @@ namespace WindowsFormsApp1
             if (!_connected) return false;
             try
             {
-                int[] data = new int[count];
-                Array.Copy(PLCData1.writePlcValue, startAddress, data, 0, count);
-
-                object[] args = new object[] { $"D{startAddress}", count, data };
-                var pm = new ParameterModifier(3);
-                pm[2] = true;
-                int ret = (int)_plcType.InvokeMember("WriteDeviceBlock",
-                    BindingFlags.InvokeMethod, null, _plc, args,
-                    new[] { pm }, null, null);
-                return ret == 0;
+                for (int i = 0; i < count; i++)
+                {
+                    int v = PLCData1.writePlcValue[startAddress + i];
+                    if (PLCData1.lastWriteBuffer[startAddress + i] == v) continue; // 변경 없으면 스킵
+                    object[] args = { $"D{startAddress + i}", 1, (object)v };
+                    Logger.Log($"[MX] Write D{startAddress + i} = {v}");
+                    int ret = (int)_plcType.InvokeMember("WriteDeviceBlock",
+                        BindingFlags.InvokeMethod, null, _plc, args, null, null, null);
+                    Logger.Log($"[MX] Write D{startAddress + i} ret=0x{ret:X}");
+                    if (ret == 0) PLCData1.lastWriteBuffer[startAddress + i] = v;
+                    else Logger.Log($"[MX] D{startAddress + i} 쓰기 실패 ret=0x{ret:X}");
+                }
+                return true;
             }
             catch (Exception ex)
             {
@@ -161,17 +138,17 @@ namespace WindowsFormsApp1
             if (!_connected) return false;
             try
             {
-                int[] intData = new int[data.Length];
                 for (int i = 0; i < data.Length; i++)
-                    intData[i] = data[i];
-
-                object[] args = new object[] { $"D{startAddress}", intData.Length, intData };
-                var pm = new ParameterModifier(3);
-                pm[2] = true;
-                int ret = (int)_plcType.InvokeMember("WriteDeviceBlock",
-                    BindingFlags.InvokeMethod, null, _plc, args,
-                    new[] { pm }, null, null);
-                return ret == 0;
+                {
+                    int v = (int)data[i];
+                    if (PLCData1.lastWriteBuffer[startAddress + i] == v) continue;
+                    object[] args = { $"D{startAddress + i}", 1, (object)v };
+                    int ret = (int)_plcType.InvokeMember("WriteDeviceBlock",
+                        BindingFlags.InvokeMethod, null, _plc, args, null, null, null);
+                    if (ret == 0) PLCData1.lastWriteBuffer[startAddress + i] = v;
+                    else Logger.Log($"[MX] D{startAddress + i} 비트 쓰기 실패 ret=0x{ret:X}");
+                }
+                return true;
             }
             catch (Exception ex)
             {

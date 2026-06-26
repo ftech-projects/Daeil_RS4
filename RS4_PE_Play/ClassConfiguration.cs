@@ -16,41 +16,42 @@ public class Configuration
     [Description("미쓰비시 PLC Ethernet 포트 (기본 5001)")]
     public int PlcIpPort { get; set; }
 
-    [Category("센서 통신 (RS-485)")]
-    [DisplayName("RS-485 포트")]
-    [Description("LVDT + 로드셀 1,2가 공유하는 RS-485 COM 포트")]
+    [Category("센서 통신 (LVDT RS-232)")]
+    [DisplayName("LVDT 포트")]
+    [Description("DI-20W 전용 RS-232 COM 포트")]
     [TypeConverter(typeof(ComPortConverter))]
-    public string Rs485Port { get; set; }
+    public string LvdtPort { get; set; }
 
-    [Category("센서 통신 (RS-485)")]
-    [DisplayName("통신속도 (bps)")]
-    [Description("RS-485 공용 통신속도. 3개 장치 모두 동일하게 설정할 것 (기본 9600)")]
-    public int Rs485Baud { get; set; }
+    [Category("센서 통신 (LVDT RS-232)")]
+    [DisplayName("LVDT 통신속도 (bps)")]
+    [Description("DI-20W 통신속도 (기본 38400)")]
+    public int LvdtBaud { get; set; }
 
-    [Category("센서 통신 (RS-485)")]
+    [Category("센서 통신 (LVDT RS-232)")]
     [DisplayName("LVDT ID")]
     [Description("DI-20W F-40 설정값과 일치 (기본 1)")]
     public int LvdtId { get; set; }
 
-    [Category("센서 통신 (RS-485)")]
+    [Category("센서 통신 (로드셀 RS-485)")]
+    [DisplayName("RS-485 포트")]
+    [Description("로드셀 1,2가 공유하는 RS-485 COM 포트")]
+    [TypeConverter(typeof(ComPortConverter))]
+    public string Rs485Port { get; set; }
+
+    [Category("센서 통신 (로드셀 RS-485)")]
+    [DisplayName("RS-485 통신속도 (bps)")]
+    [Description("RS-485 공용 통신속도. BS-205 2대 동일하게 설정 (기본 9600)")]
+    public int Rs485Baud { get; set; }
+
+    [Category("센서 통신 (로드셀 RS-485)")]
     [DisplayName("로드셀1 ID (전진)")]
     [Description("BS-205 1번 기기 Id 설정값과 일치 (기본 1)")]
     public int LoadCell1Id { get; set; }
 
-    [Category("센서 통신 (RS-485)")]
+    [Category("센서 통신 (로드셀 RS-485)")]
     [DisplayName("로드셀2 ID (후진)")]
     [Description("BS-205 2번 기기 Id 설정값과 일치 (기본 2)")]
     public int LoadCell2Id { get; set; }
-
-    [Category("기타 통신")]
-    [DisplayName("스캐너 포트")]
-    [TypeConverter(typeof(ComPortConverter))]
-    public string ScannerPort { get; set; }
-
-    [Category("기타 통신")]
-    [DisplayName("프린터 포트")]
-    [TypeConverter(typeof(ComPortConverter))]
-    public string PrinterPort { get; set; }
 
     // 리셋 입력 주소
     [Category("리셋 설정")]
@@ -75,6 +76,11 @@ public class Configuration
     public int ErrorResetOutBit { get; set; }
 
     [Category("기타")]
+    [DisplayName("설비 타이틀")]
+    [Description("메인 화면 상단에 표시되는 설비 이름")]
+    public string EquipTitle { get; set; }
+
+    [Category("기타")]
     [DisplayName("비밀번호")]
     [Description("관리자 비밀번호 (0이면 비밀번호 없음)")]
     public string strPassWord { get; set; }
@@ -83,17 +89,18 @@ public class Configuration
     {
         PlcIpAddress   = GlobalValues.PlcIpAddress;
         PlcIpPort      = GlobalValues.PlcIpPort;
+        LvdtPort       = GlobalValues.LvdtPort;
+        LvdtBaud       = GlobalValues.LvdtBaud;
+        LvdtId         = GlobalValues.LvdtId;
         Rs485Port      = GlobalValues.Rs485Port;
         Rs485Baud      = GlobalValues.Rs485Baud;
-        LvdtId         = GlobalValues.LvdtId;
         LoadCell1Id    = GlobalValues.LoadCell1Id;
         LoadCell2Id    = GlobalValues.LoadCell2Id;
-        ScannerPort    = GlobalValues.ScannerPort;
-        PrinterPort    = GlobalValues.PrinterPort;
         ResetInputDWord    = GlobalValues.ResetInputDWord;
         ResetInputBit      = GlobalValues.ResetInputBit;
         ErrorResetOutDWord = GlobalValues.ErrorResetOutDWord;
         ErrorResetOutBit   = GlobalValues.ErrorResetOutBit;
+        EquipTitle     = GlobalValues.EquipTitle;
         strPassWord    = GlobalValues.strPassWord;
     }
 
@@ -101,18 +108,19 @@ public class Configuration
     {
         GlobalValues.PlcIpAddress   = PlcIpAddress;
         GlobalValues.PlcIpPort      = PlcIpPort;
+        GlobalValues.LvdtPort       = LvdtPort;
+        GlobalValues.LvdtBaud       = LvdtBaud;
+        GlobalValues.LvdtId         = LvdtId;
         GlobalValues.Rs485Port      = Rs485Port;
         GlobalValues.Rs485Baud      = Rs485Baud;
-        GlobalValues.LvdtId         = LvdtId;
         GlobalValues.LoadCell1Id    = LoadCell1Id;
         GlobalValues.LoadCell2Id    = LoadCell2Id;
-        GlobalValues.ScannerPort    = ScannerPort;
-        GlobalValues.PrinterPort    = PrinterPort;
         GlobalValues.ResetInputDWord    = ResetInputDWord;
         GlobalValues.ResetInputBit      = ResetInputBit;
         GlobalValues.ErrorResetOutDWord = ErrorResetOutDWord;
         GlobalValues.ErrorResetOutBit   = ErrorResetOutBit;
-        GlobalValues.strPassWord    = strPassWord;
+        GlobalValues.EquipTitle         = EquipTitle;
+        GlobalValues.strPassWord        = strPassWord;
     }
 
     private class ComPortConverter : System.ComponentModel.StringConverter
@@ -157,23 +165,12 @@ public class ConfigurationMeasure
     [Description("그래프 Y축 하중 단위 (예: kgf, N, kg)")]
     public string LoadUnit { get; set; }
 
-    [Category("품목 정보")]
-    [DisplayName("품번")]
-    public string AssyPartNo { get; set; }
-
-    [Category("품목 정보")]
-    [DisplayName("스캔 타겟")]
-    [Description("바코드 스캔 시 비교할 타겟 문자열")]
-    public string TargetScan { get; set; }
-
     public ConfigurationMeasure()
     {
         L_mm       = MeasureData1.L_mm;
         GapSpec    = MeasureData1.GapSpec;
         Unit       = MeasureData1.Unit;
         LoadUnit   = MeasureData1.LoadUnit;
-        AssyPartNo = MeasureData1.AssyParNo;
-        TargetScan = MeasureData1.TargetScan;
     }
 
     public void Apply()
@@ -182,7 +179,5 @@ public class ConfigurationMeasure
         MeasureData1.GapSpec   = GapSpec;
         MeasureData1.Unit      = Unit;
         MeasureData1.LoadUnit  = LoadUnit;
-        MeasureData1.AssyParNo = AssyPartNo;
-        MeasureData1.TargetScan = TargetScan;
     }
 }

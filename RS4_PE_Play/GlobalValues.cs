@@ -5,7 +5,8 @@ using System.Windows.Forms;
 public static class MeasureData1
 {
     // 실시간 센서값
-    public static double ValueLvdt = 0;           // LVDT 현재값 (mm)
+    public static double ValueLvdt = 0;           // LVDT 현재값 (mm, offset 적용 후)
+    public static double LvdtOffset = 0;          // LVDT 소프트웨어 영점 기준값
     public static double ValueLoadCell1 = 0;      // 1번 로드셀 (전진용, kgf)
     public static double ValueLoadCell2 = 0;      // 2번 로드셀 (후진용, kgf)
 
@@ -21,10 +22,8 @@ public static class MeasureData1
     public static double GapAngle = 0;            // 유격 각도 (°)
 
     // 품목 정보
-    public static string AssyParNo = "";   // 바코드 원문 (시리얼 번호)
     public static string PartNo    = "";   // DB PartNo 값
     public static string PartName  = "";   // DB PartName 값
-    public static string TargetScan = "";
 
     // 부하 하중: P(kgf) = 4.6(kgf·m) / L(m)
     public static double CalcThreshold()
@@ -135,13 +134,15 @@ public class GlobalValues
     public static System.Action ZeroLc2Action;     // 로드셀2 단독 영점
     public static string strPassWord;
 
+    public static string EquipTitle = "유격 검사기";
     public static string PlcIpAddress = "192.168.0.1";
     public static int PlcIpPort = 5001;
 
-    public static string Rs485Port;          // RS-485 공용 포트 (LVDT + 로드셀 1,2)
-    public static string ScannerPort;
-    public static string PrinterPort;
+    public static string LvdtPort;            // DI-20W RS-232 전용 포트
+    public static string Rs485Port;          // RS-485 포트 (로드셀 1,2)
+    public static string ScannerPort;        // 바코드 스캐너 포트
 
+    public static int LvdtBaud     = 38400;  // DI-20W 통신속도
     public static int Rs485Baud    = 9600;   // RS-485 공용 통신속도
     public static int LvdtId       = 1;      // DI-20W Command mode ID (F-40)
     public static int LoadCell1Id  = 1;      // BS-205 1번 로드셀 ID
@@ -201,12 +202,14 @@ public class GlobalValues
         SqlServerPassword = ReadStr("SqlServer", "Password", "");
 
         // 시스템 설정
-        strPassWord = ReadStr("System", "PassWord", "0");
+        EquipTitle   = ReadStr("System", "EquipTitle",   "유격 검사기");
+        strPassWord  = ReadStr("System", "PassWord", "0");
         PlcIpAddress = ReadStr("System", "PlcIpAddress", "192.168.0.1");
         PlcIpPort = ReadInt("System", "PlcIpPort", 5001);
+        LvdtPort     = ReadStr("System", "LvdtPort",     "COM4");
         Rs485Port    = ReadStr("System", "Rs485Port",    "COM3");
         ScannerPort  = ReadStr("System", "ScannerPort",  "COM5");
-        PrinterPort  = ReadStr("System", "PrinterPort",  "COM6");
+        LvdtBaud     = ReadInt("System", "LvdtBaud",     38400);
         Rs485Baud    = ReadInt("System", "Rs485Baud",    9600);
         LvdtId       = ReadInt("System", "LvdtId",       1);
         LoadCell1Id  = ReadInt("System", "LoadCell1Id",  1);
@@ -233,8 +236,6 @@ public class GlobalValues
         MeasureData1.GapSpec    = ReadDouble("Measure", "GapSpec", 0.5);
         MeasureData1.Unit       = ReadStr("Measure", "Unit", "°");
         MeasureData1.LoadUnit   = ReadStr("Measure", "LoadUnit", "kgf");
-        MeasureData1.AssyParNo = ReadStr("Measure", "AssyPartNo", "");
-        MeasureData1.TargetScan = ReadStr("Measure", "TargetScan", "");
     }
 
     // config.ini [PartList] 섹션에서 바코드→품명 조회
@@ -257,12 +258,14 @@ public class GlobalValues
         ini.WriteValue("SqlServer", "UserId",   SqlServerUserId   ?? "sa");
         ini.WriteValue("SqlServer", "Password", SqlServerPassword ?? "");
 
+        ini.WriteValue("System", "EquipTitle",  EquipTitle  ?? "유격 검사기");
         ini.WriteValue("System", "PassWord", strPassWord ?? "0");
         ini.WriteValue("System", "PlcIpAddress", PlcIpAddress ?? "192.168.0.1");
         ini.WriteValue("System", "PlcIpPort", PlcIpPort.ToString());
+        ini.WriteValue("System", "LvdtPort",    LvdtPort    ?? "COM4");
         ini.WriteValue("System", "Rs485Port",   Rs485Port   ?? "COM3");
         ini.WriteValue("System", "ScannerPort", ScannerPort ?? "COM5");
-        ini.WriteValue("System", "PrinterPort", PrinterPort ?? "COM6");
+        ini.WriteValue("System", "LvdtBaud",    LvdtBaud.ToString());
         ini.WriteValue("System", "Rs485Baud",   Rs485Baud.ToString());
         ini.WriteValue("System", "LvdtId",      LvdtId.ToString());
         ini.WriteValue("System", "LoadCell1Id", LoadCell1Id.ToString());
@@ -286,7 +289,5 @@ public class GlobalValues
         ini.WriteValue("Measure", "GapSpec", MeasureData1.GapSpec.ToString());
         ini.WriteValue("Measure", "Unit",     MeasureData1.Unit     ?? "°");
         ini.WriteValue("Measure", "LoadUnit", MeasureData1.LoadUnit ?? "kgf");
-        ini.WriteValue("Measure", "AssyPartNo", MeasureData1.AssyParNo);
-        ini.WriteValue("Measure", "TargetScan", MeasureData1.TargetScan);
     }
 }

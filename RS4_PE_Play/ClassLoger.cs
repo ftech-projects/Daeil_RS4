@@ -35,8 +35,6 @@ namespace ResisterTest.Managers
         {
             string time = DateTime.Now.ToString("HH:mm:ss");
             _targetTextBox.AppendText($"[{time}] {message}{Environment.NewLine}");
-            _targetTextBox.SelectionStart = _targetTextBox.Text.Length;
-            _targetTextBox.ScrollToCaret();
         }
     }
 }

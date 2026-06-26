@@ -1,5 +1,14 @@
 # Daeil_RS4 작업 기록
 
+## 2026-06-26 14:05 — RS4_PE_Play 프레임 바코드 DB 저장 Git 푸시
+
+- **변경**: `SaveRecord` — `Frame_Barcode` 있으면 `Table_Fram_Inspection` **UPDATE**, 없으면 **INSERT**
+- **변경**: `_FrmMain` — 검사 완료 시 `lbBarcode1` 바코드를 DB 저장에 전달 (`대기 중...` 제외)
+- **추가**: `PLC/DAIL_PLAY.gxw`, `Doc/RS4_1st_BACK_유격검사WorRK FLOW.xlsx`
+- **삭제**: `Tools/Table_Part_backup_20260605_090550.csv` (구 백업)
+
+---
+
 ## 2026-06-15 — RS4 Program Files vs Git 소스 비교
 
 - PF: `C:\Program Files (x86)\business\대일공업\RS4`

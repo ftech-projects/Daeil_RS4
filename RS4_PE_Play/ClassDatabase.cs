@@ -4,10 +4,10 @@ using System.Data.OleDb;
 
 public static class ClassDatabase
 {
-    // ── 검사 결과 저장 ──────────────────────────────────────────────────
+    // ── 검사 결과 저장 (바코드 있으면 UPDATE, 없으면 INSERT) ──────────
     public static void SaveRecord(
         DateTime startTime, DateTime endTime,
-        double play, bool pass)
+        double play, bool pass, string barcode = "")
     {
         try
         {
@@ -15,16 +15,45 @@ public static class ClassDatabase
             {
                 conn.Open();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText =
-                    "INSERT INTO Table_Fram_Inspection " +
-                    "(Frame_Barcode, JobDate, JobStartTime, JobEndTime, Inspection_Value, Decision) " +
-                    "VALUES (?,?,?,?,?,?)";
-                cmd.Parameters.AddWithValue("?", "");
-                cmd.Parameters.AddWithValue("?", startTime.ToString("yyyy-MM-dd"));
-                cmd.Parameters.AddWithValue("?", startTime.ToString("HH:mm:ss"));
-                cmd.Parameters.AddWithValue("?", endTime.ToString("HH:mm:ss"));
-                cmd.Parameters.AddWithValue("?", play.ToString("F3"));
-                cmd.Parameters.AddWithValue("?", pass ? "OK" : "NG");
+
+                bool hasBarcode = !string.IsNullOrWhiteSpace(barcode);
+                bool exists = false;
+
+                if (hasBarcode)
+                {
+                    var chk = conn.CreateCommand();
+                    chk.CommandText = "SELECT COUNT(*) FROM Table_Fram_Inspection WHERE Frame_Barcode = ?";
+                    chk.Parameters.AddWithValue("?", barcode);
+                    exists = (int)chk.ExecuteScalar() > 0;
+                }
+
+                if (exists)
+                {
+                    cmd.CommandText =
+                        "UPDATE Table_Fram_Inspection SET " +
+                        "JobDate=?, JobStartTime=?, JobEndTime=?, Inspection_Value=?, Decision=? " +
+                        "WHERE Frame_Barcode=?";
+                    cmd.Parameters.AddWithValue("?", startTime.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("?", startTime.ToString("HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("?", endTime.ToString("HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("?", play.ToString("F3"));
+                    cmd.Parameters.AddWithValue("?", pass ? "OK" : "NG");
+                    cmd.Parameters.AddWithValue("?", barcode);
+                }
+                else
+                {
+                    cmd.CommandText =
+                        "INSERT INTO Table_Fram_Inspection " +
+                        "(Frame_Barcode, JobDate, JobStartTime, JobEndTime, Inspection_Value, Decision) " +
+                        "VALUES (?,?,?,?,?,?)";
+                    cmd.Parameters.AddWithValue("?", barcode);
+                    cmd.Parameters.AddWithValue("?", startTime.ToString("yyyy-MM-dd"));
+                    cmd.Parameters.AddWithValue("?", startTime.ToString("HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("?", endTime.ToString("HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("?", play.ToString("F3"));
+                    cmd.Parameters.AddWithValue("?", pass ? "OK" : "NG");
+                }
+
                 cmd.ExecuteNonQuery();
             }
         }

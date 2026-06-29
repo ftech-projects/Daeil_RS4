@@ -1,5 +1,14 @@
 # Daeil_RS4 작업 기록
 
+## 2026-06-26 — OP05 PE전용·IO UI, ServerManager NULL 안전, 기타 Git 푸시
+
+- **OP05_NEW**: Basic/길이시험 PE 공차 전용, `IoMap.vb`+FrmIo Op01_PE UI, 스캔 시 `PrepareNewScanDisplay`, DPI manifest
+- **ServerManager**: `FieldGridValue`로 Table_Part 그리드 NULL 안전, V1.0 어셈블리·.NET 4.5
+- **RS4_PE_Play**: `SaveRecord` INSERT 단순화(바코드 UPSERT 제거)
+- **RS4.sln**: `Op01_PE(192.168.0.205)` 저장소 경로로 등록
+
+---
+
 ## 2026-06-26 14:05 — RS4_PE_Play 프레임 바코드 DB 저장 Git 푸시
 
 - **변경**: `SaveRecord` — `Frame_Barcode` 있으면 `Table_Fram_Inspection` **UPDATE**, 없으면 **INSERT**

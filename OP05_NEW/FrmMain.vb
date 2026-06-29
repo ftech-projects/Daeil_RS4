@@ -276,11 +276,6 @@ Public Class FrmMain
 
     End Sub
 
-    Private Sub Control2Arry()
-
-        
-    End Sub
-
     ' FlexCell → DataGridView 변환. 미사용 메서드지만 타입 호환 유지
     Private Sub Init_Grid(ByVal GridName As System.Windows.Forms.DataGridView)
 
@@ -367,6 +362,15 @@ Public Class FrmMain
         UpdateStepTraceLabels()
         FitDynamicLabels()
 
+    End Sub
+
+    Private Sub PrepareNewScanDisplay(ByVal scanData As String)
+        InitControl()
+        InitGrid()
+        LoadGrid()
+        srclbAlarm.Visible = False
+        srcLbSerial.Text = scanData
+        FitDynamicLabels()
     End Sub
 
     Private Sub ResetIoToolRivetCounts()
@@ -501,7 +505,7 @@ Public Class FrmMain
                 Sab1String = Sab1String & SplitSab1String(i) & GS
             Next i
         End If
-        
+
         If tmpSab2Barcode <> "" Then
             SplitSab2String = Split(tmpSab2Barcode, Chr(29))
             For i As Integer = 1 To UBound(SplitSab2String) - 1
@@ -548,7 +552,7 @@ Public Class FrmMain
                            "#" & "[)>" & RS & "06" & GS & Sab1String & RS & EOT &
                            "#" & "[)>" & RS & "06" & GS & LsuptString & RS & EOT
             End If
-            
+
         ElseIf Sab1String <> "" And Sab2String <> "" Then
 
             BarcodeSize = BarcodeSize - 2
@@ -730,15 +734,7 @@ Public Class FrmMain
 
             ApplyPartSkipDecisions()
 
-            If _usePeLine Then
-                srclbSpecLengthTest.Text = BasicFrtMin_PE & " ~ " & BasicFrtMax_PE
-            ElseIf OptionType = "VIP" Then
-                srclbSpecLengthTest.Text = BAsicFrtMin_VIPRH & " ~ " & BAsicFrtMax_VIPRH
-            ElseIf OptionType = "STD" Then
-                srclbSpecLengthTest.Text = BAsicFrtMin_STDLH & " ~ " & BAsicFrtMax_STDLH
-            ElseIf OptionType = "FOLD" Then
-                srclbSpecLengthTest.Text = BAsicFrtMin_FOLDRH & " ~ " & BAsicFrtMax_FOLDRH
-            End If
+            srclbSpecLengthTest.Text = BasicFrtMin_PE & " ~ " & BasicFrtMax_PE
 
             If usingLocalMdb Then
                 WriteTxtMessage("[PART] SQL 오프라인 - 로컬 Table_Part_Local 사용")
@@ -1044,12 +1040,6 @@ Public Class FrmMain
         LabelTextFitHelper.FitLabels(srcLsrLeftUpper, srcLsrRightUpper, srcLsrLeftLower, srcLsrRightLower)
     End Sub
 
-    Private Function ResolveOptionTypeForLength() As String
-        Dim t = OptionType.Trim()
-        If String.IsNullOrEmpty(t) Then Return "STD"
-        Return t
-    End Function
-
     Private Sub LogLaserValuesAtStep3()
         _laserDiagTick += 1
         If _laserDiagTick Mod 30 <> 0 Then Return
@@ -1099,55 +1089,15 @@ Public Class FrmMain
         FitDynamicLabels()
     End Sub
 
-    ''' <summary>wStep 3 길이시험 — Use_PE_Line 또는 OptionType(VIP/STD/FOLD)</summary>
+    ''' <summary>wStep 3 길이시험 — PE 공차</summary>
     Private Sub RunLengthTestStep3()
-        If _usePeLine Then
-            Dim frtValPe As Double = basicFrtTolPE - ValueLsrLeftUpper - ValueLsrRightUpper
-            Dim rearValPe As Double = BasicRearTolPE - ValueLsrLeftLower - ValueLsrRightLower
-            srclbDataLengthTestFrt.Text = Format(frtValPe, "0.0#")
-            srclbDataLengthTestRear.Text = Format(rearValPe, "0.0#")
-            Dim frtOkPe As Boolean = frtValPe >= BasicFrtMin_PE And frtValPe <= BasicFrtMax_PE
-            Dim rearOkPe As Boolean = rearValPe >= BasicRearMin_PE And rearValPe <= BasicRearMax_PE
-            FinalizeLengthSetJudgment(frtOkPe, rearOkPe)
-            Return
-        End If
-
-        Dim opt = ResolveOptionTypeForLength()
-        If String.IsNullOrEmpty(OptionType.Trim()) Then
-            WriteTxtMessage("[LENGTH] OptionType 미설정 — STD 공차로 계산")
-        End If
-
-        Dim frtOk As Boolean
-        Dim rearOk As Boolean
-        Dim frtVal As Double
-        Dim rearVal As Double
-
-        If opt = "VIP" Then
-            frtVal = basicFrtTolVIP - ValueLsrLeftUpper - ValueLsrRightUpper
-            rearVal = BasicRearTolVIP - ValueLsrLeftLower - ValueLsrRightLower
-            srclbDataLengthTestFrt.Text = Format(frtVal, "0.0#")
-            srclbDataLengthTestRear.Text = Format(rearVal, "0.0#")
-            frtOk = frtVal >= BAsicFrtMin_VIPRH And frtVal <= BAsicFrtMax_VIPRH
-            rearOk = rearVal >= BAsicRearMin_VIPRH And rearVal <= BAsicRearMax_VIPRH
-        ElseIf opt = "FOLD" Then
-            frtVal = basicFrtTolFOLD - ValueLsrLeftUpper - ValueLsrRightUpper
-            rearVal = BasicRearTolFOLD - ValueLsrLeftLower - ValueLsrRightLower
-            srclbDataLengthTestFrt.Text = Format(frtVal, "0.0#")
-            srclbDataLengthTestRear.Text = Format(rearVal, "0.0#")
-            frtOk = frtVal >= BAsicFrtMin_FOLDRH And frtVal <= BAsicFrtMax_FOLDRH
-            rearOk = rearVal >= BAsicRearMin_FOLDRH And rearVal <= BAsicRearMax_FOLDRH
-        Else
-            frtVal = basicFrtTolSTD - ValueLsrLeftUpper - ValueLsrRightUpper
-            rearVal = BasicRearTolSTD - ValueLsrLeftLower - ValueLsrRightLower
-            srclbDataLengthTestFrt.Text = Format(frtVal, "0.0#")
-            srclbDataLengthTestRear.Text = Format(rearVal, "0.0#")
-            Dim frtTol As Double = (BAsicFrtMax_STDLH - BAsicFrtMin_STDLH)
-            Dim rearTol As Double = (BAsicRearMax_STDLH - BAsicRearMin_STDLH)
-            frtOk = frtVal >= (BAsicFrtMin_STDLH - frtTol) And frtVal <= (BAsicFrtMax_STDLH + frtTol)
-            rearOk = rearVal >= (BAsicRearMin_STDLH - rearTol) And rearVal <= (BAsicRearMax_STDLH + rearTol)
-        End If
-
-        FinalizeLengthSetJudgment(frtOk, rearOk)
+        Dim frtValPe As Double = basicFrtTolPE - ValueLsrLeftUpper - ValueLsrRightUpper
+        Dim rearValPe As Double = BasicRearTolPE - ValueLsrLeftLower - ValueLsrRightLower
+        srclbDataLengthTestFrt.Text = Format(frtValPe, "0.0#")
+        srclbDataLengthTestRear.Text = Format(rearValPe, "0.0#")
+        Dim frtOkPe As Boolean = frtValPe >= BasicFrtMin_PE And frtValPe <= BasicFrtMax_PE
+        Dim rearOkPe As Boolean = rearValPe >= BasicRearMin_PE And rearValPe <= BasicRearMax_PE
+        FinalizeLengthSetJudgment(frtOkPe, rearOkPe)
     End Sub
 
     ''' <summary>wStep / reset step(reStep) 표시 라벨 갱신</summary>
@@ -1730,17 +1680,21 @@ Public Class FrmMain
     End Sub
 
     Private Sub BasicToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BasicToolStripMenuItem.Click
-        FrmBasic.Show()
+        Using basicDlg As New FrmBasic()
+            basicDlg.ShowDialog(Me)
+        End Using
     End Sub
 
     Private Sub PartToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PartToolStripMenuItem.Click
         FrmPart.Show()
     End Sub
 
+    Private _frmIo As FrmIo
+
     Private Sub IoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles IoToolStripMenuItem.Click
-        Using frm As New FrmIo(Me)
-            frm.ShowDialog(Me)
-        End Using
+        If _frmIo Is Nothing OrElse _frmIo.IsDisposed Then _frmIo = New FrmIo(Me)
+        _frmIo.Show()
+        _frmIo.BringToFront()
     End Sub
 
     Private Sub ExitToolStripMenuItem_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -1858,9 +1812,9 @@ Public Class FrmMain
             AddGrid(srcLbPartNo.Text)
             InitGrid()
             LoadGrid()
-            InitControl()
             FrmColor.Close()
             wStep = 0
+            WriteTxtMessage("[SEQ] Result kept on screen; next scan will clear and load new data")
 
         End If
 
@@ -2013,8 +1967,8 @@ Public Class FrmMain
                 If Len(ScanData) >= 23 Then
 
                     StartTIme = Format(Now, "HH:mm:ss")
+                    PrepareNewScanDisplay(ScanData)
                     If FlagBeforeCheck = True Then
-                        srcLbSerial.Text = ScanData
                         LoadBasicData()
                         If Not LoadPArt(ScanData) Then
                             NG()
@@ -2051,7 +2005,6 @@ Public Class FrmMain
 
                     Else
 
-                        srcLbSerial.Text = ScanData
                         If LoadPArt(ScanData) Then
                             srclbAlarm.Visible = False
                             wStep = 1

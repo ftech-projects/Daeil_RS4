@@ -148,9 +148,7 @@
     <Compile Include="FrmColor.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmIo.Designer.vb">
-      <DependentUpon>FrmIo.vb</DependentUpon>
-    </Compile>
+    <Compile Include="IoMap.vb" />
     <Compile Include="FrmIo.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -189,9 +187,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmColor.resx">
       <DependentUpon>FrmColor.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmIo.resx">
-      <DependentUpon>FrmIo.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.vb</DependentUpon>

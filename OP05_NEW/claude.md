@@ -867,6 +867,16 @@ $env:DEPLOY_PASSWORD='현장 Administrator 암호'
 
 ---
 
+---
+
+## 2026-06-11 — FrmIo Op01_PE UI 통일 (재작업)
+
+- 기존 COM/FBEI **2탭** → Op01_PE **단일 창** (입력 좌 / 출력 우, 네이비 헤더, 녹색 IN·주황 OUT)
+- `IoMap.vb` 추가, Designer 기반 `FrmIo` 제거
+- 상세: 상위 `RS4\CLAUDE.md` 2026-06-11 항목
+
+---
+
 ## 2026-06-03 — Menu > I/O 모니터 창 (OP01 PE 스타일)
 
 ### 배경

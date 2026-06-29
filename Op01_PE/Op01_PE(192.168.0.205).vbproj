@@ -5,7 +5,7 @@
     <MyType>WindowsForms</MyType>
     <ProductVersion>8.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D7C06F74-4322-4338-8CC3-DA47531D0ACA}</ProjectGuid>
+    <ProjectGuid>{ABC984C4-C43A-4418-B40C-919E9DA49ED3}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AssemblyName>RS4_OP01_PE</AssemblyName>

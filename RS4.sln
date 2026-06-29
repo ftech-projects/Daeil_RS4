@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.6.11819.183 stable
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Op02_2(192.168.0.108)", "Op03\Op02_2(192.168.0.108).vbproj", "{75507D58-B632-4885-857E-8EA471ADA8FA}"
 EndProject
@@ -32,6 +32,8 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "AlcUpdate", "ALC_UPDATE\ServerSeq\AlcUpdate.vbproj", "{FE3BE206-F327-4566-96EC-02386B04A7F7}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Op01_PE", "Op01_PE\Op01_PE.vbproj", "{D7C06F74-4322-4338-8CC3-DA47531D0ACA}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Op01_PE(192.168.0.205)", "Op01_PE\Op01_PE(192.168.0.205).vbproj", "{ABC984C4-C43A-4418-B40C-919E9DA49ED3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,6 +199,18 @@ Global
 		{D7C06F74-4322-4338-8CC3-DA47531D0ACA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D7C06F74-4322-4338-8CC3-DA47531D0ACA}.Release|x86.ActiveCfg = Release|Any CPU
 		{D7C06F74-4322-4338-8CC3-DA47531D0ACA}.Release|x86.Build.0 = Release|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Debug|x86.Build.0 = Debug|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABC984C4-C43A-4418-B40C-919E9DA49ED3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

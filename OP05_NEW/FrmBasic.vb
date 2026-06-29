@@ -1,19 +1,24 @@
+Imports System.Collections.Generic
 Imports System.Globalization
-Imports System.Drawing
 Imports System.Windows.Forms
 
 Public Class FrmBasic
 
-    Private txtPeFrtMax As TextBox
-    Private txtPeFrtMin As TextBox
-    Private txtPeRearMax As TextBox
-    Private txtPeRearMin As TextBox
-    Private txtPeFrtTol As TextBox
-    Private txtPeRearTol As TextBox
-    Private _peUiReady As Boolean
+    ''' <summary>고정 클라이언트 크기 — DPI/자동맞춤 없이 픽셀 고정</summary>
+    Private Const FormClientWidth As Integer = 902
+    Private Const FormClientHeight As Integer = 571
+
+    Private Shared ReadOnly AllowedControlNames As HashSet(Of String) = New HashSet(Of String)(StringComparer.OrdinalIgnoreCase) From {
+        "Button1", "Button2", "Panel1", "Label1", "Label2", "Label3", "Label4", "Label5", "Label6", "Label7",
+        "Label9", "Label23", "Label24", "Label25",
+        "srcTxtMax", "srcTxtMin", "TextBox1", "TextBox2", "TextBox11", "TextBox12",
+        "CheckBox1", "CheckBox2"
+    }
 
     Private Sub FrmBasic_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        EnsurePeBasicUi()
+        RemoveLegacyBasicControls()
+        ApplyPeOnlyLayout()
+
         If Not LoadBasicData() Then
             MessageBox.Show("Basic 불러오기 실패" & vbCrLf & LastMdbError & vbCrLf & MdbFilePath(),
                             "DB", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -21,71 +26,34 @@ Public Class FrmBasic
         BindBasicFieldsToForm()
     End Sub
 
-    Private Sub EnsurePeBasicUi()
-        If _peUiReady Then Return
-        _peUiReady = True
+    Private Sub RemoveLegacyBasicControls()
+        Dim toRemove As New List(Of Control)
+        For Each ctrl As Control In Controls
+            If Not AllowedControlNames.Contains(ctrl.Name) Then
+                toRemove.Add(ctrl)
+            End If
+        Next
 
-        Dim gb As New GroupBox With {
-            .Text = "PE Line 길이 공차",
-            .Location = New Point(12, 430),
-            .Size = New Size(870, 120),
-            .Font = New Font("맑은 고딕", 10.0F, FontStyle.Bold)
-        }
+        For Each ctrl As Control In toRemove
+            Controls.Remove(ctrl)
+            ctrl.Dispose()
+        Next
+    End Sub
 
-        Dim lblFrt As New Label With {.Text = "FRT Min/Max", .Location = New Point(16, 32), .AutoSize = True}
-        txtPeFrtMin = New TextBox With {.Location = New Point(120, 28), .Size = New Size(80, 27)}
-        txtPeFrtMax = New TextBox With {.Location = New Point(210, 28), .Size = New Size(80, 27)}
-
-        Dim lblRear As New Label With {.Text = "REAR Min/Max", .Location = New Point(310, 32), .AutoSize = True}
-        txtPeRearMin = New TextBox With {.Location = New Point(430, 28), .Size = New Size(80, 27)}
-        txtPeRearMax = New TextBox With {.Location = New Point(520, 28), .Size = New Size(80, 27)}
-
-        Dim lblTol As New Label With {.Text = "FRT/REAR 보정치", .Location = New Point(16, 72), .AutoSize = True}
-        txtPeFrtTol = New TextBox With {.Location = New Point(150, 68), .Size = New Size(80, 27)}
-        txtPeRearTol = New TextBox With {.Location = New Point(240, 68), .Size = New Size(80, 27)}
-
-        gb.Controls.AddRange(New Control() {
-            lblFrt, txtPeFrtMin, txtPeFrtMax,
-            lblRear, txtPeRearMin, txtPeRearMax,
-            lblTol, txtPeFrtTol, txtPeRearTol
-        })
-        Controls.Add(gb)
-        ClientSize = New Size(902, 570)
+    Private Sub ApplyPeOnlyLayout()
+        Text = "Basic (PE)"
+        Label1.Text = "PE BASIC SETTING"
+        ClientSize = New Drawing.Size(FormClientWidth, FormClientHeight)
     End Sub
 
     Private Sub BindBasicFieldsToForm()
-        srcTxtMax.Text = CStr(BAsicFrtMax_STDLH)
-        srcTxtMin.Text = CStr(BAsicFrtMin_STDLH)
-        TextBox2.Text = CStr(BAsicRearMax_STDLH)
-        TextBox1.Text = CStr(BAsicRearMin_STDLH)
+        srcTxtMax.Text = CStr(BasicFrtMax_PE)
+        srcTxtMin.Text = CStr(BasicFrtMin_PE)
+        TextBox2.Text = CStr(BasicRearMax_PE)
+        TextBox1.Text = CStr(BasicRearMin_PE)
 
-        TextBox6.Text = CStr(BAsicFrtMax_FOLDRH)
-        TextBox5.Text = CStr(BAsicFrtMin_FOLDRH)
-        TextBox4.Text = CStr(BAsicRearMax_FOLDRH)
-        TextBox3.Text = CStr(BAsicRearMin_FOLDRH)
-
-        TextBox10.Text = CStr(BAsicFrtMax_VIPRH)
-        TextBox9.Text = CStr(BAsicFrtMin_VIPRH)
-        TextBox8.Text = CStr(BAsicRearMax_VIPRH)
-        TextBox7.Text = CStr(BAsicRearMin_VIPRH)
-
-        TextBox12.Text = CStr(basicFrtTolVIP)
-        TextBox11.Text = CStr(BasicRearTolVIP)
-
-        TextBox14.Text = CStr(basicFrtTolSTD)
-        TextBox13.Text = CStr(BasicRearTolSTD)
-
-        TextBox16.Text = CStr(basicFrtTolFOLD)
-        TextBox15.Text = CStr(BasicRearTolFOLD)
-
-        If txtPeFrtMin IsNot Nothing Then
-            txtPeFrtMin.Text = CStr(BasicFrtMin_PE)
-            txtPeFrtMax.Text = CStr(BasicFrtMax_PE)
-            txtPeRearMin.Text = CStr(BasicRearMin_PE)
-            txtPeRearMax.Text = CStr(BasicRearMax_PE)
-            txtPeFrtTol.Text = CStr(basicFrtTolPE)
-            txtPeRearTol.Text = CStr(BasicRearTolPE)
-        End If
+        TextBox12.Text = CStr(basicFrtTolPE)
+        TextBox11.Text = CStr(BasicRearTolPE)
 
         CheckBox1.Checked = FlagBeforeCheck
         CheckBox2.Checked = FlagDuplicate
@@ -100,38 +68,13 @@ Public Class FrmBasic
 
     Private Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
         Try
-            BAsicFrtMax_STDLH = ParseBasicNumber(srcTxtMax.Text, "STD FRT Max")
-            BAsicFrtMin_STDLH = ParseBasicNumber(srcTxtMin.Text, "STD FRT Min")
-            BAsicRearMax_STDLH = ParseBasicNumber(TextBox2.Text, "STD REAR Max")
-            BAsicRearMin_STDLH = ParseBasicNumber(TextBox1.Text, "STD REAR Min")
+            BasicFrtMax_PE = ParseBasicNumber(srcTxtMax.Text, "PE FRT Max")
+            BasicFrtMin_PE = ParseBasicNumber(srcTxtMin.Text, "PE FRT Min")
+            BasicRearMax_PE = ParseBasicNumber(TextBox2.Text, "PE REAR Max")
+            BasicRearMin_PE = ParseBasicNumber(TextBox1.Text, "PE REAR Min")
 
-            BAsicFrtMax_FOLDRH = ParseBasicNumber(TextBox6.Text, "FOLD FRT Max")
-            BAsicFrtMin_FOLDRH = ParseBasicNumber(TextBox5.Text, "FOLD FRT Min")
-            BAsicRearMax_FOLDRH = ParseBasicNumber(TextBox4.Text, "FOLD REAR Max")
-            BAsicRearMin_FOLDRH = ParseBasicNumber(TextBox3.Text, "FOLD REAR Min")
-
-            BAsicFrtMax_VIPRH = ParseBasicNumber(TextBox10.Text, "VIP FRT Max")
-            BAsicFrtMin_VIPRH = ParseBasicNumber(TextBox9.Text, "VIP FRT Min")
-            BAsicRearMax_VIPRH = ParseBasicNumber(TextBox8.Text, "VIP REAR Max")
-            BAsicRearMin_VIPRH = ParseBasicNumber(TextBox7.Text, "VIP REAR Min")
-
-            basicFrtTolVIP = ParseBasicNumber(TextBox12.Text, "VIP FRT 보정치")
-            BasicRearTolVIP = ParseBasicNumber(TextBox11.Text, "VIP REAR 보정치")
-
-            basicFrtTolSTD = ParseBasicNumber(TextBox14.Text, "STD FRT 보정치")
-            BasicRearTolSTD = ParseBasicNumber(TextBox13.Text, "STD REAR 보정치")
-
-            basicFrtTolFOLD = ParseBasicNumber(TextBox16.Text, "FOLD FRT 보정치")
-            BasicRearTolFOLD = ParseBasicNumber(TextBox15.Text, "FOLD REAR 보정치")
-
-            If txtPeFrtMin IsNot Nothing Then
-                BasicFrtMin_PE = ParseBasicNumber(txtPeFrtMin.Text, "PE FRT Min")
-                BasicFrtMax_PE = ParseBasicNumber(txtPeFrtMax.Text, "PE FRT Max")
-                BasicRearMin_PE = ParseBasicNumber(txtPeRearMin.Text, "PE REAR Min")
-                BasicRearMax_PE = ParseBasicNumber(txtPeRearMax.Text, "PE REAR Max")
-                basicFrtTolPE = ParseBasicNumber(txtPeFrtTol.Text, "PE FRT 보정치")
-                BasicRearTolPE = ParseBasicNumber(txtPeRearTol.Text, "PE REAR 보정치")
-            End If
+            basicFrtTolPE = ParseBasicNumber(TextBox12.Text, "PE FRT 보정치")
+            BasicRearTolPE = ParseBasicNumber(TextBox11.Text, "PE REAR 보정치")
 
             FlagBeforeCheck = CheckBox1.Checked
             FlagDuplicate = CheckBox2.Checked

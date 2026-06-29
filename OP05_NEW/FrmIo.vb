@@ -1,185 +1,189 @@
-Public Class FrmIo
+' IO 제어 창 — Op01_PE FrmIo.vb 와 UI·이벤트 동일 (이미지1)
+' OP05: IN:00~02·IN:31 = COM(ESP), 나머지 IN/OUT = FBEI
+Imports System.Collections
+Imports System.Drawing
+Imports System.Windows.Forms
 
-    Private ReadOnly _main As FrmMain
+Public Class FrmIo
+    Inherits Form
+
+    Private ReadOnly _io As FbeiIoClient
+    Private ReadOnly _mmIo As MultiMonitorIoClient
+    Private ReadOnly _settings As MultiMonitorSettings
+    Private ReadOnly _inLabels(48) As Label
+    Private ReadOnly _outLabels(24) As Label
+    Private ReadOnly LedOff As Color = Color.FromArgb(64, 64, 64)
+    Private ReadOnly LedInOn As Color = Color.Green
+    Private ReadOnly LedOutOn As Color = Color.OrangeRed
+    Private Const IoRowHeight As Integer = 28
+    Private Const IoRowPitch As Integer = 30
+    Private Const InLabelWidth As Integer = 388
+    Private Const OutLabelWidth As Integer = 384
 
     Public Sub New(main As FrmMain)
-        _main = main
-        InitializeComponent()
+        _io = main.IoMonitorFbei
+        _mmIo = main.IoMonitorMm
+        _settings = main.IoMonitorSettings
+
+        Me.Text = "IO 제어 — FBEI (OP05_NEW)"
+        Me.ClientSize = New Size(820, 900)
+        Me.StartPosition = FormStartPosition.CenterScreen
+        Me.BackColor = Color.FromArgb(30, 30, 30)
+        Me.MaximizeBox = False
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
+
+        BuildPanels()
+        SyncInputs()
+        If _io IsNot Nothing Then AddHandler _io.InputChanged, AddressOf OnInputChanged
+        If _mmIo IsNot Nothing Then AddHandler _mmIo.DigitalInputChanged, AddressOf OnComInputChanged
+        AddHandler Me.FormClosed,
+            Sub()
+                If _io IsNot Nothing Then RemoveHandler _io.InputChanged, AddressOf OnInputChanged
+                If _mmIo IsNot Nothing Then RemoveHandler _mmIo.DigitalInputChanged, AddressOf OnComInputChanged
+            End Sub
     End Sub
 
-    Private Const RowH As Integer = 26
-    Private Const RowW As Integer = 220
-
-    Private _comDi(MultiMonitorIoClient.DiCount - 1) As Label
-    Private _comDo(MultiMonitorIoClient.DoCount - 1) As Button
-    Private _fbeiDi(31) As Label
-    Private _fbeiDo(31) As Button
-
-    Private Sub FrmIo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BuildComPanel()
-        BuildFbeiPanel()
-        RefreshAll()
-        TimerRefresh.Start()
-    End Sub
-
-    Private Sub BuildComPanel()
-        For i As Integer = 0 To MultiMonitorIoClient.DiCount - 1
-            Dim ch = i + 1
-            Dim lbl = CreateDiLabel(PanelComIn, ch, ComDiName(ch), 0, i * RowH)
-            _comDi(i) = lbl
+    Private Sub BuildPanels()
+        Dim pnlIn As New Panel With {
+            .Location = New Point(8, 8), .Size = New Size(400, 884),
+            .BorderStyle = BorderStyle.FixedSingle, .BackColor = Color.Black, .AutoScroll = True
+        }
+        Header(pnlIn, "입 력 (IN) — IN:핀번호")
+        Dim r As Integer = 0
+        For pin As Integer = 0 To Math.Min(IoMap.InputNames.Length, _inLabels.Length) - 1
+            If IoMap.InputNames(pin) = "" Then Continue For
+            Dim lb As Label = MkInLabel(pin, r)
+            _inLabels(pin) = lb
+            pnlIn.Controls.Add(lb)
+            r += 1
         Next
+        Controls.Add(pnlIn)
 
-        For i As Integer = 0 To MultiMonitorIoClient.DoCount - 1
-            Dim ch = i + 1
-            Dim btn = CreateDoButton(PanelComOut, "DO" & ch.ToString(), ch, 0, i * RowH, True)
-            _comDo(i) = btn
+        Dim pnlOut As New Panel With {
+            .Location = New Point(416, 8), .Size = New Size(396, 884),
+            .BorderStyle = BorderStyle.FixedSingle, .BackColor = Color.Black, .AutoScroll = True
+        }
+        Header(pnlOut, "출 력 (OUT) — OUT:핀번호  ▶ 클릭 ON/OFF")
+        r = 0
+        For pin As Integer = 0 To Math.Min(IoMap.OutputNames.Length, _outLabels.Length) - 1
+            Dim lb As Label = MkOutLabel(pin, r)
+            lb.Tag = pin
+            AddHandler lb.Click, AddressOf OutClick
+            _outLabels(pin) = lb
+            pnlOut.Controls.Add(lb)
+            r += 1
         Next
+        Controls.Add(pnlOut)
     End Sub
 
-    Private Sub BuildFbeiPanel()
-        For i As Integer = 0 To 31
-            Dim ch = i + 1
-            Dim col = i \ 16
-            Dim row = i Mod 16
-            _fbeiDi(i) = CreateDiLabel(PanelFbeiIn, ch, "X" & ch.ToString(), col * (RowW + 8), row * RowH)
-            _fbeiDo(i) = CreateDoButton(PanelFbeiOut, "Q" & ch.ToString(), ch, col * (RowW + 8), row * RowH, False)
-        Next
-    End Sub
-
-    Private Function CreateDiLabel(parent As Panel, channel As Integer, caption As String, x As Integer, y As Integer) As Label
-        Dim lbl As New Label()
-        lbl.Size = New Size(RowW, RowH - 2)
-        lbl.Location = New Point(4 + x, 4 + y)
-        lbl.BorderStyle = BorderStyle.FixedSingle
-        lbl.TextAlign = ContentAlignment.MiddleLeft
-        lbl.Font = New Font("Arial Narrow", 10.0F, FontStyle.Bold)
-        lbl.Text = " " & caption
-        lbl.Tag = channel
-        parent.Controls.Add(lbl)
-        Return lbl
+    Private Function MkInLabel(pin As Integer, row As Integer) As Label
+        Return MkIoRowLabel("ledIn" & pin.ToString("00"),
+                            "IN:" & pin.ToString("00") & "  " & IoMap.InputNames(pin),
+                            InLabelWidth, row, Cursors.Default)
     End Function
 
-    Private Function CreateDoButton(parent As Panel, caption As String, channel As Integer, x As Integer, y As Integer, isCom As Boolean) As Button
-        Dim btn As New Button()
-        btn.Size = New Size(RowW, RowH - 2)
-        btn.Location = New Point(4 + x, 4 + y)
-        btn.FlatStyle = FlatStyle.Flat
-        btn.Font = New Font("Arial Narrow", 10.0F, FontStyle.Bold)
-        btn.Text = caption
-        btn.Tag = New DoTag(channel, isCom)
-        AddHandler btn.Click, AddressOf DoButton_Click
-        parent.Controls.Add(btn)
-        Return btn
+    Private Function MkOutLabel(pin As Integer, row As Integer) As Label
+        Return MkIoRowLabel("ledOut" & pin.ToString("00"),
+                            "OUT:" & pin.ToString("00") & "  " & IoMap.OutputNames(pin),
+                            OutLabelWidth, row, Cursors.Hand)
     End Function
 
-    Private Class DoTag
-        Public ReadOnly Channel As Integer
-        Public ReadOnly IsCom As Boolean
-        Public Sub New(ch As Integer, com As Boolean)
-            Channel = ch
-            IsCom = com
-        End Sub
-    End Class
-
-    Private Function ComDiName(channel As Integer) As String
-        Dim s = _main.IoMonitorSettings
-        If s Is Nothing Then Return "IN" & (channel - 1).ToString()
-        If channel = s.IoChannelStart() Then Return "IN0 Start"
-        If channel = s.IoChannelReset() Then Return "IN1 Reset"
-        If channel = s.IoChannelEStop() Then Return "IN2 E-Stop"
-        If channel = s.IoChannelAirTool() Then Return "IN3 에어툴"
-        Return "IN" & (channel - 1).ToString()
+    Private Function MkIoRowLabel(controlName As String, text As String, width As Integer,
+                                  row As Integer, cursor As Cursor) As Label
+        Return New Label With {
+            .Name = controlName,
+            .Text = text,
+            .AutoSize = False,
+            .Size = New Size(width, IoRowHeight),
+            .Location = New Point(4, 34 + row * IoRowPitch),
+            .BorderStyle = BorderStyle.FixedSingle,
+            .TextAlign = ContentAlignment.MiddleLeft,
+            .Font = New Font("맑은 고딕", 10.0!),
+            .BackColor = LedOff,
+            .ForeColor = Color.White,
+            .Cursor = cursor
+        }
     End Function
 
-    Private Sub DoButton_Click(sender As Object, e As EventArgs)
-        Dim btn = CType(sender, Button)
-        Dim tag = CType(btn.Tag, DoTag)
+    Private Function ReadComPin(pin As Integer) As Boolean
+        If _mmIo Is Nothing OrElse Not _mmIo.IsConnected Then Return False
         Try
-            If tag.IsCom Then
-                Dim mm = _main.IoMonitorMm
-                If mm Is Nothing OrElse Not mm.IsConnected Then Return
-                mm.SetDigitalOutput(tag.Channel, Not mm.GetDigitalOutput(tag.Channel))
-            Else
-                Dim ios = _main.IoMonitorFbei
-                If ios Is Nothing OrElse Not _main.IoMonitorFbeiOk Then Return
-                ios.SetOutput(tag.Channel, Not ios.GetOutput(tag.Channel))
-            End If
-        Catch ex As Exception
-            LblStatus.Text = "DO 오류: " & ex.Message
+            Return _mmIo.GetDigitalInput(IoMap.ComChannelForPin(pin, _settings))
+        Catch
+            Return False
         End Try
-        RefreshAll()
+    End Function
+
+    Private Sub SyncInputs()
+        Try
+            Dim bits As BitArray = Nothing
+            If _io IsNot Nothing Then bits = _io.GetInputBits()
+            For pin As Integer = 0 To _inLabels.Length - 1
+                If _inLabels(pin) Is Nothing Then Continue For
+                Dim value As Boolean
+                If IoMap.IsComInputPin(pin) Then
+                    value = ReadComPin(pin)
+                ElseIf bits IsNot Nothing AndAlso pin < bits.Length Then
+                    value = bits(pin)
+                Else
+                    value = False
+                End If
+                SetInLed(pin, value)
+            Next
+        Catch
+        End Try
     End Sub
 
-    Private Sub TimerRefresh_Tick(sender As Object, e As EventArgs) Handles TimerRefresh.Tick
-        RefreshAll()
+    Private Sub OnInputChanged(channel As Integer, value As Boolean)
+        Dim pin As Integer = channel - 1
+        Try
+            If IoMap.IsComInputPin(pin) Then Return
+            If pin >= 0 AndAlso pin <= _inLabels.Length - 1 AndAlso _inLabels(pin) IsNot Nothing Then
+                SetInLed(pin, value)
+            End If
+        Catch
+        End Try
     End Sub
 
-    Private Sub RefreshAll()
-        Dim mm = _main.IoMonitorMm
-        Dim ios = _main.IoMonitorFbei
-        Dim settings = _main.IoMonitorSettings
-
-        If mm IsNot Nothing AndAlso mm.IsConnected Then
-            For i As Integer = 0 To MultiMonitorIoClient.DiCount - 1
-                ApplyDiLabel(_comDi(i), mm.GetDigitalInput(i + 1))
+    Private Sub OnComInputChanged(channel As Integer, value As Boolean)
+        Try
+            For pin As Integer = 0 To _inLabels.Length - 1
+                If _inLabels(pin) Is Nothing Then Continue For
+                If Not IoMap.IsComInputPin(pin) Then Continue For
+                If IoMap.ComChannelForPin(pin, _settings) = channel Then
+                    SetInLed(pin, value)
+                End If
             Next
-            For i As Integer = 0 To MultiMonitorIoClient.DoCount - 1
-                ApplyDoButton(_comDo(i), mm.GetDigitalOutput(i + 1))
-            Next
-            Dim aiText As String = ""
-            For ai As Integer = 1 To MultiMonitorIoClient.AiCount
-                If aiText.Length > 0 Then aiText &= "   "
-                aiText &= "AI" & ai.ToString() & "=" & mm.GetAnalogRaw(ai).ToString()
-            Next
-            LblComAi.Text = "  " & aiText
-        Else
-            For i As Integer = 0 To _comDi.Length - 1
-                If _comDi(i) IsNot Nothing Then ApplyDiLabel(_comDi(i), False)
-            Next
-            For i As Integer = 0 To _comDo.Length - 1
-                If _comDo(i) IsNot Nothing Then ApplyDoButton(_comDo(i), False)
-            Next
-            LblComAi.Text = "  COM I/O 미연결"
-        End If
-
-        If ios IsNot Nothing AndAlso _main.IoMonitorFbeiOk Then
-            For i As Integer = 0 To 31
-                ApplyDiLabel(_fbeiDi(i), ios.GetInput(i + 1))
-                ApplyDoButton(_fbeiDo(i), ios.GetOutput(i + 1))
-            Next
-        Else
-            For i As Integer = 0 To 31
-                ApplyDiLabel(_fbeiDi(i), False)
-                ApplyDoButton(_fbeiDo(i), False)
-            Next
-        End If
-
-        Dim comPort = If(settings IsNot Nothing, settings.ComPort, "-")
-        Dim comState = If(mm IsNot Nothing AndAlso mm.IsConnected, "OK", "NG")
-        Dim fbeiState = If(_main.IoMonitorFbeiOk, "OK", "NG")
-        LblStatus.Text = "  COM " & comPort & " : " & comState &
-                         "   |   FBEI : " & fbeiState &
-                         If(settings IsNot Nothing AndAlso settings.FbeiEnabled,
-                            " (DI=" & settings.FbeiDiIp & ", DO=" & settings.FbeiDoIp & ")",
-                            " (disabled)")
+        Catch
+        End Try
     End Sub
 
-    Private Shared Sub ApplyDiLabel(lbl As Label, isOn As Boolean)
-        lbl.BackColor = If(isOn, Color.Lime, Color.LightGray)
-        lbl.ForeColor = Color.Black
+    Private Sub SetInLed(pin As Integer, value As Boolean)
+        If _inLabels(pin) Is Nothing Then Return
+        _inLabels(pin).BackColor = If(value, LedInOn, LedOff)
+        _inLabels(pin).ForeColor = If(value, Color.Black, Color.White)
     End Sub
 
-    Private Shared Sub ApplyDoButton(btn As Button, isOn As Boolean)
-        btn.BackColor = If(isOn, Color.Orange, Color.LightGray)
-        btn.ForeColor = Color.Black
+    Private Sub OutClick(sender As Object, e As EventArgs)
+        Dim lb As Label = TryCast(sender, Label)
+        If lb Is Nothing OrElse lb.Tag Is Nothing Then Return
+        Dim pin As Integer = CInt(lb.Tag)
+        Dim newState As Boolean = (lb.BackColor <> LedOutOn)
+        Try
+            If _io IsNot Nothing Then IoMap.SetOut(_io, pin, newState)
+        Catch
+        End Try
+        lb.BackColor = If(newState, LedOutOn, LedOff)
+        lb.ForeColor = If(newState, Color.White, Color.White)
     End Sub
 
-    Private Sub BtnClose_Click(sender As Object, e As EventArgs) Handles BtnClose.Click
-        Close()
-    End Sub
-
-    Private Sub FrmIo_FormClosed(sender As Object, e As FormClosedEventArgs) Handles Me.FormClosed
-        TimerRefresh.Stop()
+    Private Sub Header(pnl As Panel, text As String)
+        pnl.Controls.Add(New Label With {
+            .Text = text, .AutoSize = False, .Size = New Size(pnl.Width - 4, 28),
+            .Location = New Point(1, 1), .TextAlign = ContentAlignment.MiddleCenter,
+            .BackColor = Color.Navy, .ForeColor = Color.White,
+            .Font = New Font("맑은 고딕", 11.0!, FontStyle.Bold)
+        })
     End Sub
 
 End Class

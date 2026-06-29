@@ -103,13 +103,13 @@ Public Class FrmMain
             Rs.MoveFirst()
             Do Until Rs.EOF
                 Grid2.Rows.Add("",
-                    Trim(Rs.Fields("PartNo").Value),
-                    Trim(Rs.Fields("OptionLhrh").Value),
-                    Trim(Rs.Fields("OptionType").Value),
-                    Rs.Fields("Use_Op01_MotorTq").Value,
-                    Trim(Rs.Fields("Target_Op01_MotorBarcode").Value),
-                    Trim(Rs.Fields("Target_Op01_ToolNum").Value),
-                    Trim(Rs.Fields("Target_Op01_FrameBarcode").Value))
+                    FieldGridValue(Rs.Fields("PartNo")),
+                    FieldGridValue(Rs.Fields("OptionLhrh")),
+                    FieldGridValue(Rs.Fields("OptionType")),
+                    FieldGridValue(Rs.Fields("Use_Op01_MotorTq")),
+                    FieldGridValue(Rs.Fields("Target_Op01_MotorBarcode")),
+                    FieldGridValue(Rs.Fields("Target_Op01_ToolNum")),
+                    FieldGridValue(Rs.Fields("Target_Op01_FrameBarcode")))
                 Rs.MoveNext()
             Loop
         End If
@@ -196,14 +196,14 @@ Public Class FrmMain
             Rs.MoveFirst()
             Do Until Rs.EOF
                 Grid2.Rows.Add("",
-                    Trim(Rs.Fields("PartNo").Value),
-                    Trim(Rs.Fields("OptionLhrh").Value),
-                    Trim(Rs.Fields("OptionType").Value),
-                    Trim(Rs.Fields("Target_Op02_HarnessBarcode").Value),
-                    Trim(Rs.Fields("Target_Op02_LsuptBarcode").Value),
-                    Trim(Rs.Fields("Target_Op02_LsuptVersion").Value),
-                    Trim(Rs.Fields("Target_Op02_ToolNum").Value),
-                    Trim(Rs.Fields("Target_Op02_ToolNum2").Value))
+                    FieldGridValue(Rs.Fields("PartNo")),
+                    FieldGridValue(Rs.Fields("OptionLhrh")),
+                    FieldGridValue(Rs.Fields("OptionType")),
+                    FieldGridValue(Rs.Fields("Target_Op02_HarnessBarcode")),
+                    FieldGridValue(Rs.Fields("Target_Op02_LsuptBarcode")),
+                    FieldGridValue(Rs.Fields("Target_Op02_LsuptVersion")),
+                    FieldGridValue(Rs.Fields("Target_Op02_ToolNum")),
+                    FieldGridValue(Rs.Fields("Target_Op02_ToolNum2")))
                 Rs.MoveNext()
             Loop
         End If
@@ -404,15 +404,15 @@ Public Class FrmMain
             Rs.MoveFirst()
             Do Until Rs.EOF
                 Grid2.Rows.Add("",
-                    Trim(Rs.Fields("PartNo").Value),
-                    Trim(Rs.Fields("OptionLhrh").Value),
-                    Trim(Rs.Fields("OptionType").Value),
-                    Trim(Rs.Fields("Target_OpVip_HarnessBarcode").Value),
-                    Trim(Rs.Fields("Target_OpVip_ToolNum").Value),
-                    Trim(Rs.Fields("Target_OpVip_Rivet1Num").Value),
-                    Trim(Rs.Fields("Target_OpVip_Rivet2Num").Value),
-                    Trim(Rs.Fields("Target_OpVip_Rivet3Num").Value),
-                    Trim(Rs.Fields("Target_OpVip_MonitorCableBarcode").Value))
+                    FieldGridValue(Rs.Fields("PartNo")),
+                    FieldGridValue(Rs.Fields("OptionLhrh")),
+                    FieldGridValue(Rs.Fields("OptionType")),
+                    FieldGridValue(Rs.Fields("Target_OpVip_HarnessBarcode")),
+                    FieldGridValue(Rs.Fields("Target_OpVip_ToolNum")),
+                    FieldGridValue(Rs.Fields("Target_OpVip_Rivet1Num")),
+                    FieldGridValue(Rs.Fields("Target_OpVip_Rivet2Num")),
+                    FieldGridValue(Rs.Fields("Target_OpVip_Rivet3Num")),
+                    FieldGridValue(Rs.Fields("Target_OpVip_MonitorCableBarcode")))
                 Rs.MoveNext()
             Loop
         End If
@@ -499,13 +499,13 @@ Public Class FrmMain
             Rs.MoveFirst()
             Do Until Rs.EOF
                 Grid2.Rows.Add("",
-                    Trim(Rs.Fields("PartNo").Value),
-                    Trim(Rs.Fields("OptionLhrh").Value),
-                    Trim(Rs.Fields("OptionType").Value),
-                    Trim(Rs.Fields("Target_Op04_ToolNum").Value),
-                    Trim(Rs.Fields("Target_Op04_RivetNum").Value),
-                    Trim(Rs.Fields("Target_Op03_InsideCoverL").Value),
-                    Trim(Rs.Fields("Target_Op03_InsideCoverR").Value))
+                    FieldGridValue(Rs.Fields("PartNo")),
+                    FieldGridValue(Rs.Fields("OptionLhrh")),
+                    FieldGridValue(Rs.Fields("OptionType")),
+                    FieldGridValue(Rs.Fields("Target_Op04_ToolNum")),
+                    FieldGridValue(Rs.Fields("Target_Op04_RivetNum")),
+                    FieldGridValue(Rs.Fields("Target_Op03_InsideCoverL")),
+                    FieldGridValue(Rs.Fields("Target_Op03_InsideCoverR")))
                 Rs.MoveNext()
             Loop
         End If

@@ -1055,8 +1055,7 @@ namespace WindowsFormsApp1
                 startTime:  _startTime,
                 endTime:    endTime,
                 play:       MeasureData1.GapAngle,
-                pass:       pass,
-                barcode:    lbBarcode1.Text == "대기 중..." ? "" : lbBarcode1.Text);
+                pass:       pass);
 
             // CSV 저장 (기존 유지)
             string dir  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Result",

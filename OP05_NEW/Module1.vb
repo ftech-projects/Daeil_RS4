@@ -45,27 +45,6 @@ Module Module1
 
     Public WorkImage() As String
 
-    Public BAsicFrtMin_STDLH As Double
-    Public BAsicFrtMax_STDLH As Double
-    Public BAsicFrtMin_VIPRH As Double
-    Public BAsicFrtMax_VIPRH As Double
-    Public BAsicFrtMin_FOLDRH As Double
-    Public BAsicFrtMax_FOLDRH As Double
-
-    Public BAsicRearMin_STDLH As Double
-    Public BAsicRearMax_STDLH As Double
-    Public BAsicRearMin_VIPRH As Double
-    Public BAsicRearMax_VIPRH As Double
-    Public BAsicRearMin_FOLDRH As Double
-    Public BAsicRearMax_FOLDRH As Double
-
-    Public BasicRearTolSTD As Double
-    Public basicFrtTolSTD As Double
-    Public BasicRearTolVIP As Double
-    Public basicFrtTolVIP As Double
-    Public BasicRearTolFOLD As Double
-    Public basicFrtTolFOLD As Double
-
     Public BasicFrtMin_PE As Double
     Public BasicFrtMax_PE As Double
     Public BasicRearMin_PE As Double
@@ -265,65 +244,37 @@ Module Module1
         End Try
     End Sub
 
+    Private Function TryReadLegacyDoubleField(Rs As ADODB.Recordset, ParamArray fieldNames() As String) As Double?
+        For Each fieldName As String In fieldNames
+            Try
+                Dim raw As Object = Rs.Fields(fieldName).Value
+                If Not IsDBNull(raw) Then Return CDbl(raw)
+            Catch
+            End Try
+        Next
+        Return Nothing
+    End Function
+
     Private Sub ReadBasicFromRecordset(Rs As ADODB.Recordset)
-        BAsicFrtMin_STDLH = CDbl(Rs.Fields("FrtMin_STDLH").Value)
-        BAsicFrtMax_STDLH = CDbl(Rs.Fields("FrtMax_STDLH").Value)
-        BAsicRearMin_STDLH = CDbl(Rs.Fields("RearMin_STDLH").Value)
-        BAsicRearMax_STDLH = CDbl(Rs.Fields("RearMax_STDLH").Value)
+        Dim frtMinFallback = If(TryReadLegacyDoubleField(Rs, "FrtMin_PE", "FrtMin_STDLH"), 0.0)
+        Dim frtMaxFallback = If(TryReadLegacyDoubleField(Rs, "FrtMax_PE", "FrtMax_STDLH"), 9999.0)
+        Dim rearMinFallback = If(TryReadLegacyDoubleField(Rs, "RearMin_PE", "RearMin_STDLH"), 0.0)
+        Dim rearMaxFallback = If(TryReadLegacyDoubleField(Rs, "RearMax_PE", "RearMax_STDLH"), 9999.0)
+        Dim frtTolFallback = If(TryReadLegacyDoubleField(Rs, "FrtTolPE", "FrtTolVIP", "FrtTolSTD"), 5.0)
+        Dim rearTolFallback = If(TryReadLegacyDoubleField(Rs, "RearTolPE", "RearTolVIP", "RearTolSTD"), 5.0)
 
-        BAsicFrtMin_VIPRH = CDbl(Rs.Fields("FrtMin_VIPRH").Value)
-        BAsicFrtMax_VIPRH = CDbl(Rs.Fields("FrtMax_VIPRH").Value)
-        BAsicRearMin_VIPRH = CDbl(Rs.Fields("RearMin_VIPRH").Value)
-        BAsicRearMax_VIPRH = CDbl(Rs.Fields("RearMax_VIPRH").Value)
-
-        BAsicFrtMin_FOLDRH = CDbl(Rs.Fields("FrtMin_FOLDRH").Value)
-        BAsicFrtMax_FOLDRH = CDbl(Rs.Fields("FrtMax_FOLDRH").Value)
-        BAsicRearMin_FOLDRH = CDbl(Rs.Fields("RearMin_FOLDRH").Value)
-        BAsicRearMax_FOLDRH = CDbl(Rs.Fields("RearMax_FOLDRH").Value)
-
-        BasicRearTolVIP = CDbl(Rs.Fields("RearTolVIP").Value)
-        basicFrtTolVIP = CDbl(Rs.Fields("FrtTolVIP").Value)
-
-        BasicRearTolSTD = CDbl(Rs.Fields("RearTolSTD").Value)
-        basicFrtTolSTD = CDbl(Rs.Fields("FrtTolSTD").Value)
-
-        BasicRearTolFOLD = CDbl(Rs.Fields("RearTolFOLD").Value)
-        basicFrtTolFOLD = CDbl(Rs.Fields("FrtTolFOLD").Value)
-
-        BasicFrtMin_PE = TryReadDoubleField(Rs, "FrtMin_PE", BAsicFrtMin_STDLH)
-        BasicFrtMax_PE = TryReadDoubleField(Rs, "FrtMax_PE", BAsicFrtMax_STDLH)
-        BasicRearMin_PE = TryReadDoubleField(Rs, "RearMin_PE", BAsicRearMin_STDLH)
-        BasicRearMax_PE = TryReadDoubleField(Rs, "RearMax_PE", BAsicRearMax_STDLH)
-        basicFrtTolPE = TryReadDoubleField(Rs, "FrtTolPE", basicFrtTolSTD)
-        BasicRearTolPE = TryReadDoubleField(Rs, "RearTolPE", BasicRearTolSTD)
+        BasicFrtMin_PE = TryReadDoubleField(Rs, "FrtMin_PE", frtMinFallback)
+        BasicFrtMax_PE = TryReadDoubleField(Rs, "FrtMax_PE", frtMaxFallback)
+        BasicRearMin_PE = TryReadDoubleField(Rs, "RearMin_PE", rearMinFallback)
+        BasicRearMax_PE = TryReadDoubleField(Rs, "RearMax_PE", rearMaxFallback)
+        basicFrtTolPE = TryReadDoubleField(Rs, "FrtTolPE", frtTolFallback)
+        BasicRearTolPE = TryReadDoubleField(Rs, "RearTolPE", rearTolFallback)
 
         FlagDuplicate = Rs.Fields("FlagDuplicate").Value
         FlagBeforeCheck = Rs.Fields("FlagBeforeCheck").Value
     End Sub
 
     Private Sub WriteBasicToRecordset(Rs As ADODB.Recordset)
-        Rs.Fields("FrtMin_STDLH").Value = BAsicFrtMin_STDLH
-        Rs.Fields("FrtMax_STDLH").Value = BAsicFrtMax_STDLH
-        Rs.Fields("RearMin_STDLH").Value = BAsicRearMin_STDLH
-        Rs.Fields("RearMax_STDLH").Value = BAsicRearMax_STDLH
-
-        Rs.Fields("FrtMin_VIPRH").Value = BAsicFrtMin_VIPRH
-        Rs.Fields("FrtMax_VIPRH").Value = BAsicFrtMax_VIPRH
-        Rs.Fields("RearMin_VIPRH").Value = BAsicRearMin_VIPRH
-        Rs.Fields("RearMax_VIPRH").Value = BAsicRearMax_VIPRH
-
-        Rs.Fields("FrtMin_FOLDRH").Value = BAsicFrtMin_FOLDRH
-        Rs.Fields("FrtMax_FOLDRH").Value = BAsicFrtMax_FOLDRH
-        Rs.Fields("RearMin_FOLDRH").Value = BAsicRearMin_FOLDRH
-        Rs.Fields("RearMax_FOLDRH").Value = BAsicRearMax_FOLDRH
-
-        Rs.Fields("RearTolVIP").Value = BasicRearTolVIP
-        Rs.Fields("FrtTolVIP").Value = basicFrtTolVIP
-        Rs.Fields("RearTolSTD").Value = BasicRearTolSTD
-        Rs.Fields("FrtTolSTD").Value = basicFrtTolSTD
-        Rs.Fields("RearTolFOLD").Value = BasicRearTolFOLD
-        Rs.Fields("FrtTolFOLD").Value = basicFrtTolFOLD
-
         TryWriteDoubleField(Rs, "FrtMin_PE", BasicFrtMin_PE)
         TryWriteDoubleField(Rs, "FrtMax_PE", BasicFrtMax_PE)
         TryWriteDoubleField(Rs, "RearMin_PE", BasicRearMin_PE)
